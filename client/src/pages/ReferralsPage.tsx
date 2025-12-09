@@ -161,24 +161,7 @@ export function ReferralsPage() {
           </motion.div>
           <h1 className="text-2xl font-display font-bold text-white mb-1">
             Магия дружбы
-            <motion.span
-              className="ml-2 text-lg"
-              animate={{ rotate: [0, 20, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {isFairyTheme ? '💕' : '⭐'}
-            </motion.span>
           </h1>
-          <p className={`text-sm ${isFairyTheme ? 'text-[#FC89AC]/80' : 'text-slate-400'}`}>
-            Делись волшебством с подругами
-          </p>
-          <motion.span
-            className="text-lg"
-            animate={{ y: [0, -3, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            {isFairyTheme ? '✨' : '✦'}
-          </motion.span>
         </motion.div>
 
         {/* Banner Image - феи и ведьмы */}
@@ -210,14 +193,14 @@ export function ReferralsPage() {
             className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'friends'
                 ? isFairyTheme
-                  ? 'bg-[#FC89AC] text-white'
-                  : 'bg-slate-600 text-white'
+                  ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
+                  : 'bg-slate-600 text-white shadow-lg shadow-slate-600/30'
                 : isFairyTheme
                   ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
                   : 'bg-slate-700/50 text-slate-400'
             }`}
           >
-            {isFairyTheme ? '👯‍♀️' : '👯‍♀️'} Подруги
+            👯‍♀️ Подруги
           </button>
           <button
             onClick={() => {
@@ -227,14 +210,14 @@ export function ReferralsPage() {
             className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'invite'
                 ? isFairyTheme
-                  ? 'bg-[#FC89AC] text-white'
-                  : 'bg-slate-600 text-white'
+                  ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
+                  : 'bg-slate-600 text-white shadow-lg shadow-slate-600/30'
                 : isFairyTheme
                   ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
                   : 'bg-slate-700/50 text-slate-400'
             }`}
           >
-            {isFairyTheme ? '💌' : '💌'} Пригласить
+            💌 Пригласить
           </button>
         </motion.div>
 
@@ -248,7 +231,7 @@ export function ReferralsPage() {
               exit={{ opacity: 0, x: 20 }}
             >
               {referralInfo?.recentReferrals && referralInfo.recentReferrals.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {referralInfo.recentReferrals.map((friend, index) => (
                     <motion.div
                       key={index}
@@ -261,24 +244,34 @@ export function ReferralsPage() {
                       }}
                       className={`p-4 rounded-2xl cursor-pointer active:scale-[0.98] transition-all ${
                         isFairyTheme
-                          ? 'bg-[#FC89AC]/10 border border-[#FC89AC]/20'
-                          : 'bg-slate-800/60 border border-slate-700/50'
+                          ? 'bg-[#FC89AC]/15 border border-[#FC89AC]/30 backdrop-blur-sm'
+                          : 'bg-slate-800/70 border border-slate-600/50 backdrop-blur-sm'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         {/* Avatar */}
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${
-                          isFairyTheme
-                            ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]'
-                            : 'bg-gradient-to-br from-slate-500 to-slate-700'
-                        }`}>
-                          {friend.name.charAt(0)}
-                        </div>
+                        {friend.avatar ? (
+                          <div className="w-12 h-12 rounded-full overflow-hidden">
+                            <img
+                              src={friend.avatar}
+                              alt={friend.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${
+                            isFairyTheme
+                              ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]'
+                              : 'bg-gradient-to-br from-slate-500 to-slate-700'
+                          }`}>
+                            {friend.name.charAt(0)}
+                          </div>
+                        )}
 
                         {/* Info */}
-                        <div className="flex-1">
-                          <p className="text-white font-semibold">{friend.name}</p>
-                          <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium text-sm truncate">{friend.name}</p>
+                          <p className="text-white/70 text-xs">
                             {friend.title || friendTitles[index % friendTitles.length]} • {formatDate(friend.joinedAt)}
                           </p>
                         </div>
@@ -294,16 +287,6 @@ export function ReferralsPage() {
                       </div>
                     </motion.div>
                   ))}
-
-                  {/* Magic circle growing message */}
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className={`text-center text-sm mt-4 ${isFairyTheme ? 'text-[#FC89AC]/60' : 'text-slate-500'}`}
-                  >
-                    {isFairyTheme ? '✨' : '✦'} Твой магический круг растёт!
-                  </motion.p>
 
                   {/* Share Settings Button - Большая кнопка с иконкой */}
                   <motion.button
@@ -339,23 +322,24 @@ export function ReferralsPage() {
                         <p className={`text-base font-semibold ${isFairyTheme ? 'text-white' : 'text-white'}`}>
                           Делиться раскладами
                         </p>
-                        <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
-                          Настрой видимость для подруг
-                        </p>
                       </div>
 
-                      {/* Status badge */}
-                      <div className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-                        shareEnabled
-                          ? isFairyTheme
-                            ? 'bg-[#FC89AC]/30 text-[#FC89AC] border border-[#FC89AC]/40'
-                            : 'bg-green-500/20 text-green-400 border border-green-500/30'
-                          : isFairyTheme
-                            ? 'bg-white/10 text-white/50 border border-white/10'
-                            : 'bg-slate-700 text-slate-500 border border-slate-600'
-                      }`}>
-                        {shareEnabled ? 'вкл' : 'выкл'}
-                      </div>
+                      {/* Status indicator - glowing dot */}
+                      {shareEnabled && (
+                        <motion.div
+                          className={`w-3 h-3 rounded-full ${
+                            isFairyTheme
+                              ? 'bg-[#FC89AC]'
+                              : 'bg-white'
+                          }`}
+                          animate={{
+                            boxShadow: isFairyTheme
+                              ? ['0 0 4px 2px rgba(252, 137, 172, 0.4)', '0 0 8px 4px rgba(252, 137, 172, 0.6)', '0 0 4px 2px rgba(252, 137, 172, 0.4)']
+                              : ['0 0 4px 2px rgba(255, 255, 255, 0.3)', '0 0 8px 4px rgba(255, 255, 255, 0.5)', '0 0 4px 2px rgba(255, 255, 255, 0.3)']
+                          }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      )}
                     </div>
                   </motion.button>
                 </div>
@@ -398,7 +382,7 @@ export function ReferralsPage() {
             >
               {/* Reward Info */}
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <motion.div
                     className="text-4xl"
                     animate={{ rotate: [0, 10, -10, 0] }}
@@ -417,14 +401,14 @@ export function ReferralsPage() {
 
               {/* Share Link */}
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <h3 className={`text-sm font-medium mb-3 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}>
+                <h3 className={`text-sm font-semibold mb-3 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
                   Твоя ссылка
                 </h3>
                 <div className={`rounded-xl overflow-hidden flex mb-3 ${
                   isFairyTheme ? 'bg-white/10' : 'bg-slate-700/50'
                 }`}>
                   <div className="flex-1 px-3 py-3 overflow-hidden">
-                    <p className="text-white/70 text-sm truncate">
+                    <p className="text-white/80 text-sm truncate">
                       {referralInfo?.referralLink}
                     </p>
                   </div>
@@ -438,7 +422,7 @@ export function ReferralsPage() {
                           : 'bg-slate-600 text-white'
                     }`}
                   >
-                    {copied ? '✓ Скопировано' : 'Копировать'}
+                    {copied ? '✓ Готово' : 'Копировать'}
                   </button>
                 </div>
 
@@ -449,7 +433,7 @@ export function ReferralsPage() {
                   size="lg"
                 >
                   <motion.span
-                    className="mr-2"
+                    className="mr-2 text-lg"
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
@@ -461,7 +445,7 @@ export function ReferralsPage() {
 
               {/* How it works */}
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <h3 className={`text-sm font-medium mb-4 text-center ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}>
+                <h3 className={`text-sm font-semibold mb-4 text-center ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
                   Как это работает
                 </h3>
                 <div className="space-y-3">
@@ -476,7 +460,7 @@ export function ReferralsPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + i * 0.1 }}
                       className={`flex items-center gap-3 p-3 rounded-xl ${
-                        isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-slate-700/30'
+                        isFairyTheme ? 'bg-[#FC89AC]/15' : 'bg-slate-700/40'
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -484,7 +468,7 @@ export function ReferralsPage() {
                       }`}>
                         {item.step}
                       </div>
-                      <span className="text-white/80 text-sm flex-1">{item.text}</span>
+                      <span className="text-white text-sm flex-1">{item.text}</span>
                       <span className="text-xl">{item.emoji}</span>
                     </motion.div>
                   ))}

@@ -128,11 +128,10 @@ export function DailyCardPage() {
 
   return (
     <div className="min-h-screen">
-      {step !== 'deck_select' && (
+      {step !== 'deck_select' && step !== 'interpretation' && (
         <Header
-          title="Карта Дня"
-          showBack={step !== 'interpretation'}
-          transparent={step === 'ritual' || step === 'shuffle'}
+          showBack={true}
+          transparent={true}
         />
       )}
 
@@ -278,7 +277,7 @@ export function DailyCardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="relative z-10"
+              className="relative z-10 flex justify-center w-full"
             >
               <Button
                 onClick={handleStartShuffle}
@@ -286,7 +285,7 @@ export function DailyCardPage() {
                 variant={selectedDeck === 'fairy' ? 'glass-fairy' : 'glass-witch'}
                 className="px-12 shadow-lg"
               >
-                Я готова {selectedDeck === 'fairy' ? '💕' : '✨'}
+                Я готова
               </Button>
             </motion.div>
           </motion.div>

@@ -73,70 +73,27 @@ export function HomePage() {
         transition={{ duration: 0.2, delay: 0.05 }}
       >
         <Card
-          variant={isFairyTheme ? 'mystic-fairy' : 'mystic-witch'}
+          variant="glass"
           className="mb-4 overflow-hidden relative cursor-pointer"
           onClick={() => {
             hapticFeedback('impact', 'light')
             navigate('/ask')
           }}
         >
-          {/* Animated sparkle background */}
-          <div className="absolute inset-0 opacity-30">
-            <motion.div
-              className="absolute top-2 left-4 text-xs"
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 3, repeat: Infinity, delay: 0 }}
-            >
-              ✨
-            </motion.div>
-            <motion.div
-              className="absolute top-4 right-8 text-xs"
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-            >
-              {isFairyTheme ? '🦋' : '🌙'}
-            </motion.div>
-            <motion.div
-              className="absolute bottom-3 left-8 text-xs"
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-            >
-              {isFairyTheme ? '💫' : '✦'}
-            </motion.div>
-            <motion.div
-              className="absolute bottom-2 right-4 text-xs"
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-            >
-              {isFairyTheme ? '⭐' : '☽'}
-            </motion.div>
-          </div>
-
-          <div className="relative text-center">
-            {/* Main icon */}
-            <div className="flex flex-col items-center mb-4">
-              <motion.div
-                className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg mb-3 ${
-                  isFairyTheme
-                    ? 'bg-gradient-to-br from-[#FC89AC]/70 via-[#FC89AC]/80 to-[#FC89AC]'
-                    : 'bg-gradient-to-br from-slate-500 via-slate-600 to-slate-700'
-                }`}
-                animate={{ scale: [1, 1.08, 1], rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <span className="text-3xl">{isFairyTheme ? '🔮' : '🌙'}</span>
-              </motion.div>
-              <h3 className="text-white font-display font-bold text-xl mb-1">
+          <div className="relative">
+            {/* Title and description */}
+            <div className="text-center mb-3">
+              <h3 className="text-white font-display font-bold text-lg mb-0.5">
                 {isFairyTheme ? 'Задай вопрос картам' : 'Вопроси судьбу'}
               </h3>
-              <p className="text-white/60 text-sm">
+              <p className="text-white/60 text-xs">
                 {isFairyTheme ? '1 вопрос в день — карты ответят' : 'Раскрой тайны через карты'}
               </p>
             </div>
 
-            {/* Button */}
+            {/* Button with icon */}
             <motion.div
-              className={`w-full rounded-xl p-4 flex items-center justify-center gap-3 ${
+              className={`w-full rounded-xl py-2.5 px-4 flex items-center justify-center gap-2 ${
                 isFairyTheme
                   ? 'bg-gradient-to-r from-[#FC89AC]/20 to-pink-500/20 border border-[#FC89AC]/30'
                   : 'bg-gradient-to-r from-slate-500/20 to-slate-600/20 border border-slate-500/30'
@@ -144,17 +101,29 @@ export function HomePage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <motion.span
-                className="text-2xl"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                {isFairyTheme ? '🦋' : '🔮'}
-              </motion.span>
-              <span className={`font-medium ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+              <span className={`font-medium text-sm ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
                 {isFairyTheme ? 'Спросить карты' : 'Задать вопрос'}
               </span>
-              <span className="text-white/40">→</span>
+              {/* Icon with glow - после текста */}
+              <div className="relative">
+                <motion.div
+                  className={`absolute inset-0 rounded-full blur-md ${
+                    isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-400'
+                  }`}
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <div className="relative w-7 h-7 rounded-full overflow-hidden">
+                  <img
+                    src={isFairyTheme ? '/icons/ask-fairy.png' : '/icons/ask-witch.png'}
+                    alt="Ask cards"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
             </motion.div>
           </div>
         </Card>

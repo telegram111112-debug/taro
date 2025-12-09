@@ -10,11 +10,25 @@ import { getZodiacEmoji } from '../lib/zodiacEmojis'
 import { getDailyHoroscope, getZodiacSymbol, ZodiacSign } from '../lib/horoscope'
 import type { DeckTheme } from '../types'
 
+// Аватарки для выбора
+const FAIRY_AVATARS = [
+  '/avatars/fairy-1.png',
+  '/avatars/fairy-2.png',
+  '/avatars/fairy-3.png',
+]
+
+const WITCH_AVATARS = [
+  '/avatars/witch-1.png',
+  '/avatars/witch-2.png',
+  '/avatars/witch-3.png',
+]
+
 export function ProfilePage() {
   const { user, updateUser, setDeckTheme } = useUserStore()
   const themeConfig = getThemeConfig(user?.deckTheme || 'witch')
 
   const [showDeckModal, setShowDeckModal] = useState(false)
+  const [showAvatarModal, setShowAvatarModal] = useState(false)
   const [expandedHoroscope, setExpandedHoroscope] = useState(false)
 
   const handleChangeDeck = (theme: DeckTheme) => {
@@ -59,39 +73,43 @@ export function ProfilePage() {
       {/* Magic particles */}
       <MagicParticlesLight />
 
-      <Header title="Профиль" />
+      <Header />
 
-      {/* User Info Card */}
+      {/* User Info - только имя и дата (без рамки) */}
       <div className="px-4 mb-4">
-        <Card variant={isFairyTheme ? 'mystic-fairy' : 'mystic-witch'}>
-          <div className="flex items-center gap-4">
-            <motion.div
-              className="w-16 h-16 rounded-full flex items-center justify-center text-3xl relative overflow-hidden"
-              style={{ background: themeConfig.gradients.button }}
-              whileHover={{ scale: 1.05 }}
+        <div className="flex flex-col items-center justify-center py-2">
+          <h2 className="text-xl tracking-wide text-white italic text-center"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontWeight: 500,
+            fontStyle: 'italic',
+            textShadow: isFairyTheme
+              ? '0 0 20px rgba(252, 137, 172, 0.3)'
+              : '0 0 20px rgba(148, 163, 184, 0.2)'
+          }}
+          >
+            {user?.name || 'Путница'}
+          </h2>
+          {user?.birthDate && (
+            <p className={`text-xs mt-1 tracking-widest ${
+              isFairyTheme
+                ? 'text-[#FC89AC]/60'
+                : 'text-slate-400/70'
+            }`}
+            style={{
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              fontWeight: 300,
+              letterSpacing: '0.15em'
+            }}
             >
-              {user?.deckTheme === 'fairy' ? '🦋' : '🌙'}
-              {/* Animated glow */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{ background: `radial-gradient(circle, ${themeConfig.colors.primary}40 0%, transparent 70%)` }}
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              />
-            </motion.div>
-            <div className="flex-1">
-              <h2 className="text-xl font-display font-bold text-white">
-                {user?.name || 'Путница'}
-              </h2>
-              {user?.zodiacSign && (
-                <p className="text-white/60 text-sm flex items-center gap-1">
-                  <span>{getZodiacSymbol(user.zodiacSign as ZodiacSign)}</span>
-                  <span>{user.zodiacSign}</span>
-                </p>
-              )}
-            </div>
-          </div>
-        </Card>
+              {new Date(user.birthDate).toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              }).replace(/\./g, ' / ')}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Daily Horoscope */}
@@ -214,12 +232,43 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {/* Deck Theme */}
-      <div className="px-4 mb-4">
+      {/* Settings: Avatar + Theme */}
+      <div className="px-4 mb-4 space-y-3">
+        {/* Avatar selection - первым */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
+        >
+          <Card
+            variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
+            onClick={() => setShowAvatarModal(true)}
+            className="cursor-pointer hover:bg-white/10 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {user?.avatar ? (
+                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <span className="text-2xl">{isFairyTheme ? '🦋' : '🌙'}</span>
+                )}
+                <div>
+                  <p className="text-white font-medium">Аватар</p>
+                  <p className="text-white/50 text-sm">{user?.avatar ? 'Выбрано' : 'Не выбрано'}</p>
+                </div>
+              </div>
+              <span className="text-white/40">→</span>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Deck Theme - вторым */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
         >
           <Card
             variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
@@ -380,6 +429,104 @@ export function ProfilePage() {
             >
               Оставить навсегда
             </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Avatar Selection Modal - переработанный дизайн */}
+      <Modal
+        isOpen={showAvatarModal}
+        onClose={() => setShowAvatarModal(false)}
+        size="lg"
+        backgroundImage={isWitchTheme ? '/backgrounds/roses-witch.jpg' : '/backgrounds/clouds-fairy.jpg'}
+      >
+        <div className="space-y-6">
+          {/* Заголовок */}
+          <div className="text-center">
+            <motion.div
+              className="text-4xl mb-2"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {isFairyTheme ? '✨' : '🌙'}
+            </motion.div>
+            <h3 className="text-white text-xl font-display mb-1">
+              {isFairyTheme ? 'Выбери свою фею' : 'Выбери свою ведьму'}
+            </h3>
+          </div>
+
+          {/* Аватарки - крупные карточки */}
+          <div className={`grid gap-3 ${isFairyTheme ? 'grid-cols-2' : 'grid-cols-3'}`}>
+            {(isFairyTheme ? FAIRY_AVATARS : WITCH_AVATARS).map((avatarPath, index) => {
+              const isSelected = user?.avatar === avatarPath
+              return (
+                <motion.button
+                  key={avatarPath}
+                  onClick={() => {
+                    updateUser({ avatar: avatarPath })
+                    setShowAvatarModal(false)
+                  }}
+                  className={`relative aspect-square rounded-2xl overflow-hidden ${
+                    isSelected
+                      ? isFairyTheme
+                        ? 'ring-3 ring-[#FC89AC] ring-offset-2 ring-offset-black/50'
+                        : 'ring-3 ring-slate-300 ring-offset-2 ring-offset-black/50'
+                      : ''
+                  }`}
+                  whileHover={{ scale: 1.05, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    delay: index * 0.1,
+                    type: 'spring',
+                    stiffness: 200,
+                    damping: 15
+                  }}
+                >
+                  {/* Фоновое свечение */}
+                  <motion.div
+                    className={`absolute inset-0 ${
+                      isFairyTheme
+                        ? 'bg-gradient-to-t from-[#FC89AC]/30 to-transparent'
+                        : 'bg-gradient-to-t from-slate-500/30 to-transparent'
+                    }`}
+                    animate={{
+                      opacity: isSelected ? [0.5, 0.8, 0.5] : 0.3,
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+
+                  {/* Изображение аватара */}
+                  <img
+                    src={avatarPath}
+                    alt={`Avatar ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Оверлей при наведении */}
+                  <div className={`absolute inset-0 transition-opacity ${
+                    isFairyTheme
+                      ? 'bg-[#FC89AC]/0 hover:bg-[#FC89AC]/10'
+                      : 'bg-slate-400/0 hover:bg-slate-400/10'
+                  }`} />
+
+                  {/* Галочка выбора */}
+                  {isSelected && (
+                    <motion.div
+                      className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center ${
+                        isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-500'
+                      }`}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 500 }}
+                    >
+                      <span className="text-white text-xs">✓</span>
+                    </motion.div>
+                  )}
+                </motion.button>
+              )
+            })}
           </div>
         </div>
       </Modal>

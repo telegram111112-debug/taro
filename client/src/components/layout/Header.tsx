@@ -32,7 +32,7 @@ export function Header({
       animate={{ opacity: 1, y: 0 }}
       className={`
         sticky top-0 z-30 px-4 py-3
-        ${transparent ? '' : 'bg-black/50 backdrop-blur-xl border-b border-white/5'}
+        ${transparent ? '' : 'backdrop-blur-sm'}
       `}
     >
       <div className="flex items-center justify-between">

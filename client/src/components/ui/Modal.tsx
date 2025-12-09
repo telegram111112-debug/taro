@@ -64,7 +64,7 @@ export function Modal({
               'relative w-full overflow-hidden',
               !backgroundImage && 'bg-gradient-to-b from-mystic-900/95 to-mystic-950/95',
               'backdrop-blur-xl border border-white/10 shadow-2xl',
-              'rounded-t-3xl sm:rounded-3xl p-6 safe-area-bottom',
+              'rounded-t-3xl sm:rounded-3xl p-6',
               sizes[size]
             )}
           >

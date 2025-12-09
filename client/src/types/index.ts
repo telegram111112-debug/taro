@@ -3,6 +3,7 @@ export interface User {
   id: string
   telegramId: number
   name: string
+  avatar?: string
   birthDate?: string
   birthTime?: string
   birthCity?: string
@@ -13,6 +14,7 @@ export interface User {
   premiumUntil?: string
   timezone: string
   deckTheme: DeckTheme
+  deckPermanent?: boolean
   createdAt: string
 }
 
