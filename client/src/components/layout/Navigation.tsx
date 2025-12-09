@@ -78,7 +78,7 @@ export function Navigation() {
               {isProfileWithAvatar ? (
                 <motion.div
                   className={clsx(
-                    'w-8 h-8 rounded-full overflow-hidden',
+                    'w-10 h-10 rounded-full overflow-hidden',
                     isActive && (isFairyTheme
                       ? 'ring-2 ring-[#FC89AC] ring-offset-1 ring-offset-transparent'
                       : 'ring-2 ring-slate-400 ring-offset-1 ring-offset-transparent')

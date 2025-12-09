@@ -46,6 +46,7 @@ export function CardDeck({
   const [shufflePhase, setShufflePhase] = useState<'idle' | 'shuffling' | 'spreading' | 'ready'>('idle')
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [isAnimating, setIsAnimating] = useState(false)
+  const [flyingCardIndex, setFlyingCardIndex] = useState<number | null>(null)
 
   // Случайные параметры для каждой карты (мемоизированы)
   const cardRandomness = useMemo(() => generateCardRandomness(cardsCount), [cardsCount])
@@ -86,13 +87,15 @@ export function CardDeck({
 
     hapticFeedback('impact', 'medium')
     setIsAnimating(true)
+    setFlyingCardIndex(index)
     setSelectedIndices(prev => [...prev, index])
 
-    // Анимация вылета карты, потом вызов callback
+    // Анимация вылета карты вверх, потом вызов callback
     setTimeout(() => {
+      setFlyingCardIndex(null)
       onCardSelect?.()
       setIsAnimating(false)
-    }, 600)
+    }, 800)
   }
 
   const cards = [...Array(cardsCount)]
@@ -264,13 +267,16 @@ export function CardDeck({
           <div className="relative w-full flex items-center justify-center">
             {cards.map((_, index) => {
               const isSelected = selectedIndices.includes(index)
-              const isLastSelected = selectedIndices[selectedIndices.length - 1] === index
+              const isFlying = flyingCardIndex === index
               const center = (cardsCount - 1) / 2
               const angle = ((index - center) * 12) // Уменьшенный угол для более плотного веера
               const offsetX = (index - center) * 38 // Горизонтальный разброс
               const arcY = Math.pow(Math.abs(index - center), 1.5) * 3 // Дуга снизу
               const canSelect = shufflePhase === 'ready' && !isSelected && !isAnimating && selectedCount < requiredSelections
-              const randomness = cardRandomness[index]
+
+              // Вычисляем целевую позицию для полёта карты (вверх к ряду выбранных карт)
+              const targetX = (selectedCount - 1.5) * 70 // Позиция в ряду выбранных карт
+              const targetY = -280 // Вверх экрана
 
               return (
                 <motion.div
@@ -281,7 +287,7 @@ export function CardDeck({
                       ? 'linear-gradient(135deg, #1a1a2e, #16213e)'
                       : 'linear-gradient(135deg, #fce7f3, #fbcfe8)',
                     border: `2px solid ${themeConfig.colors.cardBorder}`,
-                    zIndex: isLastSelected ? 50 : isSelected ? -1 : 10 + index,
+                    zIndex: isFlying ? 100 : isSelected ? -1 : 10 + index,
                     transformOrigin: 'center bottom',
                   }}
                   initial={{
@@ -292,11 +298,11 @@ export function CardDeck({
                     opacity: 0,
                   }}
                   animate={{
-                    x: isLastSelected ? 0 : isSelected ? offsetX * 2 : offsetX,
-                    y: isLastSelected ? -120 : isSelected ? 100 : arcY,
-                    rotate: isLastSelected ? 0 : isSelected ? angle * 3 : angle,
-                    scale: isLastSelected ? 1.4 : isSelected ? 0.5 : 1,
-                    opacity: isSelected && !isLastSelected ? 0 : 1,
+                    x: isFlying ? targetX : isSelected ? offsetX * 2 : offsetX,
+                    y: isFlying ? targetY : isSelected ? 100 : arcY,
+                    rotate: isFlying ? 0 : isSelected ? angle * 3 : angle,
+                    scale: isFlying ? 0.7 : isSelected ? 0.5 : 1,
+                    opacity: isSelected && !isFlying ? 0 : 1,
                   }}
                   whileHover={canSelect ? {
                     y: arcY - 25,
@@ -305,7 +311,12 @@ export function CardDeck({
                     zIndex: 30,
                     transition: { type: 'spring', stiffness: 400, damping: 25 }
                   } : {}}
-                  transition={{
+                  transition={isFlying ? {
+                    type: 'spring',
+                    damping: 20,
+                    stiffness: 120,
+                    duration: 0.7,
+                  } : {
                     type: 'spring',
                     damping: 18,
                     stiffness: 180,
@@ -328,38 +339,38 @@ export function CardDeck({
                     />
                   )}
 
-                  {/* Glow и эффекты для выбранной карты */}
-                  {isLastSelected && (
+                  {/* Glow и эффекты для летящей карты */}
+                  {isFlying && (
                     <>
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{
-                          opacity: [0.4, 0.8, 0.4],
-                          scale: [1, 1.2, 1],
+                          opacity: [0.5, 1, 0.5],
+                          scale: [1, 1.3, 1],
                         }}
                         transition={{
-                          duration: 1.5,
+                          duration: 0.4,
                           repeat: Infinity,
                           ease: 'easeInOut',
                         }}
                         className="absolute inset-0 -z-10 blur-2xl rounded-xl"
                         style={{ background: themeConfig.colors.primary }}
                       />
-                      {/* Искры вокруг выбранной карты */}
-                      {[...Array(6)].map((_, i) => (
+                      {/* Искры за летящей картой */}
+                      {[...Array(8)].map((_, i) => (
                         <motion.div
                           key={i}
                           className="absolute text-sm"
                           initial={{ opacity: 0, scale: 0 }}
                           animate={{
                             opacity: [0, 1, 0],
-                            scale: [0, 1.2, 0],
-                            x: Math.cos(i * Math.PI / 3) * 50,
-                            y: Math.sin(i * Math.PI / 3) * 60,
+                            scale: [0, 1.5, 0],
+                            x: Math.cos(i * Math.PI / 4) * 40,
+                            y: Math.sin(i * Math.PI / 4) * 50 + 30, // Сдвиг вниз для эффекта хвоста
                           }}
                           transition={{
-                            duration: 0.8,
-                            delay: i * 0.1,
+                            duration: 0.6,
+                            delay: i * 0.05,
                             ease: 'easeOut',
                           }}
                           style={{

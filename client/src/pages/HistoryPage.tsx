@@ -174,15 +174,18 @@ export function HistoryPage() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center px-4 pt-2 pb-4"
+        className="text-center px-4 pb-4"
       >
-        <motion.div
-          className="text-4xl mb-2"
-          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+        <motion.img
+          src={isFairyTheme ? '/icons/history-fairy.png' : '/icons/history-witch.png'}
+          alt="История раскладов"
+          className="w-14 h-14 object-contain mx-auto mb-2"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, -5, 0]
+          }}
           transition={{ duration: 4, repeat: Infinity }}
-        >
-          {isFairyTheme ? '📖' : '📜'}
-        </motion.div>
+        />
         <h1 className="text-xl font-display font-bold text-white">
           Твои расклады
         </h1>

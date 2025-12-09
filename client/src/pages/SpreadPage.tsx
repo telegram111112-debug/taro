@@ -11,7 +11,17 @@ import { getThemeConfig } from '../lib/deckThemes'
 import { getThemeEmoji } from '../lib/themeEmojis'
 import { generateFullInterpretation, generateClarifyingCardInterpretation, ClarifyingCardInterpretation } from '../lib/spreadInterpretations'
 import { drawCardsForSpread, drawSingleCard } from '../data/tarotCards'
+import { getCurrentFairyBackground } from '../lib/fairyBackgrounds'
+import { getCurrentWitchBackground } from '../lib/witchBackgrounds'
 import type { DeckTheme, Card as TarotCardType, ReadingType } from '../types'
+
+// Получить фон по дню недели (синхронизировано с DailyCardPage)
+const getShuffleBackground = (theme: DeckTheme): string => {
+  if (theme === 'fairy') {
+    return getCurrentFairyBackground().imagePath
+  }
+  return getCurrentWitchBackground().imagePath
+}
 
 const spreadConfigs = {
   love: {
@@ -183,27 +193,24 @@ export function SpreadPage() {
     )
   }, [cards, spreadConfig.positions, type, user])
 
+  // Определяем фон: на шаге shuffle используем динамический фон по дню недели
+  const isShuffleStep = step === 'shuffle'
+  const backgroundImage = isShuffleStep
+    ? getShuffleBackground(selectedDeck)
+    : isWitchTheme
+      ? '/backgrounds/background-witch.jpg'
+      : '/backgrounds/background-fairy.jpg'
+
   return (
     <div className="min-h-screen relative">
-      {/* Background based on theme */}
-      {isWitchTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-witch.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/60 -z-10" />
-        </>
-      )}
-      {isFairyTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-fairy.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/40 -z-10" />
-        </>
-      )}
+      {/* Background based on theme and step */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 transition-all duration-500"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
+      <div className={`fixed inset-0 -z-10 transition-all duration-500 ${
+        isWitchTheme ? 'bg-black/60' : 'bg-black/40'
+      }`} />
       {step !== 'deck_select' && (
         <Header
           title={`${spreadConfig.name} ${getThemeEmoji(selectedDeck, spreadConfig.emojiKey)}`}

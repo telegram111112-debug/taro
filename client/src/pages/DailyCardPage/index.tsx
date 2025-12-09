@@ -585,6 +585,18 @@ export function DailyCardPage() {
               </motion.div>
             )}
 
+            {/* Кнопка возврата на главную */}
+            <div className="mt-4">
+              <Button
+                onClick={() => navigate('/')}
+                variant={selectedDeck === 'fairy' ? 'glass-fairy' : 'glass-witch'}
+                size="lg"
+                className="w-full"
+              >
+                На главную
+              </Button>
+            </div>
+
             </div>
           </motion.div>
         )}

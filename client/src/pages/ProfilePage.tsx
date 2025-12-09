@@ -456,7 +456,7 @@ export function ProfilePage() {
           </div>
 
           {/* Аватарки - крупные карточки */}
-          <div className={`grid gap-3 ${isFairyTheme ? 'grid-cols-2' : 'grid-cols-3'}`}>
+          <div className={`grid gap-2 grid-cols-3`}>
             {(isFairyTheme ? FAIRY_AVATARS : WITCH_AVATARS).map((avatarPath, index) => {
               const isSelected = user?.avatar === avatarPath
               return (
