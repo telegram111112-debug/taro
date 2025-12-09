@@ -1,0 +1,73 @@
+import { ButtonHTMLAttributes, forwardRef } from 'react'
+import { clsx } from 'clsx'
+import { motion } from 'framer-motion'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'glass-fairy' | 'glass-witch'
+  size?: 'sm' | 'md' | 'lg'
+  isLoading?: boolean
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
+}
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      variant = 'primary',
+      size = 'md',
+      isLoading = false,
+      leftIcon,
+      rightIcon,
+      className,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100'
+
+    const variants = {
+      primary:
+        'bg-gradient-to-r from-mystic-500 to-primary-500 text-white shadow-lg shadow-mystic-500/30 hover:shadow-xl hover:shadow-mystic-500/40',
+      secondary:
+        'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20',
+      ghost:
+        'text-mystic-300 hover:text-white hover:bg-white/10',
+      danger:
+        'bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30',
+      'glass-fairy':
+        'bg-[#FC89AC]/20 backdrop-blur-md border border-[#FC89AC]/30 text-white shadow-lg shadow-[#FC89AC]/20 hover:bg-[#FC89AC]/30',
+      'glass-witch':
+        'bg-slate-500/20 backdrop-blur-md border border-slate-400/30 text-white shadow-lg shadow-slate-400/20 hover:bg-slate-500/30',
+    }
+
+    const sizes = {
+      sm: 'text-sm py-2 px-4 gap-1.5',
+      md: 'text-base py-3 px-6 gap-2',
+      lg: 'text-lg py-4 px-8 gap-2.5',
+    }
+
+    return (
+      <motion.button
+        ref={ref}
+        whileTap={{ scale: disabled ? 1 : 0.95 }}
+        className={clsx(baseStyles, variants[variant], sizes[size], className)}
+        disabled={disabled || isLoading}
+        {...props}
+      >
+        {isLoading ? (
+          <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        ) : (
+          <>
+            {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
+            {children}
+            {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+          </>
+        )}
+      </motion.button>
+    )
+  }
+)
+
+Button.displayName = 'Button'

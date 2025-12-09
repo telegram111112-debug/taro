@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  telegramId         BigInt    @unique @map("telegram_id")
+  name               String
+  birthDate          DateTime? @map("birth_date")
+  birthTime          String?   @map("birth_time")
+  birthCity          String?   @map("birth_city")
+  zodiacSign         String?   @map("zodiac_sign")
+  relationshipStatus String?   @map("relationship_status")
+  streakCount        Int       @default(0) @map("streak_count")
+  streakLastDate     DateTime? @map("streak_last_date")
+  premiumUntil       DateTime? @map("premium_until")
+  timezone           String    @default("Europe/Moscow")
+  deckTheme          String    @default("witch") @map("deck_theme")
+  deckPermanent      Boolean   @default(false) @map("deck_permanent")
+  referralCode       String    @unique @map("referral_code")
+  referredById       String?   @map("referred_by_id")
+  referralCount      Int       @default(0) @map("referral_count")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  readings     Reading[]
+  collection   UserCard[]
+  achievements UserAchievement[]
+  gifts        Gift[]
+  referredBy   User?             @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals    User[]            @relation("UserReferrals")
+
+  @@map("users")
+}
+
+model Card {
+  id               String  @id @default(cuid())
+  slug             String  @unique
+  nameRu           String  @map("name_ru")
+  nameEn           String  @map("name_en")
+  arcana           String
+  suit             String?
+  number           Int
+  description      String
+  uprightMeaning   String  @map("upright_meaning")
+  reversedMeaning  String  @map("reversed_meaning")
+  uprightKeywords  String  @map("upright_keywords") // JSON string for SQLite
+  reversedKeywords String  @map("reversed_keywords") // JSON string for SQLite
+  imageUrl         String? @map("image_url")
+
+  readingCards ReadingCard[]
+  collections  UserCard[]
+
+  @@map("cards")
+}
+
+model Reading {
+  id             String    @id @default(cuid())
+  userId         String    @map("user_id")
+  type           String // DAILY, LOVE, MONEY, FUTURE
+  interpretation String
+  feedback       String? // POSITIVE, NEGATIVE
+  moonPhase      String?   @map("moon_phase")
+  deckTheme      String    @default("witch") @map("deck_theme")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards ReadingCard[]
+
+  @@map("readings")
+}
+
+model ReadingCard {
+  id              String  @id @default(cuid())
+  readingId       String  @map("reading_id")
+  cardId          String  @map("card_id")
+  position        Int
+  isReversed      Boolean @default(false) @map("is_reversed")
+  positionMeaning String? @map("position_meaning")
+
+  reading Reading @relation(fields: [readingId], references: [id], onDelete: Cascade)
+  card    Card    @relation(fields: [cardId], references: [id])
+
+  @@map("reading_cards")
+}
+
+model UserCard {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  cardId      String   @map("card_id")
+  count       Int      @default(1)
+  firstSeenAt DateTime @default(now()) @map("first_seen_at")
+  lastSeenAt  DateTime @default(now()) @map("last_seen_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card Card @relation(fields: [cardId], references: [id])
+
+  @@unique([userId, cardId])
+  @@map("user_cards")
+}
+
+model Achievement {
+  id          String @id @default(cuid())
+  code        String @unique
+  name        String
+  description String
+  icon        String
+  order       Int    @default(0)
+
+  users UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  achievementId String   @map("achievement_id")
+  unlockedAt    DateTime @default(now()) @map("unlocked_at")
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+model Gift {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  type      String // LOVE_SPREAD, MONEY_SPREAD, FUTURE_SPREAD, CLARIFICATION
+  used      Boolean   @default(false)
+  reason    String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  usedAt    DateTime? @map("used_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("gifts")
+}
