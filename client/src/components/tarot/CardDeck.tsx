@@ -18,7 +18,7 @@ const generateCardRandomness = (count: number) => {
 
 // Генерируем случайные частицы для магического эффекта
 const generateMagicParticles = (count: number, theme: DeckTheme) => {
-  const witchSymbols = ['✧', '☆', '✦', '⋆', '✶', '★', '✴', '✳']
+  const witchSymbols = ['🖤', '🤍', '🖤', '🤍', '🖤', '🤍', '🖤', '🤍']
   const fairySymbols = ['✨', '💫', '⭐', '🌟', '✧', '⋆', '★', '💖']
   const symbols = theme === 'witch' ? witchSymbols : fairySymbols
 
@@ -72,13 +72,9 @@ export function CardDeck({
   // Магические частицы для эффекта выбора
   const selectionParticles = useMemo(() => generateMagicParticles(24, theme), [theme])
 
-  // Магические частицы во время перетасовки
-  const [showParticles, setShowParticles] = useState(false)
-
   useEffect(() => {
     if (isShuffling && shufflePhase === 'idle') {
       setShufflePhase('shuffling')
-      setShowParticles(true)
 
       // Haptic feedback during shuffle - более интенсивный
       const hapticInterval = setInterval(() => {
@@ -90,7 +86,6 @@ export function CardDeck({
         clearInterval(hapticInterval)
         hapticFeedback('notification', 'success')
         setShufflePhase('spreading')
-        setShowParticles(false)
 
         setTimeout(() => {
           setShufflePhase('ready')
@@ -165,7 +160,7 @@ export function CardDeck({
                 className="w-32 h-32 rounded-full blur-2xl"
                 style={{
                   background: theme === 'witch'
-                    ? 'radial-gradient(circle, rgba(139, 92, 246, 0.9) 0%, rgba(139, 92, 246, 0) 70%)'
+                    ? 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%)'
                     : 'radial-gradient(circle, rgba(252, 137, 172, 0.9) 0%, rgba(252, 137, 172, 0) 70%)',
                 }}
               />
@@ -178,7 +173,7 @@ export function CardDeck({
                 left: burstPosition.x,
                 top: burstPosition.y,
                 transform: 'translate(-50%, -50%)',
-                borderColor: theme === 'witch' ? 'rgba(139, 92, 246, 0.8)' : 'rgba(252, 137, 172, 0.8)',
+                borderColor: theme === 'witch' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(252, 137, 172, 0.8)',
               }}
               initial={{ width: 0, height: 0, opacity: 1 }}
               animate={{
@@ -196,7 +191,7 @@ export function CardDeck({
                 left: burstPosition.x,
                 top: burstPosition.y,
                 transform: 'translate(-50%, -50%)',
-                borderColor: theme === 'witch' ? 'rgba(167, 139, 250, 0.6)' : 'rgba(244, 114, 182, 0.6)',
+                borderColor: theme === 'witch' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(244, 114, 182, 0.6)',
               }}
               initial={{ width: 0, height: 0, opacity: 1 }}
               animate={{
@@ -254,7 +249,7 @@ export function CardDeck({
                 width: 4,
                 height: 400,
                 background: theme === 'witch'
-                  ? 'linear-gradient(to bottom, transparent, rgba(139, 92, 246, 0.8), transparent)'
+                  ? 'linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8), transparent)'
                   : 'linear-gradient(to bottom, transparent, rgba(252, 137, 172, 0.8), transparent)',
                 transform: 'translateX(-50%)',
               }}
@@ -269,40 +264,6 @@ export function CardDeck({
         )}
       </AnimatePresence>
 
-      {/* Магические частицы при перетасовке */}
-      <AnimatePresence>
-        {showParticles && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {[...Array(12)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute text-lg"
-                initial={{
-                  x: '50%',
-                  y: '50%',
-                  opacity: 0,
-                  scale: 0,
-                }}
-                animate={{
-                  x: `${50 + Math.cos(i * Math.PI / 6) * 80}%`,
-                  y: `${50 + Math.sin(i * Math.PI / 6) * 80}%`,
-                  opacity: [0, 1, 1, 0],
-                  scale: [0, 1.5, 1, 0],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: i * 0.15,
-                  ease: 'easeOut',
-                }}
-              >
-                {theme === 'witch' ? ['✧', '☽', '✦', '⭐'][i % 4] : ['✨', '🦋', '💫', '⋆'][i % 4]}
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* Stacked deck (idle/shuffling) */}
       <AnimatePresence>
@@ -321,7 +282,7 @@ export function CardDeck({
                     border: `2px solid ${themeConfig.colors.cardBorder}`,
                     zIndex: index,
                     boxShadow: shufflePhase === 'shuffling'
-                      ? `0 10px 40px ${theme === 'witch' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(252, 137, 172, 0.3)'}`
+                      ? `0 10px 40px ${theme === 'witch' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(252, 137, 172, 0.3)'}`
                       : '0 4px 12px rgba(0,0,0,0.3)',
                   }}
                   initial={{
@@ -406,7 +367,7 @@ export function CardDeck({
                 className="absolute inset-0 -z-10 rounded-full blur-3xl"
                 style={{
                   background: theme === 'witch'
-                    ? 'radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%)'
+                    ? 'radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%)'
                     : 'radial-gradient(circle, rgba(252, 137, 172, 0.4) 0%, transparent 70%)',
                   width: '200px',
                   height: '200px',
@@ -507,7 +468,7 @@ export function CardDeck({
                       className="absolute inset-0 -z-10 blur-lg rounded-xl opacity-0"
                       style={{
                         background: theme === 'witch'
-                          ? 'rgba(139, 92, 246, 0.5)'
+                          ? 'rgba(255, 255, 255, 0.5)'
                           : 'rgba(252, 137, 172, 0.5)',
                       }}
                       whileHover={{ opacity: 0.6 }}
@@ -531,7 +492,7 @@ export function CardDeck({
                         className="absolute inset-0 -z-10 blur-3xl rounded-xl"
                         style={{
                           background: theme === 'witch'
-                            ? 'radial-gradient(circle, rgba(139, 92, 246, 0.9) 0%, rgba(167, 139, 250, 0.5) 50%, transparent 100%)'
+                            ? 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%)'
                             : 'radial-gradient(circle, rgba(252, 137, 172, 0.9) 0%, rgba(244, 114, 182, 0.5) 50%, transparent 100%)',
                         }}
                       />
@@ -549,10 +510,10 @@ export function CardDeck({
                         className="absolute inset-0 -z-5 rounded-xl"
                         style={{
                           background: theme === 'witch'
-                            ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(167, 139, 250, 0.6))'
+                            ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.6))'
                             : 'linear-gradient(135deg, rgba(252, 137, 172, 0.4), rgba(244, 114, 182, 0.6))',
                           boxShadow: theme === 'witch'
-                            ? '0 0 60px rgba(139, 92, 246, 0.8), inset 0 0 30px rgba(167, 139, 250, 0.3)'
+                            ? '0 0 60px rgba(255, 255, 255, 0.8), inset 0 0 30px rgba(255, 255, 255, 0.3)'
                             : '0 0 60px rgba(252, 137, 172, 0.8), inset 0 0 30px rgba(244, 114, 182, 0.3)',
                         }}
                       />
@@ -584,12 +545,12 @@ export function CardDeck({
                             className="text-sm"
                             style={{
                               textShadow: theme === 'witch'
-                                ? '0 0 10px rgba(139, 92, 246, 0.8)'
+                                ? '0 0 10px rgba(255, 255, 255, 0.8)'
                                 : '0 0 10px rgba(252, 137, 172, 0.8)',
                             }}
                           >
                             {theme === 'witch'
-                              ? ['✧', '✦', '⋆', '☆'][i % 4]
+                              ? ['🖤', '🤍', '🖤', '🤍'][i % 4]
                               : ['✨', '💫', '⭐', '🌟'][i % 4]
                             }
                           </span>
@@ -603,7 +564,7 @@ export function CardDeck({
                           className="absolute inset-[-20px] rounded-2xl border-2 -z-10"
                           style={{
                             borderColor: theme === 'witch'
-                              ? 'rgba(139, 92, 246, 0.6)'
+                              ? 'rgba(255, 255, 255, 0.6)'
                               : 'rgba(252, 137, 172, 0.6)',
                           }}
                           initial={{ scale: 0.8, opacity: 0 }}
@@ -630,7 +591,7 @@ export function CardDeck({
                 className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-80 h-20 rounded-full blur-3xl -z-10"
                 style={{
                   background: theme === 'witch'
-                    ? 'rgba(139, 92, 246, 0.3)'
+                    ? 'rgba(255, 255, 255, 0.3)'
                     : 'rgba(252, 137, 172, 0.3)',
                 }}
                 initial={{ opacity: 0, scaleX: 0.5 }}
@@ -704,7 +665,7 @@ function DeckCardBack({
           <motion.div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
             }}
             animate={{ opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 1.5, repeat: Infinity }}

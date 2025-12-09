@@ -194,10 +194,10 @@ export function ReferralsPage() {
               activeTab === 'friends'
                 ? isFairyTheme
                   ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
-                  : 'bg-slate-600 text-white shadow-lg shadow-slate-600/30'
+                  : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
                   ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
-                  : 'bg-slate-700/50 text-slate-400'
+                  : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
             👯‍♀️ Подруги
@@ -211,10 +211,10 @@ export function ReferralsPage() {
               activeTab === 'invite'
                 ? isFairyTheme
                   ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
-                  : 'bg-slate-600 text-white shadow-lg shadow-slate-600/30'
+                  : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
                   ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
-                  : 'bg-slate-700/50 text-slate-400'
+                  : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
             💌 Пригласить
@@ -245,7 +245,7 @@ export function ReferralsPage() {
                       className={`p-4 rounded-2xl cursor-pointer active:scale-[0.98] transition-all ${
                         isFairyTheme
                           ? 'bg-[#FC89AC]/15 border border-[#FC89AC]/30 backdrop-blur-sm'
-                          : 'bg-slate-800/70 border border-slate-600/50 backdrop-blur-sm'
+                          : 'bg-[#2a2a2a]/90 border border-[#3a3a3a]/50 backdrop-blur-sm'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -262,7 +262,7 @@ export function ReferralsPage() {
                           <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${
                             isFairyTheme
                               ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]'
-                              : 'bg-gradient-to-br from-slate-500 to-slate-700'
+                              : 'bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]'
                           }`}>
                             {friend.name.charAt(0)}
                           </div>
@@ -297,10 +297,10 @@ export function ReferralsPage() {
                       hapticFeedback('impact', 'light')
                       setShowShareSettings(true)
                     }}
-                    className={`w-full p-4 mt-4 rounded-2xl font-medium transition-all active:scale-[0.98] ${
+                    className={`w-full p-4 mt-8 rounded-2xl font-medium transition-all active:scale-[0.98] ${
                       isFairyTheme
                         ? 'bg-gradient-to-r from-[#FC89AC]/20 via-[#E879F9]/15 to-[#FC89AC]/20 border-2 border-[#FC89AC]/40 shadow-lg shadow-[#FC89AC]/10'
-                        : 'bg-gradient-to-r from-slate-800/80 via-slate-700/60 to-slate-800/80 border-2 border-slate-500/40 shadow-lg shadow-slate-900/30'
+                        : 'bg-[#2a2a2a]/90 border-2 border-[#3a3a3a]/50 shadow-lg shadow-black/30'
                     }`}
                   >
                     <div className="flex items-center gap-4">

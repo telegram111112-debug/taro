@@ -40,7 +40,7 @@ export const deckThemes: Record<DeckTheme, DeckThemeConfig> = {
       accent: '#c4b5fd', // Light purple
       background: '#0f0f1a',
       cardBg: '#1a1a2e',
-      cardBorder: 'rgba(139, 92, 246, 0.3)',
+      cardBorder: 'rgba(255, 255, 255, 0.4)',
       text: '#ffffff',
       textMuted: 'rgba(255, 255, 255, 0.6)',
     },

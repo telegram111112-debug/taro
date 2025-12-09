@@ -133,7 +133,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 className={`
                   absolute inset-0 w-full h-full rounded-2xl overflow-hidden
                   ${selectedDeck === 'witch'
-                    ? 'ring-2 ring-purple-500/50'
+                    ? 'ring-2 ring-white/50'
                     : 'ring-1 ring-white/10'
                   }
                 `}
@@ -163,7 +163,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 absolute inset-0 w-full h-full rounded-2xl overflow-hidden
                 transition-all duration-300
                 ${selectedDeck === 'witch'
-                  ? 'ring-4 ring-purple-500 shadow-lg shadow-purple-500/50'
+                  ? 'ring-4 ring-white shadow-lg shadow-white/30'
                   : 'ring-2 ring-white/20 hover:ring-white/40'
                 }
               `}
@@ -279,7 +279,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
               className={`
                 w-full py-4 text-lg rounded-2xl font-medium transition-all
                 ${selectedDeck === 'witch'
-                  ? 'bg-gradient-to-r from-purple-900 via-purple-800 to-slate-900 text-purple-100 border border-purple-500/30 shadow-lg shadow-purple-900/50 hover:shadow-purple-800/60'
+                  ? 'bg-[#3a3a3a] text-white border border-white/20 shadow-lg shadow-black/30 hover:bg-[#4a4a4a]'
                   : 'bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 text-white border border-pink-300/30 shadow-lg shadow-pink-400/50 hover:shadow-pink-400/60'
                 }
               `}
@@ -293,7 +293,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 className={`
                   text-sm transition-colors
                   ${selectedDeck === 'witch'
-                    ? 'text-purple-300/60 hover:text-purple-200'
+                    ? 'text-white/60 hover:text-white'
                     : 'text-pink-200/60 hover:text-pink-100'
                   }
                 `}
@@ -322,7 +322,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
               className={`
                 rounded-3xl p-6 max-w-sm w-full
                 ${selectedDeck === 'witch'
-                  ? 'bg-gradient-to-b from-slate-900 via-purple-950 to-slate-950 border border-purple-500/20'
+                  ? 'bg-[#3a3a3a] border border-white/20'
                   : 'bg-gradient-to-b from-pink-950 via-rose-950 to-pink-950 border border-pink-400/20'
                 }
               `}
@@ -350,7 +350,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                   className={`
                     flex-1 py-3 rounded-xl font-medium transition-all
                     ${selectedDeck === 'witch'
-                      ? 'bg-slate-800/50 text-purple-200 border border-purple-500/20 hover:bg-slate-700/50'
+                      ? 'bg-[#2a2a2a] text-white border border-white/20 hover:bg-[#4a4a4a]'
                       : 'bg-pink-100/10 text-pink-200 border border-pink-300/20 hover:bg-pink-100/20'
                     }
                   `}
@@ -362,7 +362,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                   className={`
                     flex-1 py-3 rounded-xl font-medium transition-all
                     ${selectedDeck === 'witch'
-                      ? 'bg-gradient-to-r from-purple-800 to-purple-900 text-purple-100 border border-purple-500/30 shadow-lg shadow-purple-900/50'
+                      ? 'bg-[#4a4a4a] text-white border border-white/30 shadow-lg shadow-black/30 hover:bg-[#5a5a5a]'
                       : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white border border-pink-300/30 shadow-lg shadow-pink-400/50'
                     }
                   `}

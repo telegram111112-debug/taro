@@ -8,7 +8,7 @@ interface TarotCardProps {
   card?: Card
   isReversed?: boolean
   isRevealed?: boolean
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg'
   showName?: boolean
   onClick?: () => void
   className?: string
@@ -30,6 +30,7 @@ export function TarotCard({
   const themeConfig = getThemeConfig(theme)
 
   const sizes = {
+    xxs: { width: 'w-[72px]', height: 'h-[108px]', text: 'text-[6px]' },
     xs: { width: 'w-12', height: 'h-20', text: 'text-[8px]' },
     sm: { width: 'w-20', height: 'h-32', text: 'text-xs' },
     md: { width: 'w-32', height: 'h-48', text: 'text-sm' },
@@ -144,7 +145,7 @@ function CardBack({ theme }: { theme: DeckTheme }) {
         <motion.div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(135deg, transparent 40%, rgba(139, 92, 246, 0.1) 50%, transparent 60%)',
+            background: 'linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%)',
             backgroundSize: '200% 200%',
           }}
           animate={{

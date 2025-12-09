@@ -468,9 +468,11 @@ export function HomePage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <span>
-                      {isFairyTheme ? '💅' : '✨'}
-                    </span>
+                    <img
+                      src="/icons/beauty-witch.png"
+                      alt="Бьюти"
+                      className="w-5 h-5 object-contain"
+                    />
                     Бьюти
                   </motion.button>
                 </div>
