@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../../store/useUserStore'
 import { useTelegram } from '../../providers/TelegramProvider'
@@ -8,9 +9,11 @@ import type { DeckTheme } from '../../types'
 interface DeckSelectorProps {
   onSelect: (theme: DeckTheme) => void
   showPermanentOption?: boolean
+  showBackButton?: boolean
 }
 
-export function DeckSelector({ onSelect, showPermanentOption = true }: DeckSelectorProps) {
+export function DeckSelector({ onSelect, showPermanentOption = true, showBackButton = true }: DeckSelectorProps) {
+  const navigate = useNavigate()
   const { user, setDeckTheme, updateUser } = useUserStore()
   const { hapticFeedback } = useTelegram()
   const [selectedDeck, setSelectedDeck] = useState<DeckTheme | null>(null)
@@ -54,6 +57,42 @@ export function DeckSelector({ onSelect, showPermanentOption = true }: DeckSelec
     >
       {/* Затемнение для читаемости контента */}
       <div className="absolute inset-0 bg-black/40" />
+
+      {/* Back Button */}
+      {showBackButton && (
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          onClick={() => {
+            hapticFeedback('impact', 'light')
+            navigate('/')
+          }}
+          className={`
+            absolute top-6 left-4 z-20 flex items-center gap-2 px-4 py-2.5 rounded-2xl
+            backdrop-blur-md transition-all duration-300
+            ${user?.deckTheme === 'fairy'
+              ? 'bg-[#FC89AC]/20 border border-[#FC89AC]/30 text-[#FC89AC] hover:bg-[#FC89AC]/30'
+              : 'bg-slate-500/20 border border-slate-400/30 text-slate-300 hover:bg-slate-500/30'
+            }
+          `}
+        >
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          <span className="text-sm font-medium">Главная</span>
+        </motion.button>
+      )}
 
       {/* Magic particles based on hovered/selected deck */}
       <MagicParticles

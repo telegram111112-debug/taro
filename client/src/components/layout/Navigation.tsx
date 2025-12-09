@@ -57,7 +57,7 @@ export function Navigation() {
       "fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t safe-area-bottom z-40",
       isFairyTheme
         ? "bg-[#FC89AC]/20 border-[#FC89AC]/20"
-        : "bg-black/80 border-white/10"
+        : "bg-[#2a2a2a]/95 border-[#3a3a3a]/50"
     )}>
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {

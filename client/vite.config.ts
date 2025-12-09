@@ -12,7 +12,13 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    allowedHosts: ['edythe-desireless-uxorially.ngrok-free.dev'],
+    allowedHosts: ['edythe-desireless-uxorially.ngrok-free.dev', 'localhost'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     outDir: 'dist',

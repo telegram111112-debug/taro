@@ -8,26 +8,36 @@ const prisma = new PrismaClient()
 // POST /api/tarot/ask - Задать вопрос картам
 router.post('/ask', async (req: Request, res: Response) => {
   try {
-    const { userId, question, card, isReversed } = req.body
+    const { userId, question, card, isReversed, deckTheme } = req.body
 
-    if (!userId || !question || !card) {
-      return res.status(400).json({ error: 'Missing required fields: userId, question, card' })
+    if (!question || !card) {
+      return res.status(400).json({ error: 'Missing required fields: question, card' })
     }
 
-    // Получаем данные пользователя
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    })
+    // Получаем данные пользователя (если есть)
+    let user = null
+    if (userId) {
+      user = await prisma.user.findUnique({
+        where: { id: userId },
+      })
+    }
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+    // Если пользователя нет в базе - используем дефолтные значения
+    const userData = user || {
+      name: null,
+      birthDate: null as Date | null,
+      zodiacSign: null as string | null,
+      relationshipStatus: null as string | null,
+      deckTheme: deckTheme || 'witch',
+      birthCity: null as string | null,
+      streakCount: 0,
     }
 
     // Вычисляем возраст
     let age: number | undefined
-    if (user.birthDate) {
+    if (userData.birthDate) {
       const today = new Date()
-      const birth = new Date(user.birthDate)
+      const birth = new Date(userData.birthDate)
       age = today.getFullYear() - birth.getFullYear()
       const monthDiff = today.getMonth() - birth.getMonth()
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
@@ -35,23 +45,26 @@ router.post('/ask', async (req: Request, res: Response) => {
       }
     }
 
-    // Получаем историю раскладов пользователя
-    const readings = await prisma.reading.findMany({
-      where: { userId },
-      include: {
-        cards: {
-          include: {
-            card: true,
+    // Получаем историю раскладов пользователя (только если есть userId)
+    let readings: any[] = []
+    if (userId) {
+      readings = await prisma.reading.findMany({
+        where: { userId },
+        include: {
+          cards: {
+            include: {
+              card: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-    })
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      })
+    }
 
     // Статистика по типам раскладов
     const readingsByType = readings.reduce((acc, r) => {
-      const existing = acc.find(x => x.type === r.type)
+      const existing = acc.find((x: any) => x.type === r.type)
       if (existing) {
         existing.count++
       } else {
@@ -70,7 +83,7 @@ router.post('/ask', async (req: Request, res: Response) => {
       interpretation: r.interpretation,
       feedback: r.feedback,
       createdAt: r.createdAt,
-      cards: r.cards.map(c => ({
+      cards: r.cards.map((c: any) => ({
         nameRu: c.card.nameRu,
         isReversed: c.isReversed,
       })),
@@ -101,13 +114,13 @@ router.post('/ask', async (req: Request, res: Response) => {
       },
       isReversed: isReversed || false,
       userInfo: {
-        name: user.name,
+        name: userData.name || undefined,
         age,
-        zodiacSign: user.zodiacSign || undefined,
-        relationshipStatus: user.relationshipStatus || undefined,
-        deckTheme: (user.deckTheme as 'witch' | 'fairy') || 'witch',
-        birthCity: user.birthCity || undefined,
-        streakCount: user.streakCount,
+        zodiacSign: userData.zodiacSign || undefined,
+        relationshipStatus: userData.relationshipStatus || undefined,
+        deckTheme: (userData.deckTheme as 'witch' | 'fairy') || 'witch',
+        birthCity: userData.birthCity || undefined,
+        streakCount: userData.streakCount,
       },
       userHistory: {
         totalReadings: readings.length,
@@ -119,53 +132,55 @@ router.post('/ask', async (req: Request, res: Response) => {
       },
     })
 
-    // Сохраняем расклад в базу данных
-    const cardInDb = await prisma.card.findFirst({
-      where: {
-        OR: [
-          { slug: card.slug },
-          { nameRu: card.nameRu },
-          { nameEn: card.name || card.nameEn },
-        ],
-      },
-    })
+    // Сохраняем расклад в базу данных ТОЛЬКО если есть реальный пользователь
+    if (user) {
+      const cardInDb = await prisma.card.findFirst({
+        where: {
+          OR: [
+            { slug: card.slug },
+            { nameRu: card.nameRu },
+            { nameEn: card.name || card.nameEn },
+          ],
+        },
+      })
 
-    if (cardInDb) {
-      await prisma.reading.create({
-        data: {
-          userId,
-          type: 'ASK',
-          interpretation: `Вопрос: "${question}"\n\n${response.greeting}\n\n${response.cardMeaning}\n\n${response.answer}\n\n${response.advice}`,
-          deckTheme: user.deckTheme,
-          cards: {
-            create: {
-              cardId: cardInDb.id,
-              position: 0,
-              isReversed: isReversed || false,
-              positionMeaning: response.cardMeaning,
+      if (cardInDb) {
+        await prisma.reading.create({
+          data: {
+            userId,
+            type: 'ASK',
+            interpretation: `Вопрос: "${question}"\n\n${response.greeting}\n\n${response.cardMeaning}\n\n${response.answer}\n\n${response.advice}`,
+            deckTheme: userData.deckTheme,
+            cards: {
+              create: {
+                cardId: cardInDb.id,
+                position: 0,
+                isReversed: isReversed || false,
+                positionMeaning: response.cardMeaning,
+              },
             },
           },
-        },
-      })
+        })
 
-      // Обновляем коллекцию пользователя
-      await prisma.userCard.upsert({
-        where: {
-          userId_cardId: {
+        // Обновляем коллекцию пользователя
+        await prisma.userCard.upsert({
+          where: {
+            userId_cardId: {
+              userId,
+              cardId: cardInDb.id,
+            },
+          },
+          create: {
             userId,
             cardId: cardInDb.id,
+            count: 1,
           },
-        },
-        create: {
-          userId,
-          cardId: cardInDb.id,
-          count: 1,
-        },
-        update: {
-          count: { increment: 1 },
-          lastSeenAt: new Date(),
-        },
-      })
+          update: {
+            count: { increment: 1 },
+            lastSeenAt: new Date(),
+          },
+        })
+      }
     }
 
     return res.json({

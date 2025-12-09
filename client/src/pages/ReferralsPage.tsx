@@ -507,11 +507,6 @@ export function ReferralsPage() {
 
               {/* Header */}
               <div className="px-5 pb-4 flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                  isFairyTheme ? 'bg-[#FC89AC]/20' : 'bg-slate-700'
-                }`}>
-                  <span className="text-2xl">{isFairyTheme ? '💕' : '⚙️'}</span>
-                </div>
                 <div className="flex-1">
                   <h3 className="text-white font-bold text-lg">Делиться результатами</h3>
                   <p className={`text-sm ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
@@ -535,14 +530,11 @@ export function ReferralsPage() {
                   isFairyTheme ? 'bg-[#FC89AC]/10 border border-[#FC89AC]/20' : 'bg-slate-800/50 border border-slate-700'
                 }`}>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{isFairyTheme ? '👁️' : '👁️'}</span>
-                      <div>
-                        <p className="text-white font-medium">Расклады видны подругам</p>
-                        <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/60' : 'text-slate-500'}`}>
-                          Подруги могут видеть твои расклады
-                        </p>
-                      </div>
+                    <div className="flex-1">
+                      <p className="text-white font-medium">Расклады видны подругам</p>
+                      <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/60' : 'text-slate-500'}`}>
+                        Подруги могут видеть твои расклады
+                      </p>
                     </div>
                     <button
                       onClick={() => {
@@ -566,7 +558,7 @@ export function ReferralsPage() {
 
                 {/* Info */}
                 <p className={`text-xs text-center mb-4 ${isFairyTheme ? 'text-[#FC89AC]/50' : 'text-slate-500'}`}>
-                  {isFairyTheme ? '🦋' : '💡'} Когда функция включена, подруги смогут видеть твои расклады на вкладке "Подруги"
+                  Когда функция включена, подруги смогут видеть твои расклады на вкладке "Подруги"
                 </p>
 
                 {/* Share Now Button */}
@@ -579,13 +571,6 @@ export function ReferralsPage() {
                   className="w-full mb-3"
                   size="lg"
                 >
-                  <motion.span
-                    className="mr-2"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    {isFairyTheme ? '💕' : '✨'}
-                  </motion.span>
                   Поделиться сейчас
                 </Button>
 

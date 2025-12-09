@@ -190,13 +190,9 @@ export function AskTarotPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center mb-6"
               >
-                <motion.div
-                  className="text-5xl mb-4"
-                  animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                >
+                <div className="text-5xl mb-4">
                   {isFairyTheme ? '✨' : '🌙'}
-                </motion.div>
+                </div>
                 <h1 className={`text-2xl font-display font-bold mb-2 ${isFairyTheme ? 'text-white drop-shadow-lg' : 'text-white'}`}>
                   Задай вопрос картам
                 </h1>
@@ -288,11 +284,19 @@ export function AskTarotPage() {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute top-20 left-0 right-0 px-6 z-10"
+              className="absolute top-16 left-4 right-4 z-10"
             >
-              <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 max-w-sm mx-auto">
-                <p className="text-white/60 text-xs mb-1">Твой вопрос:</p>
-                <p className="text-white text-sm italic">"{question}"</p>
+              <div className={`backdrop-blur-md rounded-2xl p-4 max-w-md mx-auto border ${
+                isFairyTheme
+                  ? 'bg-black/30 border-[#FC89AC]/20'
+                  : 'bg-black/40 border-slate-500/20'
+              }`}>
+                <p className={`text-xs mb-1.5 text-center ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-white/50'}`}>
+                  Твой вопрос:
+                </p>
+                <p className="text-white text-sm text-center leading-relaxed">
+                  "{question}"
+                </p>
               </div>
             </motion.div>
 

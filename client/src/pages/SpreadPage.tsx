@@ -305,29 +305,160 @@ export function SpreadPage() {
             transition={{ duration: 0.15 }}
             className="min-h-screen flex flex-col items-center justify-center p-6"
           >
-            {/* Показываем уже выбранные карты сверху */}
+            {/* Показываем уже выбранные карты сверху с эпичными эффектами */}
             {cards.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex gap-2 mb-6 flex-wrap justify-center"
+                className="flex gap-3 mb-6 flex-wrap justify-center relative"
               >
+                {/* Общее свечение за картами */}
+                <motion.div
+                  className="absolute inset-0 -z-10 blur-3xl"
+                  style={{
+                    background: isFairyTheme
+                      ? 'radial-gradient(ellipse at center, rgba(252, 137, 172, 0.3) 0%, transparent 70%)'
+                      : 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.3) 0%, transparent 70%)',
+                  }}
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.5, 0.8, 0.5],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+
                 {cards.map((c, i) => (
                   <motion.div
                     key={i}
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', damping: 15 }}
-                    className="text-center"
+                    initial={{ scale: 0, rotate: -180, y: 50 }}
+                    animate={{ scale: 1, rotate: 0, y: 0 }}
+                    transition={{
+                      type: 'spring',
+                      damping: 12,
+                      stiffness: 100,
+                      delay: i * 0.1,
+                    }}
+                    className="text-center relative"
                   >
-                    <p className="text-white/60 text-xs mb-1">{spreadConfig.positions[i].name}</p>
-                    <TarotCard
-                      card={c.card}
-                      isReversed={c.isReversed}
-                      isRevealed={false}
-                      size="xs"
-                      deckTheme={selectedDeck}
+                    {/* Индивидуальное свечение карты */}
+                    <motion.div
+                      className="absolute inset-0 -z-10 blur-xl rounded-xl"
+                      style={{
+                        background: isFairyTheme
+                          ? 'rgba(252, 137, 172, 0.4)'
+                          : 'rgba(139, 92, 246, 0.4)',
+                      }}
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.4, 0.7, 0.4],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                        ease: 'easeInOut',
+                      }}
                     />
+
+                    {/* Номер позиции - бейдж */}
+                    <motion.div
+                      initial={{ scale: 0, rotate: -90 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: i * 0.1 + 0.3, type: 'spring', damping: 10 }}
+                      className={`
+                        absolute -top-2 -right-2 w-6 h-6 rounded-full z-10
+                        flex items-center justify-center text-xs font-bold
+                        ${isFairyTheme
+                          ? 'bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-lg shadow-pink-500/50'
+                          : 'bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/50'
+                        }
+                      `}
+                    >
+                      {i + 1}
+                    </motion.div>
+
+                    {/* Название позиции */}
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 + 0.2 }}
+                      className={`
+                        text-xs mb-1 font-medium
+                        ${isFairyTheme ? 'text-pink-200' : 'text-purple-200'}
+                      `}
+                    >
+                      {spreadConfig.positions[i].name}
+                    </motion.p>
+
+                    {/* Контейнер карты с кольцом */}
+                    <motion.div
+                      className="relative"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: 'spring', damping: 15 }}
+                    >
+                      {/* Декоративное кольцо вокруг карты */}
+                      <motion.div
+                        className={`
+                          absolute -inset-1 rounded-xl
+                          ${isFairyTheme
+                            ? 'bg-gradient-to-br from-pink-400/30 via-rose-300/20 to-pink-500/30'
+                            : 'bg-gradient-to-br from-violet-500/30 via-purple-400/20 to-indigo-500/30'
+                          }
+                        `}
+                        animate={{
+                          opacity: [0.5, 0.8, 0.5],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.2,
+                        }}
+                      />
+                      <TarotCard
+                        card={c.card}
+                        isReversed={c.isReversed}
+                        isRevealed={false}
+                        size="xs"
+                        deckTheme={selectedDeck}
+                      />
+                    </motion.div>
+
+                    {/* Магические частицы вокруг новой карты */}
+                    {i === cards.length - 1 && (
+                      <>
+                        {[...Array(6)].map((_, j) => (
+                          <motion.div
+                            key={j}
+                            className="absolute text-xs pointer-events-none"
+                            style={{
+                              left: '50%',
+                              top: '50%',
+                            }}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{
+                              opacity: [0, 1, 0],
+                              scale: [0, 1, 0],
+                              x: Math.cos((j / 6) * Math.PI * 2) * 40 - 6,
+                              y: Math.sin((j / 6) * Math.PI * 2) * 40 - 6,
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              delay: j * 0.1,
+                              repeat: 2,
+                            }}
+                          >
+                            {isFairyTheme
+                              ? ['✨', '💫', '⭐', '🌟', '⋆', '💖'][j]
+                              : ['✧', '☆', '✦', '⋆', '✶', '★'][j]
+                            }
+                          </motion.div>
+                        ))}
+                      </>
+                    )}
                   </motion.div>
                 ))}
               </motion.div>
