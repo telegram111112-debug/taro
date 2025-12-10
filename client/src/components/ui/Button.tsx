@@ -3,7 +3,7 @@ import { clsx } from 'clsx'
 import { motion } from 'framer-motion'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'glass-fairy' | 'glass-witch'
+  variant?: 'primary' | 'primary-fairy' | 'secondary' | 'ghost' | 'danger' | 'glass-fairy' | 'glass-witch'
   size?: 'sm' | 'md' | 'lg'
   isLoading?: boolean
   leftIcon?: React.ReactNode
@@ -30,6 +30,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary:
         'bg-gradient-to-r from-mystic-500 to-primary-500 text-white shadow-lg shadow-mystic-500/30 hover:shadow-xl hover:shadow-mystic-500/40',
+      'primary-fairy':
+        'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30 hover:bg-[#d4b0b5] hover:shadow-xl hover:shadow-[#C4A0A5]/40',
       secondary:
         'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20',
       ghost:

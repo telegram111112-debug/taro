@@ -30,26 +30,6 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen p-4 pb-24 relative">
-      {/* Background based on theme */}
-      {isWitchTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-witch.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/60 -z-10" />
-        </>
-      )}
-      {isFairyTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-fairy.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/40 -z-10" />
-        </>
-      )}
-
       {/* Magic particles */}
       <MagicParticlesLight />
 
@@ -72,7 +52,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.2, delay: 0.05 }}
+        transition={{ duration: 0.15 }}
       >
         <Card
           variant="glass"
@@ -135,7 +115,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.1 }}
+        transition={{ duration: 0.15 }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
@@ -236,7 +216,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.15 }}
+        transition={{ duration: 0.15 }}
       >
         <Card
           variant="glass"
@@ -272,7 +252,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.2 }}
+        transition={{ duration: 0.15 }}
         className="mb-4"
       >
         <h2 className="text-white/80 font-medium mb-3 text-center">Расклады</h2>
@@ -310,7 +290,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.3 }}
+        transition={{ duration: 0.15 }}
         className="mt-4"
       >
         <Link to="/referrals">

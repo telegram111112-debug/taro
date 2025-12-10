@@ -51,26 +51,6 @@ export function ProfilePage() {
 
   return (
     <div className="min-h-screen pb-24 relative">
-      {/* Background based on theme */}
-      {isWitchTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-witch.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/60 -z-10" />
-        </>
-      )}
-      {isFairyTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-fairy.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/40 -z-10" />
-        </>
-      )}
-
       {/* Magic particles */}
       <MagicParticlesLight />
 
@@ -116,11 +96,7 @@ export function ProfilePage() {
       {/* Daily Horoscope */}
       {horoscope && user?.zodiacSign && (
         <div className="px-4 mb-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+          <div>
             <div
               className="relative rounded-2xl overflow-hidden cursor-pointer"
               onClick={() => setExpandedHoroscope(!expandedHoroscope)}
@@ -228,7 +204,7 @@ export function ProfilePage() {
                 </AnimatePresence>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
 
@@ -238,13 +214,8 @@ export function ProfilePage() {
           {[
             { label: 'Раскладов', value: stats.totalReadings, emoji: '🔮' },
             { label: 'Дней', value: stats.streak, emoji: '🔥' },
-          ].map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-            >
+          ].map((stat) => (
+            <div key={stat.label}>
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className="text-center py-3">
                 <span className="text-lg">{stat.emoji}</span>
                 <p className="font-bold text-white mt-1 text-xl">
@@ -252,19 +223,14 @@ export function ProfilePage() {
                 </p>
                 <p className="text-white/50 text-[10px]">{stat.label}</p>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Settings: Avatar + Theme */}
-      <div className="px-4 mb-4 space-y-3">
-        {/* Avatar selection - первым */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
+      {/* Avatar */}
+      <div className="px-4 mb-3">
+        <div>
           <Card
             variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
             onClick={() => setShowAvatarModal(true)}
@@ -273,11 +239,11 @@ export function ProfilePage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {user?.avatar ? (
-                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                  <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                     <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <span className="text-2xl">{isFairyTheme ? '🦋' : '🌙'}</span>
+                  <span className="text-2xl w-8 flex-shrink-0">{isFairyTheme ? '🦋' : '🌙'}</span>
                 )}
                 <div>
                   <p className="text-white font-medium">Аватар</p>
@@ -287,14 +253,12 @@ export function ProfilePage() {
               <span className="text-white/40">→</span>
             </div>
           </Card>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Deck Theme - вторым */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-        >
+      {/* Deck Theme */}
+      <div className="px-4 mb-3">
+        <div>
           <Card
             variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
             onClick={() => setShowDeckModal(true)}
@@ -302,7 +266,7 @@ export function ProfilePage() {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{themeConfig.emoji.main}</span>
+                <span className="text-2xl w-8 flex-shrink-0">{themeConfig.emoji.main}</span>
                 <div>
                   <p className="text-white font-medium">Тема колоды</p>
                   <p className="text-white/50 text-sm">{themeConfig.name}</p>
@@ -318,62 +282,56 @@ export function ProfilePage() {
               </div>
             </div>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
-      {/* Menu Items */}
-      <div className="px-4 space-y-2">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
+      {/* History */}
+      <div className="px-4 mb-3">
+        <div>
           <Link to="/history">
             <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className="hover:bg-white/10 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">📜</span>
-                  <span className="text-white">История раскладов</span>
+                  <span className="text-2xl w-8 flex-shrink-0">📜</span>
+                  <div>
+                    <p className="text-white font-medium">История раскладов</p>
+                  </div>
                 </div>
                 <span className="text-white/40">→</span>
               </div>
             </Card>
           </Link>
-        </motion.div>
+        </div>
+      </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-        >
+      {/* Rewards */}
+      <div className="px-4 mb-3">
+        <div>
           <Link to="/rewards">
             <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className="hover:bg-white/10 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">🎁</span>
-                  <span className="text-white">Награды</span>
+                  <span className="text-2xl w-8 flex-shrink-0">🎁</span>
+                  <div>
+                    <p className="text-white font-medium">Награды</p>
+                  </div>
                 </div>
                 <span className="text-white/40">→</span>
               </div>
             </Card>
           </Link>
-        </motion.div>
+        </div>
       </div>
 
       {/* Motivational quote based on theme */}
-      <motion.div
-        className="px-4 mt-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-      >
+      <div className="px-4 mt-6">
         <p className="text-center text-white/40 text-xs italic">
           {isWitchTheme
             ? '«Истинная магия — в познании себя»'
             : '«Каждый день — новая страница твоей сказки»'
           }
         </p>
-      </motion.div>
+      </div>
 
       {/* Deck Theme Modal */}
       <Modal
@@ -496,7 +454,7 @@ export function ProfilePage() {
                     isSelected
                       ? isFairyTheme
                         ? 'ring-3 ring-[#C4A0A5] ring-offset-2 ring-offset-black/50'
-                        : 'ring-3 ring-white/70 ring-offset-2 ring-offset-black/50'
+                        : 'ring-3 ring-white/60 ring-offset-2 ring-offset-black/50'
                       : ''
                   }`}
                   whileHover={{ scale: 1.05, y: -4 }}

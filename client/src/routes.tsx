@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useUserStore } from './store/useUserStore'
 import { Layout } from './components/layout/Layout'
@@ -13,14 +14,26 @@ import { RewardsPage } from './pages/RewardsPage'
 import { AskTarotPage } from './pages/AskTarotPage'
 import { SurpriseDemo } from './pages/SurpriseDemo'
 
-export function AppRoutes() {
-  const { user, isOnboarded } = useUserStore()
+// Компонент для демо-режима - сбрасывает onboarding и показывает регистрацию
+function DemoOnboarding() {
+  const { logout } = useUserStore()
 
-  // Demo route - доступен всегда без авторизации
+  useEffect(() => {
+    // Сбрасываем состояние при входе на демо
+    logout()
+  }, [logout])
+
+  return <OnboardingPage />
+}
+
+export function AppRoutes() {
+  const { isOnboarded } = useUserStore()
+
   return (
     <Routes>
-      {/* Demo route outside auth */}
+      {/* Demo routes - доступны всегда */}
       <Route path="/surprise-demo" element={<SurpriseDemo />} />
+      <Route path="/demo" element={<DemoOnboarding />} />
 
       {/* Main app routes */}
       {!isOnboarded ? (

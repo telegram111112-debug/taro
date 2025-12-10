@@ -74,10 +74,8 @@ export function ReferralsPage() {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      setReferralInfo(mockReferralInfo)
-      setLoading(false)
-    }, 500)
+    setReferralInfo(mockReferralInfo)
+    setLoading(false)
   }, [])
 
   const handleCopyLink = async () => {
@@ -129,20 +127,6 @@ export function ReferralsPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background - такой же как на главной */}
-      {isWitchTheme && (
-        <>
-          <div className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10" style={{ backgroundImage: 'url(/backgrounds/background-witch.jpg)' }} />
-          <div className="fixed inset-0 bg-black/50 -z-10" />
-        </>
-      )}
-      {isFairyTheme && (
-        <>
-          <div className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10" style={{ backgroundImage: 'url(/backgrounds/background-fairy.jpg)' }} />
-          <div className="fixed inset-0 bg-black/40 -z-10" />
-        </>
-      )}
-
       <MagicParticlesLight />
 
       <div className="px-4 pb-24 pt-4">
@@ -168,7 +152,7 @@ export function ReferralsPage() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.15 }}
           className="mb-4 rounded-2xl overflow-hidden border border-white/10"
         >
           <img
@@ -182,7 +166,7 @@ export function ReferralsPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
+          transition={{ duration: 0.15 }}
           className="flex gap-2 mb-4"
         >
           <button
@@ -233,11 +217,8 @@ export function ReferralsPage() {
               {referralInfo?.recentReferrals && referralInfo.recentReferrals.length > 0 ? (
                 <div className="space-y-3">
                   {referralInfo.recentReferrals.map((friend, index) => (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
                       onClick={() => {
                         hapticFeedback('impact', 'light')
                         setSelectedFriend(friend)
@@ -285,25 +266,20 @@ export function ReferralsPage() {
                           {getFriendEmoji(index)}
                         </motion.span>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
 
                   {/* Share Settings Button - Компактная кнопка */}
-                  <motion.button
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+                  <button
                     onClick={() => {
                       hapticFeedback('impact', 'light')
                       setShowShareSettings(true)
                     }}
                     className={`mx-auto mt-20 px-5 py-3 rounded-2xl font-medium transition-all active:scale-[0.98] relative overflow-hidden flex justify-center ${
                       isFairyTheme
-                        ? 'bg-gradient-to-r from-[#4a3538] via-[#5a4045] to-[#4a3538] border border-[#6a4a50]/50 shadow-lg shadow-[#4a3538]/40'
+                        ? 'bg-[#C4A0A5] shadow-lg shadow-[#C4A0A5]/30 hover:bg-[#d4b0b5]'
                         : 'bg-gradient-to-r from-[#282828] via-[#323232] to-[#282828] border border-[#3a3a3a]/60 shadow-lg shadow-black/40'
                     }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                   >
                     {/* Animated shimmer effect */}
                     <motion.div
@@ -350,7 +326,7 @@ export function ReferralsPage() {
                         />
                       )}
                     </div>
-                  </motion.button>
+                  </button>
                 </div>
               ) : (
                 <div className={`text-center py-12 rounded-2xl ${
@@ -463,11 +439,8 @@ export function ReferralsPage() {
                     { step: '2', text: 'Она переходит и запускает бота', emoji: isFairyTheme ? '🦋' : '✦' },
                     { step: '3', text: 'Вы обе получаете +1 расклад!', emoji: isFairyTheme ? '🎁' : '🌟' },
                   ].map((item, i) => (
-                    <motion.div
+                    <div
                       key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + i * 0.1 }}
                       className={`flex items-center gap-3 p-3 rounded-xl ${
                         isFairyTheme ? 'bg-[#C4A0A5]/15' : 'bg-[#3a3a3a]/60'
                       }`}
@@ -577,7 +550,7 @@ export function ReferralsPage() {
                       )}
                       <span className="text-white text-sm flex-1">{item.text}</span>
                       <span className="text-xl">{item.emoji}</span>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </Card>
@@ -870,7 +843,7 @@ export function ReferralsPage() {
                     className="text-white font-bold text-lg"
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1, type: 'spring' }}
+                    transition={{ type: 'spring', duration: 0.2 }}
                   >
                     <motion.span
                       animate={{ opacity: [0.9, 1, 0.9] }}
@@ -883,7 +856,7 @@ export function ReferralsPage() {
                     className="text-sm text-white/70"
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2, type: 'spring' }}
+                    transition={{ type: 'spring', duration: 0.2 }}
                   >
                     Настрой видимость раскладов
                   </motion.p>
@@ -917,7 +890,7 @@ export function ReferralsPage() {
                   }`}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ delay: 0.2, type: 'spring' }}
+                  transition={{ type: 'spring', duration: 0.2 }}
                 >
                   {/* Inner glow */}
                   <motion.div
@@ -979,7 +952,7 @@ export function ReferralsPage() {
                   className="text-xs text-center mb-4 text-white/60"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <motion.span
                     animate={{ opacity: [0.5, 0.8, 0.5] }}
@@ -993,7 +966,7 @@ export function ReferralsPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35, type: 'spring' }}
+                  transition={{ type: 'spring', duration: 0.2 }}
                 >
                   <motion.button
                     onClick={() => {
@@ -1054,7 +1027,7 @@ export function ReferralsPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, type: 'spring' }}
+                  transition={{ type: 'spring', duration: 0.2 }}
                 >
                   <motion.button
                     onClick={() => setShowShareSettings(false)}
@@ -1145,7 +1118,7 @@ export function ReferralsPage() {
                           key={spread.id}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.1 }}
+                          transition={{ duration: 0.15 }}
                           className={`p-4 rounded-xl ${
                             isFairyTheme ? 'bg-[#C4A0A5]/10' : 'bg-[#2a2a2a]/80'
                           }`}

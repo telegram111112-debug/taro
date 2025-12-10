@@ -124,8 +124,18 @@ export function OnboardingPage() {
     setOnboarded(true)
   }
 
+  // Используем тему fairy по умолчанию для регистрации
+  const isFairyTheme = formData.deckTheme === 'fairy'
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Background */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
+        style={{ backgroundImage: isFairyTheme ? 'url(/backgrounds/background-fairy.jpg)' : 'url(/backgrounds/background-witch.jpg)' }}
+      />
+      <div className={`fixed inset-0 -z-10 ${isFairyTheme ? 'bg-black/40' : 'bg-black/60'}`} />
+
       <AnimatePresence mode="wait">
         {/* Welcome */}
         {step === 'welcome' && (
@@ -149,7 +159,7 @@ export function OnboardingPage() {
                 Карты Таро — это не просто гадание.
                 Это разговор с самой собой через древние символы.
               </p>
-              <Button onClick={() => goToStep('name')} className="w-full">
+              <Button onClick={() => goToStep('name')} variant="primary-fairy" className="w-full">
                 Давай познакомимся! 💫
               </Button>
             </div>
@@ -185,6 +195,7 @@ export function OnboardingPage() {
                   Назад
                 </Button>
                 <Button
+                  variant="primary-fairy"
                   className="flex-1"
                   onClick={() => {
                     if (!formData.name.trim()) {
@@ -226,9 +237,9 @@ export function OnboardingPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-3 rounded-xl bg-mystic-500/20 border border-mystic-500/30"
+                  className="mt-4 p-3 rounded-xl bg-[#C4A0A5]/20 border border-[#C4A0A5]/30"
                 >
-                  <p className="text-mystic-300 text-sm">
+                  <p className="text-[#d4b0b5] text-sm">
                     ✨ {getZodiacSign(formData.birthDate)}! Отличный знак для работы с картами
                   </p>
                 </motion.div>
@@ -239,6 +250,7 @@ export function OnboardingPage() {
                   Назад
                 </Button>
                 <Button
+                  variant="primary-fairy"
                   className="flex-1"
                   onClick={() => {
                     if (!validateBirthDate(formData.birthDate)) {
@@ -285,7 +297,7 @@ export function OnboardingPage() {
                 >
                   Не знаю
                 </Button>
-                <Button className="flex-1" onClick={() => goToStep('city')}>
+                <Button variant="primary-fairy" className="flex-1" onClick={() => goToStep('city')}>
                   Продолжить
                 </Button>
               </div>
@@ -314,7 +326,7 @@ export function OnboardingPage() {
                 <Button variant="ghost" onClick={() => goToStep('birthtime')}>
                   Назад
                 </Button>
-                <Button className="flex-1" onClick={() => goToStep('relationship')}>
+                <Button variant="primary-fairy" className="flex-1" onClick={() => goToStep('relationship')}>
                   Продолжить
                 </Button>
               </div>
@@ -349,7 +361,7 @@ export function OnboardingPage() {
                     className={`
                       p-4 rounded-xl text-left transition-all
                       ${formData.relationshipStatus === value
-                        ? 'bg-mystic-500/30 border-2 border-mystic-400'
+                        ? 'bg-[#C4A0A5]/30 border-2 border-[#C4A0A5]'
                         : 'bg-white/5 border-2 border-transparent hover:bg-white/10'
                       }
                     `}
@@ -364,6 +376,7 @@ export function OnboardingPage() {
                   Назад
                 </Button>
                 <Button
+                  variant="primary-fairy"
                   className="flex-1"
                   disabled={!formData.relationshipStatus}
                   onClick={() => goToStep('gifts')}
@@ -418,7 +431,7 @@ export function OnboardingPage() {
                 Каждый день тебя ждёт бесплатная карта дня, а для глубокого анализа — расклады из 4 карт в разделе «Расклады»
               </p>
 
-              <Button onClick={handleComplete} className="w-full">
+              <Button onClick={handleComplete} variant="primary-fairy" className="w-full">
                 Начать гадать! ✨
               </Button>
             </div>
@@ -433,7 +446,7 @@ export function OnboardingPage() {
             <div
               key={s}
               className={`w-2 h-2 rounded-full transition-colors ${
-                s === step ? 'bg-mystic-400' : 'bg-white/20'
+                s === step ? 'bg-[#C4A0A5]' : 'bg-white/20'
               }`}
             />
           ))}

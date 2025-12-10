@@ -55,13 +55,6 @@ export function RewardsPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-        style={{ backgroundImage: `url(/backgrounds/background-${isWitchTheme ? 'witch' : 'fairy'}.jpg)` }}
-      />
-      <div className={`fixed inset-0 -z-10 ${isWitchTheme ? 'bg-black/60' : 'bg-black/55'}`} />
-
       <MagicParticlesLight />
 
       <Header title="Награды" />
@@ -97,7 +90,7 @@ export function RewardsPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.15 }}
           className="mb-6 relative"
         >
           {/* Milestone markers with animations */}
@@ -306,7 +299,7 @@ export function RewardsPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.15 }}
           className="grid grid-cols-4 gap-2 mb-6"
         >
           {milestones.map((count, i) => {
@@ -316,7 +309,7 @@ export function RewardsPage() {
                 key={count}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i }}
+                transition={{ duration: 0.1 }}
                 className={`
                   relative p-3 rounded-2xl text-center
                   ${achieved
@@ -355,7 +348,7 @@ export function RewardsPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ duration: 0.15 }}
           className={`rounded-2xl p-4 bg-gradient-to-br ${themeColors.secondary} ${themeColors.border} border mb-4`}
         >
           <div className="flex items-center gap-4">
@@ -388,7 +381,7 @@ export function RewardsPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ duration: 0.15 }}
         >
           <Button
             onClick={() => navigate('/referrals')}

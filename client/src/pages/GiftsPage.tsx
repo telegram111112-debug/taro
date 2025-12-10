@@ -55,25 +55,6 @@ export function GiftsPage() {
 
   return (
     <div className="min-h-screen pb-24 relative">
-      {/* Background based on theme */}
-      {isWitchTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-witch.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/60 -z-10" />
-        </>
-      )}
-      {isFairyTheme && (
-        <>
-          <div
-            className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-            style={{ backgroundImage: 'url(/backgrounds/background-fairy.jpg)' }}
-          />
-          <div className="fixed inset-0 bg-black/40 -z-10" />
-        </>
-      )}
       <Header title={`Мои подарки ${getThemeEmoji(user?.deckTheme, 'gift')}`} showBack />
 
       <div className="px-4">
