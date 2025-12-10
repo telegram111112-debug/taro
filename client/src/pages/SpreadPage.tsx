@@ -184,7 +184,7 @@ export function SpreadPage() {
       setIsDrawingClarifyingCard(false)
       setShowClarifyingCard(true)
       hapticFeedback('notification', 'success')
-    }, 1500)
+    }, 2300)
   }
 
   // Генерация полной интерпретации
@@ -232,9 +232,9 @@ export function SpreadPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="min-h-screen flex flex-col items-center justify-center p-6"
+            className="min-h-screen flex flex-col items-center justify-center p-6 pb-20"
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <div className="text-6xl mb-4">
                 {spreadConfig.emojiKey === 'spreadFuture' && (
                   <img
@@ -266,20 +266,56 @@ export function SpreadPage() {
               </p>
             </div>
 
-            <Card variant="glass" className="w-full max-w-sm mb-8">
-              <h3 className="text-white/80 font-medium mb-3">Позиции карт:</h3>
-              <div className="space-y-2">
+            {/* Позиции карт - без рамки, читабельный текст */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="w-full max-w-sm mb-10"
+            >
+              {/* Positions list */}
+              <div className="space-y-4">
                 {spreadConfig.positions.map((pos, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className="text-gold-400 font-medium">{i + 1}.</span>
-                    <div>
-                      <p className="text-white text-sm font-medium">{pos.name}</p>
-                      <p className="text-white/50 text-xs">{pos.description}</p>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08, ease: 'easeOut' }}
+                    className="flex items-center gap-4"
+                  >
+                    {/* Number */}
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-base flex-shrink-0 ${
+                        isFairyTheme
+                          ? 'bg-[#C4A0A5]/80 text-white'
+                          : 'bg-white/15 text-white'
+                      }`}
+                      style={{
+                        textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                      }}
+                    >
+                      {i + 1}
                     </div>
-                  </div>
+
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className="text-white font-semibold text-base"
+                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
+                      >
+                        {pos.name}
+                      </p>
+                      <p
+                        className={`text-sm ${isFairyTheme ? 'text-white/80' : 'text-white/70'}`}
+                        style={{ textShadow: '0 1px 3px rgba(0,0,0,0.7)' }}
+                      >
+                        {pos.description}
+                      </p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </Card>
+            </motion.div>
 
             <Button onClick={handleStart} size="lg" variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
               Начать расклад {getThemeEmoji(selectedDeck, 'button')}
@@ -702,7 +738,7 @@ export function SpreadPage() {
                 <div className={`relative overflow-hidden rounded-2xl ${
                   isWitchTheme
                     ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
-                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
+                    : 'bg-[#C4A0A5]/30 border border-[#C4A0A5]/50 backdrop-blur-sm'
                 }`}>
                   {/* Анимированный фон с частицами */}
                   <div className="absolute inset-0 overflow-hidden">
@@ -790,20 +826,14 @@ export function SpreadPage() {
 
                     <motion.button
                       onClick={handleDrawClarifyingCard}
-                      className={`w-full py-4 rounded-xl font-medium transition-all relative overflow-hidden ${
+                      className={`w-full py-4 rounded-2xl font-medium transition-all relative overflow-hidden ${
                         isWitchTheme
-                          ? 'bg-gradient-to-r from-white/20 to-white/10 text-white border border-white/30 hover:from-white/30 hover:to-white/20'
-                          : 'bg-gradient-to-r from-[#FC89AC] to-[#F472B6] text-white shadow-lg shadow-[#FC89AC]/30 hover:shadow-xl hover:shadow-[#FC89AC]/40'
+                          ? 'bg-[#6a6a6a] text-white'
+                          : 'bg-[#C4A0A5] text-white'
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      {/* Shimmer эффект */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
-                        animate={{ x: ['-100%', '200%'] }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                      />
                       <span className="relative flex items-center justify-center gap-2">
                         Вытянуть карту
                         <motion.span
@@ -819,231 +849,353 @@ export function SpreadPage() {
               </motion.div>
             )}
 
-            {/* Drawing animation - эпичная анимация вытягивания */}
+            {/* Drawing animation - эпичная анимация вытягивания 2.3 сек */}
             {isDrawingClarifyingCard && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="mb-4"
               >
-                <div className={`relative overflow-hidden rounded-2xl py-16 ${
+                <div className={`relative overflow-hidden rounded-3xl py-20 ${
                   isWitchTheme
-                    ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
-                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
+                    ? 'bg-gradient-to-b from-[#1a1a1a]/40 to-[#2a2a2a]/30 border border-white/25 backdrop-blur-md'
+                    : 'bg-gradient-to-b from-[#FC89AC]/20 to-[#F472B6]/15 border border-[#FC89AC]/50 backdrop-blur-md'
                 }`}>
-                  {/* Магические руны/символы по углам */}
-                  {['✧', '⋆', '✦', '★'].map((symbol, i) => (
+                  {/* Внешнее свечение контейнера */}
+                  <motion.div
+                    className={`absolute -inset-1 rounded-3xl blur-xl ${
+                      isWitchTheme ? 'bg-white/10' : 'bg-[#FC89AC]/20'
+                    }`}
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                      scale: [1, 1.02, 1],
+                    }}
+                    transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+
+                  {/* Магические руны/символы по углам - увеличенные */}
+                  {['✧', '⋆', '✦', '★', '◇', '❖'].map((symbol, i) => (
                     <motion.span
                       key={i}
-                      className={`absolute text-2xl ${
-                        isWitchTheme ? 'text-white/40' : 'text-[#FC89AC]/50'
+                      className={`absolute text-3xl ${
+                        isWitchTheme ? 'text-white/50' : 'text-[#FC89AC]/60'
                       }`}
                       style={{
-                        top: i < 2 ? '12%' : '78%',
-                        left: i % 2 === 0 ? '8%' : '84%',
+                        top: i < 2 ? '8%' : i < 4 ? '45%' : '82%',
+                        left: i % 2 === 0 ? '6%' : '88%',
                       }}
+                      initial={{ opacity: 0, scale: 0 }}
                       animate={{
                         rotate: [0, 360],
-                        scale: [1, 1.3, 1],
-                        opacity: [0.2, 0.6, 0.2],
+                        scale: [0.5, 1.4, 0.8, 1.2, 0.5],
+                        opacity: [0, 0.7, 0.3, 0.7, 0],
                       }}
                       transition={{
-                        rotate: { duration: 6 + i, repeat: Infinity, ease: 'linear' },
-                        scale: { duration: 2, repeat: Infinity, delay: i * 0.3 },
-                        opacity: { duration: 2, repeat: Infinity, delay: i * 0.3 },
+                        rotate: { duration: 8 + i * 1.5, repeat: Infinity, ease: 'linear' },
+                        scale: { duration: 2.3, repeat: Infinity, delay: i * 0.25, ease: 'easeInOut' },
+                        opacity: { duration: 2.3, repeat: Infinity, delay: i * 0.25, ease: 'easeInOut' },
                       }}
                     >
                       {symbol}
                     </motion.span>
                   ))}
 
-                  {/* Магические круги */}
+                  {/* Магические круги - 5 колец */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    {[0, 1, 2, 3].map((ring) => (
+                    {[0, 1, 2, 3, 4].map((ring) => (
                       <motion.div
                         key={ring}
                         className={`absolute rounded-full ${
                           ring % 2 === 0 ? 'border-2' : 'border border-dashed'
                         } ${
-                          isWitchTheme ? 'border-white/30' : 'border-[#FC89AC]/40'
+                          isWitchTheme ? 'border-white/35' : 'border-[#FC89AC]/50'
                         }`}
                         style={{
-                          width: 80 + ring * 50,
-                          height: 80 + ring * 50,
+                          width: 60 + ring * 45,
+                          height: 60 + ring * 45,
                         }}
+                        initial={{ scale: 0, opacity: 0 }}
                         animate={{
                           rotate: ring % 2 === 0 ? 360 : -360,
-                          scale: [1, 1.05, 1],
+                          scale: [0.8, 1.1, 0.9, 1.05, 0.8],
+                          opacity: [0.2, 0.6, 0.3, 0.5, 0.2],
                         }}
                         transition={{
-                          rotate: { duration: 6 + ring * 2, repeat: Infinity, ease: 'linear' },
-                          scale: { duration: 1.5, repeat: Infinity, delay: ring * 0.2 },
+                          rotate: { duration: 7 + ring * 1.8, repeat: Infinity, ease: 'linear' },
+                          scale: { duration: 2.3, repeat: Infinity, delay: ring * 0.15, ease: 'easeInOut' },
+                          opacity: { duration: 2.3, repeat: Infinity, delay: ring * 0.15, ease: 'easeInOut' },
                         }}
                       />
                     ))}
                   </div>
 
-                  {/* Летящие частицы к центру - основные */}
-                  {[...Array(20)].map((_, i) => {
-                    const angle = (i / 20) * 360
+                  {/* Летящие частицы к центру - 24 частицы с волновым эффектом */}
+                  {[...Array(24)].map((_, i) => {
+                    const angle = (i / 24) * 360
                     const rad = (angle * Math.PI) / 180
                     return (
                       <motion.div
                         key={i}
-                        className={`absolute w-2.5 h-2.5 rounded-full ${
-                          isWitchTheme ? 'bg-white' : 'bg-[#FC89AC]'
+                        className={`absolute rounded-full ${
+                          isWitchTheme
+                            ? i % 3 === 0 ? 'bg-white' : i % 3 === 1 ? 'bg-white/80' : 'bg-white/60'
+                            : i % 3 === 0 ? 'bg-[#FC89AC]' : i % 3 === 1 ? 'bg-[#F472B6]' : 'bg-[#E879F9]'
                         }`}
                         style={{
+                          width: 3 + (i % 4),
+                          height: 3 + (i % 4),
                           left: '50%',
                           top: '50%',
                         }}
                         animate={{
-                          x: [Math.cos(rad) * 180, 0],
-                          y: [Math.sin(rad) * 180, 0],
-                          opacity: [0, 1, 0],
-                          scale: [0.3, 1.2, 0],
+                          x: [Math.cos(rad) * 200, Math.cos(rad) * 100, 0],
+                          y: [Math.sin(rad) * 200, Math.sin(rad) * 100, 0],
+                          opacity: [0, 0.9, 1, 0],
+                          scale: [0.2, 0.8, 1.5, 0],
                         }}
                         transition={{
-                          duration: 1.2,
+                          duration: 1.8,
                           repeat: Infinity,
-                          delay: i * 0.06,
-                          ease: 'easeIn',
+                          delay: i * 0.08,
+                          ease: [0.25, 0.1, 0.25, 1],
                         }}
                       />
                     )
                   })}
 
-                  {/* Мерцающие звёздочки вокруг */}
-                  {[...Array(12)].map((_, i) => {
-                    const angle = (i / 12) * 360
+                  {/* Мерцающие звёздочки вокруг - 16 штук */}
+                  {[...Array(16)].map((_, i) => {
+                    const angle = (i / 16) * 360
                     const rad = (angle * Math.PI) / 180
-                    const radius = 100 + (i % 3) * 30
+                    const radius = 90 + (i % 4) * 25
                     return (
                       <motion.div
                         key={`star-${i}`}
-                        className={`absolute text-sm ${
+                        className={`absolute ${
                           isWitchTheme ? 'text-white' : 'text-[#FC89AC]'
                         }`}
                         style={{
+                          fontSize: 10 + (i % 3) * 4,
                           left: `calc(50% + ${Math.cos(rad) * radius}px)`,
                           top: `calc(50% + ${Math.sin(rad) * radius}px)`,
                         }}
                         animate={{
-                          opacity: [0, 1, 0],
-                          scale: [0.5, 1.5, 0.5],
-                          rotate: [0, 180, 360],
+                          opacity: [0, 1, 0.5, 1, 0],
+                          scale: [0.3, 1.2, 0.8, 1.4, 0.3],
+                          rotate: [0, 90, 180, 270, 360],
                         }}
                         transition={{
-                          duration: 1.5,
+                          duration: 2.3,
                           repeat: Infinity,
                           delay: i * 0.12,
+                          ease: 'easeInOut',
                         }}
                       >
-                        ✦
+                        {i % 2 === 0 ? '✦' : '✧'}
                       </motion.div>
                     )
                   })}
 
-                  {/* Спиральные лучи */}
-                  {[...Array(8)].map((_, i) => (
+                  {/* Спиральные лучи - 12 лучей */}
+                  {[...Array(12)].map((_, i) => (
                     <motion.div
                       key={`ray-${i}`}
-                      className={`absolute left-1/2 top-1/2 w-1 origin-bottom ${
-                        isWitchTheme ? 'bg-gradient-to-t from-white/40 to-transparent' : 'bg-gradient-to-t from-[#FC89AC]/50 to-transparent'
+                      className={`absolute left-1/2 top-1/2 origin-bottom ${
+                        isWitchTheme
+                          ? 'bg-gradient-to-t from-white/50 via-white/20 to-transparent'
+                          : 'bg-gradient-to-t from-[#FC89AC]/60 via-[#FC89AC]/25 to-transparent'
                       }`}
                       style={{
-                        height: '120px',
-                        transform: `rotate(${i * 45}deg) translateX(-50%)`,
+                        width: 2 + (i % 2),
+                        height: '140px',
+                        transform: `rotate(${i * 30}deg) translateX(-50%)`,
                         transformOrigin: 'bottom center',
                       }}
                       animate={{
-                        opacity: [0.1, 0.5, 0.1],
-                        scaleY: [0.5, 1, 0.5],
+                        opacity: [0.05, 0.6, 0.2, 0.5, 0.05],
+                        scaleY: [0.3, 1, 0.6, 0.9, 0.3],
                       }}
                       transition={{
-                        duration: 1.5,
+                        duration: 2.3,
                         repeat: Infinity,
-                        delay: i * 0.15,
+                        delay: i * 0.12,
+                        ease: 'easeInOut',
                       }}
                     />
                   ))}
 
-                  {/* Центральное свечение - многослойное */}
+                  {/* Волны энергии от центра */}
+                  {[0, 1, 2].map((wave) => (
+                    <motion.div
+                      key={`wave-${wave}`}
+                      className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
+                        isWitchTheme ? 'border-white/40' : 'border-[#FC89AC]/50'
+                      }`}
+                      initial={{ width: 20, height: 20, opacity: 0.8 }}
+                      animate={{
+                        width: [20, 250],
+                        height: [20, 250],
+                        opacity: [0.8, 0],
+                      }}
+                      transition={{
+                        duration: 2.3,
+                        repeat: Infinity,
+                        delay: wave * 0.7,
+                        ease: 'easeOut',
+                      }}
+                    />
+                  ))}
+
+                  {/* Центральное свечение - 4 слоя */}
                   <motion.div
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full blur-3xl ${
-                      isWitchTheme ? 'bg-white/30' : 'bg-[#FC89AC]/40'
+                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full blur-3xl ${
+                      isWitchTheme ? 'bg-white/25' : 'bg-[#FC89AC]/35'
                     }`}
                     animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [0.2, 0.5, 0.2],
+                      scale: [1, 1.4, 1.1, 1.3, 1],
+                      opacity: [0.15, 0.4, 0.25, 0.35, 0.15],
                     }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <motion.div
+                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full blur-2xl ${
+                      isWitchTheme ? 'bg-white/40' : 'bg-[#FC89AC]/50'
+                    }`}
+                    animate={{
+                      scale: [1, 1.6, 1.2, 1.5, 1],
+                      opacity: [0.3, 0.6, 0.4, 0.55, 0.3],
+                    }}
+                    transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
                   />
                   <motion.div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full blur-xl ${
                       isWitchTheme ? 'bg-white/60' : 'bg-[#FC89AC]/70'
                     }`}
                     animate={{
-                      scale: [1, 2, 1],
-                      opacity: [0.4, 0.8, 0.4],
+                      scale: [1, 2, 1.3, 1.8, 1],
+                      opacity: [0.4, 0.9, 0.5, 0.8, 0.4],
                     }}
-                    transition={{ duration: 1, repeat: Infinity }}
+                    transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                  />
+                  <motion.div
+                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-lg ${
+                      isWitchTheme ? 'bg-white/80' : 'bg-white/60'
+                    }`}
+                    animate={{
+                      scale: [0.8, 1.8, 1, 1.5, 0.8],
+                      opacity: [0.5, 1, 0.6, 0.9, 0.5],
+                    }}
+                    transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
                   />
 
-                  {/* Карта появляется в центре */}
+                  {/* Карта появляется в центре - улучшенная анимация */}
                   <div className="relative flex flex-col items-center justify-center">
                     <motion.div
+                      initial={{ rotateY: 0, scale: 0.3, opacity: 0 }}
                       animate={{
-                        rotateY: [0, 180, 360],
-                        scale: [0.8, 1.1, 0.8],
+                        rotateY: [0, 180, 360, 540, 720],
+                        scale: [0.3, 0.9, 1.15, 0.95, 1.1, 0.3],
+                        opacity: [0, 1, 1, 1, 1, 0],
                       }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className={`w-16 h-24 rounded-lg relative ${
+                      transition={{
+                        duration: 2.3,
+                        repeat: Infinity,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                      className={`w-20 h-28 rounded-xl relative ${
                         isWitchTheme
-                          ? 'bg-gradient-to-br from-[#3a3a3a] to-[#2a2a2a] border-2 border-white/50'
-                          : 'bg-gradient-to-br from-[#fce7f3] to-[#fbcfe8] border-2 border-[#FC89AC]/60'
+                          ? 'bg-gradient-to-br from-[#4a4a4a] via-[#3a3a3a] to-[#2a2a2a] border-2 border-white/60'
+                          : 'bg-gradient-to-br from-[#fce7f3] via-[#fbcfe8] to-[#f9a8d4] border-2 border-[#FC89AC]/70'
                       }`}
                       style={{
                         boxShadow: isWitchTheme
-                          ? '0 0 40px rgba(255,255,255,0.6), 0 0 80px rgba(255,255,255,0.3)'
-                          : '0 0 40px rgba(252,137,172,0.6), 0 0 80px rgba(252,137,172,0.3)',
+                          ? '0 0 50px rgba(255,255,255,0.7), 0 0 100px rgba(255,255,255,0.4), 0 0 150px rgba(255,255,255,0.2)'
+                          : '0 0 50px rgba(252,137,172,0.7), 0 0 100px rgba(252,137,172,0.4), 0 0 150px rgba(252,137,172,0.2)',
+                        transformStyle: 'preserve-3d',
                       }}
                     >
-                      {/* Символ на карте */}
+                      {/* Символ на карте - пульсирующий */}
                       <motion.div
                         className="absolute inset-0 flex items-center justify-center"
-                        animate={{ opacity: [0.3, 0.8, 0.3] }}
-                        transition={{ duration: 1, repeat: Infinity }}
+                        animate={{
+                          opacity: [0.2, 1, 0.5, 0.9, 0.2],
+                          scale: [0.8, 1.2, 1, 1.1, 0.8],
+                        }}
+                        transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
                       >
-                        <span className={`text-2xl ${
-                          isWitchTheme ? 'text-white/60' : 'text-white/70'
+                        <span className={`text-3xl ${
+                          isWitchTheme ? 'text-white/70' : 'text-[#FC89AC]/80'
                         }`}>
                           {isWitchTheme ? '☽' : '♡'}
                         </span>
                       </motion.div>
+
+                      {/* Блик на карте */}
+                      <motion.div
+                        className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/40 via-transparent to-transparent"
+                        animate={{
+                          opacity: [0.3, 0.7, 0.3],
+                        }}
+                        transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
+                      />
                     </motion.div>
+
+                    {/* Текст с плавной анимацией */}
                     <motion.p
-                      className={`mt-6 font-medium text-lg ${
+                      className={`mt-8 font-semibold text-xl ${
                         isWitchTheme ? 'text-white' : 'text-white'
                       }`}
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
+                      animate={{
+                        opacity: [0.4, 1, 0.6, 1, 0.4],
+                        y: [3, 0, 2, 0, 3],
+                      }}
+                      transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
+                      style={{
+                        textShadow: isWitchTheme
+                          ? '0 0 20px rgba(255,255,255,0.5)'
+                          : '0 0 20px rgba(252,137,172,0.5)',
+                      }}
                     >
                       Вытягиваем карту...
                     </motion.p>
-                    {/* Дополнительный текст с эффектом */}
+
+                    {/* Дополнительный текст с волновым эффектом */}
                     <motion.p
-                      className={`text-sm mt-1 ${
-                        isWitchTheme ? 'text-white/50' : 'text-white/60'
+                      className={`text-sm mt-2 font-medium ${
+                        isWitchTheme ? 'text-white/60' : 'text-white/70'
                       }`}
                       animate={{
-                        opacity: [0.3, 0.7, 0.3],
-                        y: [0, -3, 0]
+                        opacity: [0.2, 0.8, 0.4, 0.7, 0.2],
+                        y: [0, -4, -1, -3, 0],
+                        letterSpacing: ['0px', '2px', '1px', '2px', '0px'],
                       }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                      transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
                     >
                       {isWitchTheme ? '✧ магия раскрывается ✧' : '✧ судьба открывается ✧'}
                     </motion.p>
+
+                    {/* Дополнительные декоративные точки под текстом */}
+                    <motion.div className="flex gap-2 mt-3">
+                      {[0, 1, 2].map((dot) => (
+                        <motion.div
+                          key={dot}
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            isWitchTheme ? 'bg-white/50' : 'bg-[#FC89AC]/60'
+                          }`}
+                          animate={{
+                            scale: [0.5, 1.5, 0.5],
+                            opacity: [0.3, 1, 0.3],
+                          }}
+                          transition={{
+                            duration: 0.8,
+                            repeat: Infinity,
+                            delay: dot * 0.25,
+                            ease: 'easeInOut',
+                          }}
+                        />
+                      ))}
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
@@ -1060,7 +1212,7 @@ export function SpreadPage() {
                 <div className={`relative overflow-hidden rounded-2xl ${
                   isWitchTheme
                     ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
-                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
+                    : 'bg-[#C4A0A5]/30 border border-[#C4A0A5]/50 backdrop-blur-sm'
                 }`}>
                   {/* Декоративные элементы на фоне */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -1319,9 +1471,15 @@ export function SpreadPage() {
               <Button variant="secondary" className="flex-1">
                 Не попало {isWitchTheme ? '🖤' : '💔'}
               </Button>
-              <Button variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className="flex-1">
+              <button
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
+                  isFairyTheme
+                    ? 'bg-[#C4A0A5] text-white'
+                    : 'bg-[#6a6a6a] text-white'
+                }`}
+              >
                 В точку! {getThemeEmoji(selectedDeck, 'love')}
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
