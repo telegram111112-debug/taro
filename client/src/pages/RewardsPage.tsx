@@ -89,34 +89,201 @@ export function RewardsPage() {
           </div>
         </motion.div>
 
-        {/* Progress bar */}
+        {/* Progress bar - Epic animated version */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-6"
+          className="mb-6 relative"
         >
-          <div className="flex justify-between mb-2">
-            {milestones.map((m) => (
-              <div
-                key={m}
-                className={`text-xs font-medium ${referralCount >= m ? themeColors.accent : 'text-white/40'}`}
+          {/* Milestone markers with animations */}
+          <div className="flex justify-between mb-3 relative">
+            {milestones.map((m, i) => {
+              const achieved = referralCount >= m
+              const isNext = referralCount < m && (i === 0 || referralCount >= milestones[i - 1])
+              return (
+                <div key={m} className="relative flex flex-col items-center">
+                  {/* Floating sparkle for next milestone */}
+                  {isNext && (
+                    <motion.span
+                      className={`absolute -top-4 text-sm ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/60'}`}
+                      animate={{
+                        y: [-2, 2, -2],
+                        opacity: [0.5, 1, 0.5],
+                        rotate: [0, 10, -10, 0],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      {isFairyTheme ? '✧' : '☆'}
+                    </motion.span>
+                  )}
+
+                  {/* Achievement glow ring */}
+                  {achieved && (
+                    <motion.div
+                      className={`absolute -inset-1 rounded-full ${
+                        isFairyTheme ? 'bg-[#C4A0A5]/30' : 'bg-white/20'
+                      }`}
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        opacity: [0.5, 0, 0.5],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                    />
+                  )}
+
+                  <motion.div
+                    className={`text-xs font-bold relative z-10 ${
+                      achieved
+                        ? themeColors.accent
+                        : isNext
+                          ? isFairyTheme ? 'text-[#C4A0A5]/80' : 'text-white/60'
+                          : 'text-white/30'
+                    }`}
+                    animate={achieved ? {
+                      scale: [1, 1.1, 1],
+                    } : {}}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                  >
+                    {m}
+                  </motion.div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Progress bar container with glow */}
+          <div className="relative">
+            {/* Background glow under progress */}
+            <motion.div
+              className={`absolute -inset-1 rounded-full blur-md ${
+                isFairyTheme ? 'bg-[#C4A0A5]/20' : 'bg-white/10'
+              }`}
+              animate={{
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+
+            {/* Track */}
+            <div className="h-3 bg-white/10 rounded-full overflow-hidden relative backdrop-blur-sm border border-white/5">
+              {/* Animated progress fill */}
+              <motion.div
+                className={`h-full bg-gradient-to-r ${themeColors.progressBg} rounded-full relative overflow-hidden`}
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.min((referralCount / 10) * 100, 100)}%` }}
+                transition={{ duration: 1.5, delay: 0.2, ease: 'easeOut' }}
               >
-                {m}
-              </div>
+                {/* Shimmer effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                />
+
+                {/* Sparkle particles inside progress */}
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className={`absolute w-1 h-1 rounded-full ${
+                      isFairyTheme ? 'bg-white/60' : 'bg-white/50'
+                    }`}
+                    style={{
+                      left: `${20 + i * 15}%`,
+                      top: '50%',
+                    }}
+                    animate={{
+                      y: [-4, 4, -4],
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [0.8, 1.2, 0.8],
+                    }}
+                    transition={{
+                      duration: 1.5 + i * 0.2,
+                      repeat: Infinity,
+                      delay: i * 0.3,
+                    }}
+                  />
+                ))}
+              </motion.div>
+
+              {/* Milestone dots on track */}
+              {milestones.map((m, i) => {
+                const position = (m / 10) * 100
+                const achieved = referralCount >= m
+                return (
+                  <motion.div
+                    key={m}
+                    className={`absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border ${
+                      achieved
+                        ? isFairyTheme
+                          ? 'bg-white border-[#C4A0A5] shadow-lg shadow-[#C4A0A5]/50'
+                          : 'bg-white border-white/50 shadow-lg shadow-white/30'
+                        : 'bg-white/20 border-white/30'
+                    }`}
+                    style={{ left: `${position}%`, transform: 'translate(-50%, -50%)' }}
+                    animate={achieved ? {
+                      scale: [1, 1.3, 1],
+                      boxShadow: isFairyTheme
+                        ? ['0 0 5px rgba(196,160,165,0.5)', '0 0 15px rgba(196,160,165,0.8)', '0 0 5px rgba(196,160,165,0.5)']
+                        : ['0 0 5px rgba(255,255,255,0.3)', '0 0 15px rgba(255,255,255,0.6)', '0 0 5px rgba(255,255,255,0.3)']
+                    } : {}}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+                  />
+                )
+              })}
+            </div>
+
+            {/* Floating particles around progress bar */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className={`absolute w-1.5 h-1.5 rounded-full ${
+                  isFairyTheme ? 'bg-[#C4A0A5]/50' : 'bg-white/30'
+                }`}
+                style={{
+                  left: `${10 + i * 15}%`,
+                  top: i % 2 === 0 ? '-8px' : 'calc(100% + 4px)',
+                }}
+                animate={{
+                  y: i % 2 === 0 ? [-3, 3, -3] : [3, -3, 3],
+                  x: [-2, 2, -2],
+                  opacity: [0.2, 0.6, 0.2],
+                  scale: [0.8, 1.2, 0.8],
+                }}
+                transition={{
+                  duration: 2 + i * 0.3,
+                  repeat: Infinity,
+                  delay: i * 0.2,
+                }}
+              />
             ))}
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              className={`h-full bg-gradient-to-r ${themeColors.progressBg} rounded-full`}
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min((referralCount / 10) * 100, 100)}%` }}
-              transition={{ duration: 1, delay: 0.2 }}
-            />
-          </div>
-          <p className="text-center text-white/60 text-xs mt-2" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-            {referralCount} из 10 подруг
-          </p>
+
+          {/* Animated text */}
+          <motion.p
+            className="text-center text-white/70 text-xs mt-3 font-medium"
+            style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}
+            animate={{
+              opacity: [0.7, 1, 0.7],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <motion.span
+              className={`inline-block mr-1 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'}`}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {referralCount}
+            </motion.span>
+            из 10 подруг
+            <motion.span
+              className="inline-block ml-1"
+              animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              {isFairyTheme ? '💕' : '✨'}
+            </motion.span>
+          </motion.p>
         </motion.div>
 
         {/* Milestones Grid */}

@@ -119,7 +119,7 @@ export function ReferralsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <motion.div
-          className={`w-10 h-10 border-2 border-t-transparent rounded-full ${isFairyTheme ? 'border-[#FC89AC]' : 'border-slate-400'}`}
+          className={`w-10 h-10 border-2 border-t-transparent rounded-full ${isFairyTheme ? 'border-[#FC89AC]' : 'border-[#5a5a5a]'}`}
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         />
@@ -196,7 +196,7 @@ export function ReferralsPage() {
                   ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
                   : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
-                  ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
+                  ? 'bg-[#FC89AC]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
@@ -213,7 +213,7 @@ export function ReferralsPage() {
                   ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
                   : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
-                  ? 'bg-[#FC89AC]/20 text-[#FC89AC]'
+                  ? 'bg-[#FC89AC]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
@@ -290,62 +290,145 @@ export function ReferralsPage() {
 
                   {/* Share Settings Button - Большая кнопка с иконкой */}
                   <motion.button
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
                     onClick={() => {
                       hapticFeedback('impact', 'light')
                       setShowShareSettings(true)
                     }}
-                    className={`w-full p-4 mt-8 rounded-2xl font-medium transition-all active:scale-[0.98] ${
+                    className={`w-full p-4 mt-8 rounded-2xl font-medium transition-all active:scale-[0.98] relative overflow-hidden ${
                       isFairyTheme
-                        ? 'bg-gradient-to-r from-[#FC89AC]/20 via-[#E879F9]/15 to-[#FC89AC]/20 border-2 border-[#FC89AC]/40 shadow-lg shadow-[#FC89AC]/10'
-                        : 'bg-[#2a2a2a]/90 border-2 border-[#3a3a3a]/50 shadow-lg shadow-black/30'
+                        ? 'bg-gradient-to-r from-[#8a6a6f] via-[#9a757a] to-[#8a6a6f] border-2 border-[#a08085]/50 shadow-lg shadow-[#8a6a6f]/30'
+                        : 'bg-gradient-to-r from-[#1a1a1a] via-[#252525] to-[#1a1a1a] border-2 border-[#3a3a3a]/50 shadow-lg shadow-black/50'
                     }`}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <div className="flex items-center gap-4">
-                      {/* Icon */}
-                      <motion.div
-                        className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0"
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                    {/* Animated shimmer effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: ['-200%', '200%'] }}
+                      transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
+                    />
+
+                    {/* Glowing border animation */}
+                    <motion.div
+                      className={`absolute -inset-[1px] rounded-2xl -z-10 ${
+                        isFairyTheme
+                          ? 'bg-gradient-to-r from-[#a08085]/60 via-white/30 to-[#a08085]/60'
+                          : 'bg-gradient-to-r from-[#3a3a3a]/60 via-white/20 to-[#3a3a3a]/60'
+                      }`}
+                      animate={{
+                        opacity: [0.5, 0.8, 0.5],
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+
+                    {/* Floating sparkles */}
+                    {[...Array(4)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className={`absolute text-xs ${isFairyTheme ? 'text-white/40' : 'text-white/25'}`}
+                        style={{
+                          left: `${15 + i * 22}%`,
+                          top: '20%',
+                        }}
+                        animate={{
+                          y: [0, -8, 0],
+                          opacity: [0.2, 0.6, 0.2],
+                          scale: [0.8, 1.2, 0.8],
+                        }}
+                        transition={{
+                          duration: 2 + i * 0.3,
+                          repeat: Infinity,
+                          delay: i * 0.4,
+                        }}
                       >
-                        <img
-                          src={isFairyTheme ? '/icons/share-fairy.png' : '/icons/share-witch.png'}
-                          alt="Share"
-                          className="w-full h-full object-cover"
-                        />
-                      </motion.div>
+                        {isFairyTheme ? ['✧', '♡', '✦', '✧'][i] : ['✦', '☆', '✧', '✦'][i]}
+                      </motion.span>
+                    ))}
 
-                      {/* Text */}
-                      <div className="flex-1 text-left">
-                        <p className={`text-base font-semibold ${isFairyTheme ? 'text-white' : 'text-white'}`}>
-                          Делиться раскладами
-                        </p>
-                      </div>
-
-                      {/* Status indicator - glowing dot */}
-                      {shareEnabled && (
+                    <div className="flex flex-col items-center gap-3 relative z-10">
+                      {/* Icon with pulsing glow */}
+                      <div className="relative">
                         <motion.div
-                          className={`w-3 h-3 rounded-full ${
-                            isFairyTheme
-                              ? 'bg-[#FC89AC]'
-                              : 'bg-white'
+                          className={`absolute -inset-2 rounded-xl blur-md ${
+                            isFairyTheme ? 'bg-[#a08085]/40' : 'bg-white/10'
                           }`}
                           animate={{
-                            boxShadow: isFairyTheme
-                              ? ['0 0 4px 2px rgba(252, 137, 172, 0.4)', '0 0 8px 4px rgba(252, 137, 172, 0.6)', '0 0 4px 2px rgba(252, 137, 172, 0.4)']
-                              : ['0 0 4px 2px rgba(255, 255, 255, 0.3)', '0 0 8px 4px rgba(255, 255, 255, 0.5)', '0 0 4px 2px rgba(255, 255, 255, 0.3)']
+                            scale: [1, 1.2, 1],
+                            opacity: [0.3, 0.6, 0.3],
                           }}
                           transition={{ duration: 2, repeat: Infinity }}
                         />
+                        <motion.div
+                          className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative"
+                          animate={{
+                            scale: [1, 1.08, 1],
+                            rotate: [0, 2, -2, 0],
+                          }}
+                          transition={{ duration: 3, repeat: Infinity }}
+                        >
+                          <img
+                            src={isFairyTheme ? '/icons/share-fairy.png' : '/icons/share-witch.png'}
+                            alt="Share"
+                            className="w-full h-full object-cover"
+                          />
+                        </motion.div>
+                      </div>
+
+                      {/* Text - centered */}
+                      <div className="text-center">
+                        <motion.p
+                          className="text-base font-semibold text-white"
+                          animate={{ opacity: [0.9, 1, 0.9] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          Делиться раскладами
+                        </motion.p>
+                      </div>
+
+                      {/* Status indicator - glowing dot with orbit effect */}
+                      {shareEnabled && (
+                        <div className="relative">
+                          <motion.div
+                            className={`w-4 h-4 rounded-full ${
+                              isFairyTheme
+                                ? 'bg-white/80'
+                                : 'bg-white/70'
+                            }`}
+                            animate={{
+                              scale: [1, 1.3, 1],
+                              boxShadow: isFairyTheme
+                                ? ['0 0 8px 3px rgba(255, 255, 255, 0.4)', '0 0 16px 6px rgba(255, 255, 255, 0.7)', '0 0 8px 3px rgba(255, 255, 255, 0.4)']
+                                : ['0 0 8px 3px rgba(255, 255, 255, 0.3)', '0 0 16px 6px rgba(255, 255, 255, 0.5)', '0 0 8px 3px rgba(255, 255, 255, 0.3)']
+                            }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
+                          {/* Orbiting particle */}
+                          <motion.div
+                            className={`absolute w-1.5 h-1.5 rounded-full ${
+                              isFairyTheme ? 'bg-white/60' : 'bg-white/40'
+                            }`}
+                            animate={{
+                              rotate: 360,
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                            style={{
+                              transformOrigin: '8px 8px',
+                              left: '-4px',
+                              top: '-4px',
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
                   </motion.button>
                 </div>
               ) : (
                 <div className={`text-center py-12 rounded-2xl ${
-                  isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-slate-800/40'
+                  isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-[#2a2a2a]/80'
                 }`}>
                   <motion.div
                     className="text-5xl mb-4"
@@ -392,7 +475,7 @@ export function ReferralsPage() {
                   </motion.div>
                   <div className="flex-1">
                     <h3 className="text-white font-semibold mb-1">За каждую подругу</h3>
-                    <p className={`text-sm ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}>
+                    <p className={`text-sm ${isFairyTheme ? 'text-white/80' : 'text-gray-400'}`}>
                       +1 расклад из 4-х карт обеим
                     </p>
                   </div>
@@ -401,11 +484,11 @@ export function ReferralsPage() {
 
               {/* Share Link */}
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <h3 className={`text-sm font-semibold mb-3 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                <h3 className={`text-sm font-semibold mb-3 ${isFairyTheme ? 'text-white' : 'text-gray-300'}`}>
                   Твоя ссылка
                 </h3>
                 <div className={`rounded-xl overflow-hidden flex mb-3 ${
-                  isFairyTheme ? 'bg-white/10' : 'bg-slate-700/50'
+                  isFairyTheme ? 'bg-white/10' : 'bg-[#3a3a3a]/80'
                 }`}>
                   <div className="flex-1 px-3 py-3 overflow-hidden">
                     <p className="text-white/80 text-sm truncate">
@@ -419,7 +502,7 @@ export function ReferralsPage() {
                         ? 'bg-green-500 text-white'
                         : isFairyTheme
                           ? 'bg-[#FC89AC] text-white'
-                          : 'bg-slate-600 text-white'
+                          : 'bg-[#4a4a4a] text-white'
                     }`}
                   >
                     {copied ? '✓ Готово' : 'Копировать'}
@@ -445,7 +528,7 @@ export function ReferralsPage() {
 
               {/* How it works */}
               <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <h3 className={`text-sm font-semibold mb-4 text-center ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                <h3 className={`text-sm font-semibold mb-4 text-center ${isFairyTheme ? 'text-white' : 'text-gray-300'}`}>
                   Как это работает
                 </h3>
                 <div className="space-y-3">
@@ -460,11 +543,11 @@ export function ReferralsPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + i * 0.1 }}
                       className={`flex items-center gap-3 p-3 rounded-xl ${
-                        isFairyTheme ? 'bg-[#FC89AC]/15' : 'bg-slate-700/40'
+                        isFairyTheme ? 'bg-[#FC89AC]/15' : 'bg-[#3a3a3a]/60'
                       }`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        isFairyTheme ? 'bg-[#FC89AC] text-white' : 'bg-slate-600 text-white'
+                        isFairyTheme ? 'bg-[#FC89AC] text-white' : 'bg-[#4a4a4a] text-white'
                       }`}>
                         {item.step}
                       </div>
@@ -489,119 +572,329 @@ export function ReferralsPage() {
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={() => setShowShareSettings(false)}
           >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+            {/* Animated backdrop with pulse */}
+            <motion.div
+              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+              animate={{
+                backgroundColor: ['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.7)']
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
 
-            {/* Floating particles animation */}
-            {isFairyTheme && (
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(12)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 rounded-full bg-white/30"
-                    style={{
-                      left: `${10 + (i * 7) % 80}%`,
-                      top: `${20 + (i * 11) % 60}%`,
-                    }}
-                    animate={{
-                      y: [-20, 20, -20],
-                      x: [-10, 10, -10],
-                      opacity: [0.2, 0.5, 0.2],
-                      scale: [0.8, 1.2, 0.8],
-                    }}
-                    transition={{
-                      duration: 3 + i * 0.3,
-                      repeat: Infinity,
-                      delay: i * 0.2,
-                    }}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Aurora / Light rays effect */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={`ray-${i}`}
+                  className={`absolute w-1 origin-bottom ${
+                    isFairyTheme ? 'bg-gradient-to-t from-[#C4A0A5]/30 via-white/20 to-transparent' : 'bg-gradient-to-t from-white/20 via-[#5a5a5a]/20 to-transparent'
+                  }`}
+                  style={{
+                    height: '120%',
+                    left: `${15 + i * 17}%`,
+                    bottom: '-20%',
+                    transform: `rotate(${-15 + i * 7}deg)`,
+                  }}
+                  animate={{
+                    opacity: [0, 0.6, 0],
+                    scaleY: [0.5, 1, 0.5],
+                    width: ['2px', '8px', '2px'],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 0.4,
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Floating particles animation - increased to 30 */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {[...Array(30)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`absolute rounded-full ${
+                    isFairyTheme
+                      ? i % 3 === 0 ? 'bg-[#C4A0A5]/50' : i % 3 === 1 ? 'bg-white/40' : 'bg-[#d4b0b5]/30'
+                      : i % 3 === 0 ? 'bg-white/25' : i % 3 === 1 ? 'bg-[#6a6a6a]/40' : 'bg-[#4a4a4a]/30'
+                  }`}
+                  style={{
+                    width: 3 + (i % 5) * 2,
+                    height: 3 + (i % 5) * 2,
+                    left: `${3 + (i * 3.3) % 94}%`,
+                    top: `${5 + (i * 5.7) % 90}%`,
+                  }}
+                  animate={{
+                    y: [-40, 40, -40],
+                    x: [-20, 20, -20],
+                    opacity: [0.1, 0.7, 0.1],
+                    scale: [0.6, 1.4, 0.6],
+                  }}
+                  transition={{
+                    duration: 2.5 + i * 0.15,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
+
+              {/* Floating emoji sparkles - increased to 10 */}
+              {[...Array(10)].map((_, i) => (
+                <motion.span
+                  key={`emoji-${i}`}
+                  className="absolute text-lg"
+                  style={{
+                    left: `${8 + i * 9}%`,
+                    top: `${15 + (i % 4) * 20}%`,
+                  }}
+                  animate={{
+                    y: [-25, 25, -25],
+                    x: [-10, 10, -10],
+                    rotate: [0, 360],
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [0.7, 1.3, 0.7],
+                  }}
+                  transition={{
+                    duration: 3 + i * 0.4,
+                    repeat: Infinity,
+                    delay: i * 0.25,
+                  }}
+                >
+                  {isFairyTheme
+                    ? ['✧', '♡', '✦', '💕', '✧', '🦋', '♡', '✨', '💖', '✧'][i]
+                    : ['✧', '☆', '✦', '🌙', '⭐', '✨', '☆', '✦', '🔮', '✧'][i]
+                  }
+                </motion.span>
+              ))}
+
+              {/* Rising sparkle lines */}
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={`sparkle-line-${i}`}
+                  className={`absolute w-px ${
+                    isFairyTheme ? 'bg-gradient-to-t from-[#C4A0A5]/60 to-transparent' : 'bg-gradient-to-t from-white/30 to-transparent'
+                  }`}
+                  style={{
+                    height: '30px',
+                    left: `${10 + i * 11}%`,
+                    bottom: '10%',
+                  }}
+                  animate={{
+                    y: [0, -100, -200],
+                    opacity: [0, 0.8, 0],
+                    scale: [1, 1.5, 0.5],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: i * 0.3,
+                    ease: 'easeOut',
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Multiple glowing orbs behind modal */}
+            <motion.div
+              className={`absolute w-80 h-80 rounded-full blur-3xl ${
+                isFairyTheme ? 'bg-[#C4A0A5]/40' : 'bg-[#4a4a4a]/35'
+              }`}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.3, 0.6, 0.3],
+                rotate: [0, 180, 360],
+              }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+            <motion.div
+              className={`absolute w-56 h-56 rounded-full blur-2xl ${
+                isFairyTheme ? 'bg-white/25' : 'bg-white/15'
+              }`}
+              animate={{
+                scale: [1.2, 0.9, 1.2],
+                opacity: [0.2, 0.5, 0.2],
+                x: [-30, 30, -30],
+                y: [-20, 20, -20],
+              }}
+              transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+            />
+            <motion.div
+              className={`absolute w-40 h-40 rounded-full blur-xl ${
+                isFairyTheme ? 'bg-[#d4b0b5]/30' : 'bg-[#5a5a5a]/25'
+              }`}
+              animate={{
+                scale: [0.8, 1.4, 0.8],
+                opacity: [0.2, 0.4, 0.2],
+                x: [40, -40, 40],
+                y: [30, -30, 30],
+              }}
+              transition={{ duration: 6, repeat: Infinity, delay: 1 }}
+            />
 
             <motion.div
-              initial={{ scale: 0.8, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.8, opacity: 0, y: 50 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              initial={{ scale: 0.5, opacity: 0, y: 100, rotateX: 45 }}
+              animate={{ scale: 1, opacity: 1, y: 0, rotateX: 0 }}
+              exit={{ scale: 0.5, opacity: 0, y: 100, rotateX: -45 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 200 }}
               className={`relative w-full max-w-sm rounded-3xl overflow-hidden ${
-                isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-slate-800'
+                isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-gradient-to-b from-[#3a3a3a] to-[#2a2a2a]'
               }`}
               onClick={(e) => e.stopPropagation()}
+              style={{ perspective: 1000 }}
             >
-              {/* Shimmer effect */}
-              {isFairyTheme && (
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                />
-              )}
+              {/* Animated border glow */}
+              <motion.div
+                className={`absolute -inset-[1px] rounded-3xl ${
+                  isFairyTheme
+                    ? 'bg-gradient-to-r from-white/40 via-[#C4A0A5] to-white/40'
+                    : 'bg-gradient-to-r from-[#4a4a4a]/40 via-white/20 to-[#4a4a4a]/40'
+                }`}
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                style={{ backgroundSize: '200% 200%' }}
+              />
+              <div className={`relative rounded-3xl ${
+                isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-gradient-to-b from-[#3a3a3a] to-[#2a2a2a]'
+              }`}>
 
-              {/* Decorative corner sparkles */}
-              {isFairyTheme && (
-                <>
-                  <motion.span
-                    className="absolute top-4 right-4 text-white/40 text-lg"
-                    animate={{ rotate: [0, 180, 360], scale: [1, 1.2, 1] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  >
-                    ✦
-                  </motion.span>
-                  <motion.span
-                    className="absolute bottom-4 left-4 text-white/30 text-sm"
-                    animate={{ rotate: [360, 180, 0], scale: [1, 1.3, 1] }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                  >
-                    ✧
-                  </motion.span>
-                </>
-              )}
+              {/* Multiple shimmer layers */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                animate={{ x: ['-200%', '200%'] }}
+                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 3 }}
+              />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/5"
+                animate={{ opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
 
-              {/* Header */}
+              {/* Decorative corner sparkles - both themes */}
+              <>
+                <motion.span
+                  className={`absolute top-4 right-12 text-lg z-10 ${
+                    isFairyTheme ? 'text-white/50' : 'text-white/30'
+                  }`}
+                  animate={{
+                    rotate: [0, 360],
+                    scale: [1, 1.4, 1],
+                    opacity: [0.3, 0.7, 0.3],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  ✦
+                </motion.span>
+                <motion.span
+                  className={`absolute top-12 right-4 text-sm z-10 ${
+                    isFairyTheme ? 'text-white/40' : 'text-white/25'
+                  }`}
+                  animate={{
+                    rotate: [360, 0],
+                    scale: [1, 1.3, 1],
+                    opacity: [0.2, 0.5, 0.2],
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+                >
+                  ✧
+                </motion.span>
+                <motion.span
+                  className={`absolute bottom-20 left-4 text-lg z-10 ${
+                    isFairyTheme ? 'text-white/40' : 'text-white/20'
+                  }`}
+                  animate={{
+                    rotate: [0, -360],
+                    scale: [1.2, 0.9, 1.2],
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                >
+                  {isFairyTheme ? '♡' : '☆'}
+                </motion.span>
+                <motion.span
+                  className={`absolute bottom-32 right-6 text-xs z-10 ${
+                    isFairyTheme ? 'text-white/30' : 'text-white/20'
+                  }`}
+                  animate={{
+                    y: [-5, 5, -5],
+                    opacity: [0.2, 0.5, 0.2],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  {isFairyTheme ? '🦋' : '🌙'}
+                </motion.span>
+              </>
+
+              {/* Header with wave animation */}
               <div className="relative px-5 pt-5 pb-4 flex items-center gap-4">
                 <div className="flex-1">
                   <motion.h3
                     className="text-white font-bold text-lg"
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
+                    transition={{ delay: 0.1, type: 'spring' }}
                   >
-                    Делиться результатами
+                    <motion.span
+                      animate={{ opacity: [0.9, 1, 0.9] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      Делиться результатами
+                    </motion.span>
                   </motion.h3>
                   <motion.p
                     className="text-sm text-white/70"
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0.2, type: 'spring' }}
                   >
                     Настрой видимость раскладов
                   </motion.p>
                 </div>
                 <motion.button
                   onClick={() => setShowShareSettings(false)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    isFairyTheme ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-slate-700 text-slate-400'
+                  className={`w-9 h-9 rounded-full flex items-center justify-center text-lg font-light relative overflow-hidden ${
+                    isFairyTheme ? 'bg-white/20 text-white' : 'bg-[#4a4a4a] text-gray-300'
                   }`}
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.15, rotate: 180 }}
+                  whileTap={{ scale: 0.85 }}
                   transition={{ type: 'spring', stiffness: 400 }}
                 >
+                  <motion.div
+                    className={`absolute inset-0 ${
+                      isFairyTheme ? 'bg-white/20' : 'bg-white/10'
+                    }`}
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                   ×
                 </motion.button>
               </div>
 
               {/* Content */}
               <div className="relative px-5 pb-6">
-                {/* Toggle */}
+                {/* Toggle with glow effect */}
                 <motion.div
-                  className={`p-4 rounded-2xl mb-4 ${
-                    isFairyTheme ? 'bg-white/15 border border-white/20' : 'bg-slate-700/50 border border-slate-600'
+                  className={`p-4 rounded-2xl mb-4 relative overflow-hidden ${
+                    isFairyTheme ? 'bg-white/15 border border-white/25' : 'bg-[#3a3a3a]/70 border border-[#4a4a4a]/50'
                   }`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.2, type: 'spring' }}
                 >
-                  <div className="flex items-center justify-between">
+                  {/* Inner glow */}
+                  <motion.div
+                    className={`absolute inset-0 ${
+                      isFairyTheme ? 'bg-white/5' : 'bg-white/5'
+                    }`}
+                    animate={{ opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+
+                  <div className="flex items-center justify-between relative">
                     <div className="flex-1">
                       <p className="text-white font-medium">Расклады видны подругам</p>
                       <p className="text-xs text-white/60">
@@ -615,40 +908,56 @@ export function ReferralsPage() {
                       }}
                       className={`w-14 h-8 rounded-full transition-all relative ${
                         shareEnabled
-                          ? isFairyTheme ? 'bg-white/40' : 'bg-slate-500'
-                          : isFairyTheme ? 'bg-white/20' : 'bg-slate-700'
+                          ? isFairyTheme ? 'bg-white/50' : 'bg-[#5a5a5a]'
+                          : isFairyTheme ? 'bg-white/20' : 'bg-[#3a3a3a]'
                       }`}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.9 }}
                     >
+                      {/* Toggle glow when enabled */}
+                      {shareEnabled && (
+                        <motion.div
+                          className={`absolute inset-0 rounded-full ${
+                            isFairyTheme ? 'bg-white/30' : 'bg-white/20'
+                          }`}
+                          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                      )}
                       <motion.div
-                        className={`w-6 h-6 rounded-full absolute top-1 shadow-lg ${
-                          isFairyTheme ? 'bg-white' : 'bg-white'
-                        }`}
+                        className="w-6 h-6 rounded-full absolute top-1 shadow-lg bg-white"
                         animate={{
                           left: shareEnabled ? '1.75rem' : '0.25rem',
-                          scale: shareEnabled ? [1, 1.1, 1] : 1
+                          scale: shareEnabled ? [1, 1.2, 1] : 1,
+                          boxShadow: shareEnabled
+                            ? ['0 0 10px rgba(255,255,255,0.5)', '0 0 20px rgba(255,255,255,0.8)', '0 0 10px rgba(255,255,255,0.5)']
+                            : '0 2px 4px rgba(0,0,0,0.2)'
                         }}
-                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 25 }}
                       />
                     </motion.button>
                   </div>
                 </motion.div>
 
-                {/* Info */}
+                {/* Info with typing effect style */}
                 <motion.p
-                  className="text-xs text-center mb-4 text-white/50"
+                  className="text-xs text-center mb-4 text-white/60"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
-                  Когда функция включена, подруги смогут видеть твои расклады на вкладке "Подруги"
+                  <motion.span
+                    animate={{ opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    Когда функция включена, подруги смогут видеть твои расклады на вкладке "Подруги"
+                  </motion.span>
                 </motion.p>
 
-                {/* Share Now Button */}
+                {/* Share Now Button - Epic version */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
+                  transition={{ delay: 0.35, type: 'spring' }}
                 >
                   <motion.button
                     onClick={() => {
@@ -657,41 +966,79 @@ export function ReferralsPage() {
                     }}
                     className={`w-full py-4 rounded-2xl font-semibold text-lg mb-3 relative overflow-hidden ${
                       isFairyTheme
-                        ? 'bg-white/25 text-white border border-white/30 hover:bg-white/35'
-                        : 'bg-slate-600 text-white'
+                        ? 'bg-white/30 text-white border border-white/40'
+                        : 'bg-[#4a4a4a] text-white border border-[#5a5a5a]/30'
                     }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    {/* Button shimmer */}
+                    {/* Multiple shimmer layers */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full"
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                      animate={{ x: ['-200%', '200%'] }}
+                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
                     />
-                    <span className="relative">Поделиться сейчас</span>
+                    <motion.div
+                      className={`absolute inset-0 ${
+                        isFairyTheme ? 'bg-white/10' : 'bg-white/5'
+                      }`}
+                      animate={{ opacity: [0, 0.3, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+
+                    {/* Floating particles inside button */}
+                    {[...Array(4)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className="absolute text-xs opacity-50"
+                        style={{ left: `${20 + i * 20}%`, top: '50%' }}
+                        animate={{
+                          y: [-10, 10, -10],
+                          opacity: [0.2, 0.5, 0.2],
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+                      >
+                        {isFairyTheme ? '✧' : '✦'}
+                      </motion.span>
+                    ))}
+
+                    <span className="relative flex items-center justify-center gap-2">
+                      <motion.span
+                        animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        {isFairyTheme ? '💕' : '✨'}
+                      </motion.span>
+                      Поделиться сейчас
+                    </span>
                   </motion.button>
                 </motion.div>
 
                 {/* Done Button */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.4, type: 'spring' }}
                 >
                   <motion.button
                     onClick={() => setShowShareSettings(false)}
-                    className={`w-full py-4 rounded-2xl font-medium ${
+                    className={`w-full py-4 rounded-2xl font-medium relative overflow-hidden ${
                       isFairyTheme
-                        ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
-                        : 'bg-slate-700 text-white'
+                        ? 'bg-white/10 text-white border border-white/20'
+                        : 'bg-[#3a3a3a] text-white border border-[#4a4a4a]'
                     }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Готово
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                      animate={{ x: ['-200%', '200%'] }}
+                      transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
+                    />
+                    <span className="relative">Готово</span>
                   </motion.button>
                 </motion.div>
+              </div>
               </div>
             </motion.div>
           </motion.div>
@@ -715,32 +1062,32 @@ export function ReferralsPage() {
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className={`relative w-full max-h-[70vh] rounded-t-3xl overflow-hidden ${
-                isFairyTheme ? 'bg-gradient-to-b from-[#2a1018] to-[#1a0a10]' : 'bg-slate-900'
+                isFairyTheme ? 'bg-gradient-to-b from-[#2a1018] to-[#1a0a10]' : 'bg-[#1a1a1a]'
               }`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Handle */}
               <div className="flex justify-center pt-3 pb-2">
-                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-slate-600'}`} />
+                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-[#4a4a4a]'}`} />
               </div>
 
               {/* Header */}
               <div className="px-5 pb-4 flex items-center gap-4 border-b border-white/10">
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-xl ${
-                  isFairyTheme ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]' : 'bg-gradient-to-br from-slate-500 to-slate-700'
+                  isFairyTheme ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]' : 'bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]'
                 }`}>
                   {selectedFriend.name.charAt(0)}
                 </div>
                 <div className="flex-1">
                   <h3 className="text-white font-bold text-lg">{selectedFriend.name}</h3>
-                  <p className={`text-sm ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
+                  <p className={`text-sm ${isFairyTheme ? 'text-white/70' : 'text-gray-400'}`}>
                     {selectedFriend.title} • {formatDate(selectedFriend.joinedAt)}
                   </p>
                 </div>
                 <button
                   onClick={() => setSelectedFriend(null)}
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
-                    isFairyTheme ? 'bg-[#FC89AC]/20 text-[#FC89AC]' : 'bg-slate-700 text-slate-400'
+                    isFairyTheme ? 'bg-[#FC89AC]/20 text-white' : 'bg-[#3a3a3a] text-gray-400'
                   }`}
                 >
                   ×
@@ -749,7 +1096,7 @@ export function ReferralsPage() {
 
               {/* Content */}
               <div className="px-5 py-4 max-h-[50vh] overflow-y-auto">
-                <h4 className={`text-sm font-medium mb-3 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}>
+                <h4 className={`text-sm font-medium mb-3 ${isFairyTheme ? 'text-white' : 'text-gray-400'}`}>
                   Расклады подруги
                 </h4>
 
@@ -764,12 +1111,12 @@ export function ReferralsPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.1 }}
                           className={`p-4 rounded-xl ${
-                            isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-slate-800/50'
+                            isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-[#2a2a2a]/80'
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-xl">{typeInfo.emoji}</span>
-                            <span className={`text-sm font-medium ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                            <span className={`text-sm font-medium ${isFairyTheme ? 'text-white' : 'text-gray-300'}`}>
                               {typeInfo.label}
                             </span>
                             <span className="text-white/30 text-xs ml-auto">{formatDate(spread.date)}</span>
@@ -789,7 +1136,7 @@ export function ReferralsPage() {
               </div>
 
               {/* Footer */}
-              <div className={`px-5 py-4 border-t ${isFairyTheme ? 'border-[#FC89AC]/20' : 'border-slate-700'}`}>
+              <div className={`px-5 py-4 border-t ${isFairyTheme ? 'border-[#FC89AC]/20' : 'border-[#3a3a3a]'}`}>
                 <Button
                   onClick={() => setSelectedFriend(null)}
                   variant="secondary"
