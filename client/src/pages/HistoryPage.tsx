@@ -122,21 +122,21 @@ export function HistoryPage() {
   const getTypeColor = (type: string) => {
     if (isFairyTheme) {
       switch (type) {
-        case 'daily': return 'from-[#FC89AC]/30 to-pink-500/20'
+        case 'daily': return 'from-[#C4A0A5]/30 to-pink-500/20'
         case 'love': return 'from-pink-500/30 to-rose-500/20'
         case 'money': return 'from-amber-400/30 to-yellow-500/20'
-        case 'future': return 'from-purple-500/30 to-violet-500/20'
-        case 'question': return 'from-[#FC89AC]/30 to-fuchsia-500/20'
-        default: return 'from-[#FC89AC]/30 to-pink-500/20'
+        case 'future': return 'from-[#C4A0A5]/30 to-pink-500/20'
+        case 'question': return 'from-[#C4A0A5]/30 to-fuchsia-500/20'
+        default: return 'from-[#C4A0A5]/30 to-pink-500/20'
       }
     }
     switch (type) {
-      case 'daily': return 'from-slate-500/30 to-slate-600/20'
-      case 'love': return 'from-slate-600/30 to-slate-700/20'
+      case 'daily': return 'from-black/30 to-black/20'
+      case 'love': return 'from-black/30 to-black/20'
       case 'money': return 'from-amber-600/30 to-amber-700/20'
-      case 'future': return 'from-violet-600/30 to-purple-700/20'
-      case 'question': return 'from-slate-500/30 to-slate-600/20'
-      default: return 'from-slate-500/30 to-slate-600/20'
+      case 'future': return 'from-black/30 to-black/20'
+      case 'question': return 'from-black/30 to-black/20'
+      default: return 'from-black/30 to-black/20'
     }
   }
 
@@ -230,8 +230,8 @@ export function HistoryPage() {
                       relative overflow-hidden rounded-2xl p-3
                       backdrop-blur-md border transition-all
                       ${isFairyTheme
-                        ? 'bg-[#FC89AC]/10 border-[#FC89AC]/20 hover:bg-[#FC89AC]/15'
-                        : 'bg-slate-800/50 border-slate-600/30 hover:bg-slate-700/50'
+                        ? 'bg-[#C4A0A5]/10 border-[#C4A0A5]/20 hover:bg-[#C4A0A5]/15'
+                        : 'bg-black/40 border-white/20 hover:bg-black/50'
                       }
                     `}
                   >
@@ -261,7 +261,7 @@ export function HistoryPage() {
                         <div className={`
                           absolute -bottom-1 -right-1 w-6 h-6 rounded-full
                           flex items-center justify-center text-sm
-                          ${isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-600'}
+                          ${isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/50'}
                           shadow-lg
                         `}>
                           {getTypeIcon(item.type)}
@@ -287,7 +287,7 @@ export function HistoryPage() {
                             </motion.span>
                           )}
                         </div>
-                        <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
+                        <p className={`text-xs ${isFairyTheme ? 'text-[#C4A0A5]/70' : 'text-white/60'}`}>
                           {item.typeName}
                         </p>
                         {item.question && (
@@ -338,14 +338,14 @@ export function HistoryPage() {
                 relative w-full max-h-[85vh] rounded-t-3xl overflow-hidden
                 ${isFairyTheme
                   ? 'bg-gradient-to-b from-[#2a1018] to-[#1a0a10]'
-                  : 'bg-gradient-to-b from-slate-900 to-slate-950'
+                  : 'bg-gradient-to-b from-black/90 to-black'
                 }
               `}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Handle */}
               <div className="flex justify-center pt-3 pb-2">
-                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-slate-600'}`} />
+                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#C4A0A5]/40' : 'bg-white/40'}`} />
               </div>
 
               {/* Card showcase */}
@@ -400,7 +400,7 @@ export function HistoryPage() {
                 >
                   <div className={`
                     px-3 py-1.5 rounded-full text-xs
-                    ${isFairyTheme ? 'bg-[#FC89AC]/20 text-[#FC89AC]' : 'bg-slate-700 text-slate-300'}
+                    ${isFairyTheme ? 'bg-[#C4A0A5]/20 text-[#C4A0A5]' : 'bg-black/40 text-white/80'}
                   `}>
                     {getTypeIcon(selectedReading.type)} {selectedReading.typeName}
                   </div>
@@ -417,7 +417,7 @@ export function HistoryPage() {
                     transition={{ delay: 0.35 }}
                     className={`
                       p-3 rounded-xl mb-4 text-center
-                      ${isFairyTheme ? 'bg-[#FC89AC]/10 border border-[#FC89AC]/20' : 'bg-slate-800/50 border border-slate-700'}
+                      ${isFairyTheme ? 'bg-[#C4A0A5]/10 border border-[#C4A0A5]/20' : 'bg-black/40 border border-white/20'}
                     `}
                   >
                     <p className="text-white/60 text-xs mb-1">Твой вопрос:</p>
@@ -438,7 +438,7 @@ export function HistoryPage() {
                     <div className="space-y-4">
                       {/* Main meaning */}
                       <div>
-                        <h3 className={`text-sm font-medium mb-2 flex items-center gap-2 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                        <h3 className={`text-sm font-medium mb-2 flex items-center gap-2 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/70'}`}>
                           <span>{isFairyTheme ? '🦋' : '🔮'}</span> Послание
                         </h3>
                         <p className="text-white/80 text-sm leading-relaxed">
@@ -464,11 +464,11 @@ export function HistoryPage() {
                       <div className={`
                         p-3 rounded-xl
                         ${isFairyTheme
-                          ? 'bg-gradient-to-r from-[#FC89AC]/10 to-pink-500/10 border border-[#FC89AC]/20'
-                          : 'bg-gradient-to-r from-slate-700/30 to-slate-600/30 border border-slate-600/30'
+                          ? 'bg-gradient-to-r from-[#C4A0A5]/10 to-pink-500/10 border border-[#C4A0A5]/20'
+                          : 'bg-gradient-to-r from-black/30 to-black/20 border border-white/20'
                         }
                       `}>
-                        <h3 className={`text-xs font-medium mb-1 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}>
+                        <h3 className={`text-xs font-medium mb-1 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/60'}`}>
                           Совет карты
                         </h3>
                         <p className="text-white/70 text-sm italic">
@@ -492,7 +492,7 @@ export function HistoryPage() {
                     <span className={`
                       inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs
                       ${selectedReading.feedback === 'positive'
-                        ? isFairyTheme ? 'bg-[#FC89AC]/20 text-[#FC89AC]' : 'bg-slate-600/50 text-slate-300'
+                        ? isFairyTheme ? 'bg-[#C4A0A5]/20 text-[#C4A0A5]' : 'bg-black/40 text-white/70'
                         : 'bg-white/10 text-white/50'
                       }
                     `}>

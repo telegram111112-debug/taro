@@ -7,7 +7,7 @@ import { MagicParticlesLight } from '../components/effects'
 import { useUserStore } from '../store/useUserStore'
 import { getThemeConfig } from '../lib/deckThemes'
 import { getZodiacEmoji } from '../lib/zodiacEmojis'
-import { getDailyHoroscope, getZodiacSymbol, ZodiacSign } from '../lib/horoscope'
+import { getDailyHoroscope, getZodiacSymbol, getColorExplanation, getMoodExplanation, ZodiacSign } from '../lib/horoscope'
 import type { DeckTheme } from '../types'
 
 // Аватарки для выбора
@@ -30,6 +30,7 @@ export function ProfilePage() {
   const [showDeckModal, setShowDeckModal] = useState(false)
   const [showAvatarModal, setShowAvatarModal] = useState(false)
   const [expandedHoroscope, setExpandedHoroscope] = useState(false)
+  const [selectedHoroscopeDetail, setSelectedHoroscopeDetail] = useState<'color' | 'mood' | null>(null)
 
   const handleChangeDeck = (theme: DeckTheme) => {
     setDeckTheme(theme)
@@ -93,8 +94,8 @@ export function ProfilePage() {
           {user?.birthDate && (
             <p className={`text-xs mt-1 tracking-widest ${
               isFairyTheme
-                ? 'text-[#FC89AC]/60'
-                : 'text-slate-400/70'
+                ? 'text-[#C4A0A5]/60'
+                : 'text-white/60'
             }`}
             style={{
               fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -132,16 +133,16 @@ export function ProfilePage() {
               />
               {/* Overlay for readability */}
               <div className={`absolute inset-0 ${
-                isFairyTheme ? 'bg-black/20' : 'bg-black/40'
+                isFairyTheme ? 'bg-gradient-to-b from-black/30 via-black/40 to-black/50' : 'bg-black/40'
               }`} />
 
               {/* Content */}
               <div className="relative z-10 p-4">
                 {/* Header - centered */}
                 <div className="flex flex-col items-center text-center mb-3">
-                  <span className="text-3xl mb-1">{getZodiacSymbol(user.zodiacSign as ZodiacSign)}</span>
-                  <h3 className="text-white font-medium">Гороскоп на сегодня</h3>
-                  <p className="text-white/60 text-xs">{user.zodiacSign}</p>
+                  <span className="text-3xl mb-1 drop-shadow-lg">{getZodiacSymbol(user.zodiacSign as ZodiacSign)}</span>
+                  <h3 className="text-white font-medium drop-shadow-md">Гороскоп на сегодня</h3>
+                  <p className="text-white/80 text-xs drop-shadow-sm">{user.zodiacSign}</p>
                   <motion.span
                     className="text-white/40 text-sm mt-1"
                     animate={{ rotate: expandedHoroscope ? 180 : 0 }}
@@ -151,20 +152,44 @@ export function ProfilePage() {
                 </div>
 
                 {/* General prediction - centered */}
-                <p className="text-white/90 text-sm leading-relaxed mb-3 text-center">
+                <p className="text-white text-sm leading-relaxed mb-3 text-center drop-shadow-md">
                   {horoscope.general}
                 </p>
 
-                {/* Quick stats row - centered */}
+                {/* Quick stats row - centered - clickable buttons */}
                 <div className="flex gap-3 flex-wrap justify-center">
-                  <div className="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
-                    <span className="text-xs">🎨</span>
-                    <span className="text-white/80 text-xs capitalize">{horoscope.luckyColor}</span>
-                  </div>
-                  <div className="flex items-center gap-1 bg-white/10 rounded-full px-3 py-1">
-                    <span className="text-xs">💫</span>
-                    <span className="text-white/80 text-xs">{horoscope.mood}</span>
-                  </div>
+                  <motion.button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedHoroscopeDetail('color')
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`flex items-center gap-1 rounded-full px-3 py-1.5 transition-all backdrop-blur-sm shadow-lg ${
+                      isFairyTheme
+                        ? 'bg-white/20 border border-[#C4A0A5]/40 hover:bg-white/30'
+                        : 'bg-white/15 border border-white/20 hover:bg-white/25'
+                    }`}
+                  >
+                    <span className="text-sm drop-shadow-sm">🎨</span>
+                    <span className="text-white text-xs capitalize font-medium drop-shadow-sm">{horoscope.luckyColor}</span>
+                  </motion.button>
+                  <motion.button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedHoroscopeDetail('mood')
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`flex items-center gap-1 rounded-full px-3 py-1.5 transition-all backdrop-blur-sm shadow-lg ${
+                      isFairyTheme
+                        ? 'bg-white/20 border border-[#C4A0A5]/40 hover:bg-white/30'
+                        : 'bg-white/15 border border-white/20 hover:bg-white/25'
+                    }`}
+                  >
+                    <span className="text-sm drop-shadow-sm">💫</span>
+                    <span className="text-white text-xs font-medium drop-shadow-sm">{horoscope.mood}</span>
+                  </motion.button>
                 </div>
 
                 {/* Expanded content */}
@@ -369,7 +394,7 @@ export function ProfilePage() {
               className={`
                 p-4 rounded-xl border-2 transition-all
                 ${user?.deckTheme === 'witch'
-                  ? 'border-slate-400 bg-slate-500/20'
+                  ? 'border-white/60 bg-white/20'
                   : 'border-white/10 hover:border-white/30'
                 }
               `}
@@ -391,7 +416,7 @@ export function ProfilePage() {
               className={`
                 p-4 rounded-xl border-2 transition-all
                 ${user?.deckTheme === 'fairy'
-                  ? 'border-[#FC89AC] bg-[#FC89AC]/10'
+                  ? 'border-[#C4A0A5] bg-[#C4A0A5]/10'
                   : 'border-white/10 hover:border-white/30'
                 }
               `}
@@ -411,7 +436,7 @@ export function ProfilePage() {
           <div className="flex gap-3 mt-6">
             <Button
               variant="secondary"
-              className={`flex-1 ${isWitchTheme ? 'bg-slate-700/50 border-slate-500/30 hover:bg-slate-600/50' : 'bg-[#D4A5B9]/30 border-[#D4A5B9]/40 hover:bg-[#D4A5B9]/40'}`}
+              className={`flex-1 ${isWitchTheme ? 'bg-black/40 border-white/20 hover:bg-black/50' : 'bg-[#D4A5B9]/30 border-[#D4A5B9]/40 hover:bg-[#D4A5B9]/40'}`}
               onClick={() => {
                 updateUser({ deckPermanent: false })
                 setShowDeckModal(false)
@@ -421,7 +446,7 @@ export function ProfilePage() {
             </Button>
             <Button
               variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-              className={`flex-1 ${isWitchTheme ? 'bg-slate-600/60 border-slate-400/40' : 'bg-[#E8B4C8]/40 border-[#E8B4C8]/50'}`}
+              className={`flex-1 ${isWitchTheme ? 'bg-black/50 border-white/30' : 'bg-[#E8B4C8]/40 border-[#E8B4C8]/50'}`}
               onClick={() => {
                 updateUser({ deckPermanent: true })
                 setShowDeckModal(false)
@@ -445,6 +470,7 @@ export function ProfilePage() {
           <div className="text-center">
             <motion.div
               className="text-4xl mb-2"
+              style={{ willChange: 'transform', transform: 'translateZ(0)' }}
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -469,8 +495,8 @@ export function ProfilePage() {
                   className={`relative aspect-square rounded-2xl overflow-hidden ${
                     isSelected
                       ? isFairyTheme
-                        ? 'ring-3 ring-[#FC89AC] ring-offset-2 ring-offset-black/50'
-                        : 'ring-3 ring-slate-300 ring-offset-2 ring-offset-black/50'
+                        ? 'ring-3 ring-[#C4A0A5] ring-offset-2 ring-offset-black/50'
+                        : 'ring-3 ring-white/70 ring-offset-2 ring-offset-black/50'
                       : ''
                   }`}
                   whileHover={{ scale: 1.05, y: -4 }}
@@ -488,9 +514,10 @@ export function ProfilePage() {
                   <motion.div
                     className={`absolute inset-0 ${
                       isFairyTheme
-                        ? 'bg-gradient-to-t from-[#FC89AC]/30 to-transparent'
-                        : 'bg-gradient-to-t from-slate-500/30 to-transparent'
+                        ? 'bg-gradient-to-t from-[#C4A0A5]/30 to-transparent'
+                        : 'bg-gradient-to-t from-white/20 to-transparent'
                     }`}
+                    style={{ willChange: 'opacity', transform: 'translateZ(0)' }}
                     animate={{
                       opacity: isSelected ? [0.5, 0.8, 0.5] : 0.3,
                     }}
@@ -507,15 +534,15 @@ export function ProfilePage() {
                   {/* Оверлей при наведении */}
                   <div className={`absolute inset-0 transition-opacity ${
                     isFairyTheme
-                      ? 'bg-[#FC89AC]/0 hover:bg-[#FC89AC]/10'
-                      : 'bg-slate-400/0 hover:bg-slate-400/10'
+                      ? 'bg-[#C4A0A5]/0 hover:bg-[#C4A0A5]/10'
+                      : 'bg-white/0 hover:bg-white/10'
                   }`} />
 
                   {/* Галочка выбора */}
                   {isSelected && (
                     <motion.div
                       className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center ${
-                        isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-500'
+                        isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/60'
                       }`}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
@@ -530,6 +557,215 @@ export function ProfilePage() {
           </div>
         </div>
       </Modal>
+
+      {/* Horoscope Detail Modal (Color/Mood) */}
+      <AnimatePresence>
+        {selectedHoroscopeDetail && horoscope && user?.zodiacSign && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedHoroscopeDetail(null)}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            />
+
+            {/* Modal content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative w-full max-w-sm rounded-3xl overflow-hidden ${
+                isFairyTheme
+                  ? 'bg-gradient-to-b from-[#C4A0A5]/30 to-[#8B6B70]/30'
+                  : 'bg-gradient-to-b from-black/80 to-gray-900/80'
+              } backdrop-blur-xl border ${
+                isFairyTheme
+                  ? 'border-[#C4A0A5]/30'
+                  : 'border-white/10'
+              } shadow-2xl`}
+            >
+              {/* Decorative top gradient */}
+              <div className={`absolute top-0 left-0 right-0 h-1 ${
+                isFairyTheme
+                  ? 'bg-gradient-to-r from-transparent via-[#C4A0A5] to-transparent'
+                  : 'bg-gradient-to-r from-transparent via-white/40 to-transparent'
+              }`} />
+
+              <div className="relative p-6">
+                {/* Header with emoji */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', delay: 0.1 }}
+                  className="flex justify-center mb-4"
+                >
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl ${
+                    isFairyTheme
+                      ? 'bg-[#C4A0A5]/20 border-2 border-[#C4A0A5]/40'
+                      : 'bg-white/10 border-2 border-white/20'
+                  }`}>
+                    <motion.span
+                      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                      animate={{
+                        rotate: [0, 5, -5, 0],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
+                    >
+                      {selectedHoroscopeDetail === 'color'
+                        ? getColorExplanation(horoscope.luckyColor, user.zodiacSign as ZodiacSign).emoji
+                        : getMoodExplanation(horoscope.mood, user.zodiacSign as ZodiacSign).emoji
+                      }
+                    </motion.span>
+                  </div>
+                </motion.div>
+
+                {/* Day badge */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.15, type: 'spring' }}
+                  className="flex justify-center mb-2"
+                >
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${
+                    isFairyTheme
+                      ? 'bg-[#C4A0A5]/20 text-[#C4A0A5] border border-[#C4A0A5]/30'
+                      : 'bg-white/10 text-white/70 border border-white/20'
+                  }`}>
+                    <motion.span
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                    >
+                      {selectedHoroscopeDetail === 'color' ? '🌈' : '🌟'}
+                    </motion.span>
+                    <span>{selectedHoroscopeDetail === 'color' ? 'Твой цвет на сегодня' : 'Твой настрой на сегодня'}</span>
+                  </div>
+                </motion.div>
+
+                {/* Title */}
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className={`text-xl font-semibold text-center mb-4 ${
+                    isFairyTheme ? 'text-[#C4A0A5]' : 'text-white'
+                  }`}
+                >
+                  {selectedHoroscopeDetail === 'color'
+                    ? getColorExplanation(horoscope.luckyColor, user.zodiacSign as ZodiacSign).title
+                    : getMoodExplanation(horoscope.mood, user.zodiacSign as ZodiacSign).title
+                  }
+                </motion.h3>
+
+                {/* Content */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-4"
+                >
+                  {/* Meaning */}
+                  <p className="text-white/80 text-sm leading-relaxed text-center">
+                    {selectedHoroscopeDetail === 'color'
+                      ? getColorExplanation(horoscope.luckyColor, user.zodiacSign as ZodiacSign).meaning
+                      : getMoodExplanation(horoscope.mood, user.zodiacSign as ZodiacSign).meaning
+                    }
+                  </p>
+
+                  {/* Divider */}
+                  <div className={`h-px w-full ${
+                    isFairyTheme
+                      ? 'bg-gradient-to-r from-transparent via-[#C4A0A5]/30 to-transparent'
+                      : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
+                  }`} />
+
+                  {/* Advice */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+                    className={`p-4 rounded-xl ${
+                      isFairyTheme
+                        ? 'bg-[#C4A0A5]/10 border border-[#C4A0A5]/20'
+                        : 'bg-white/5 border border-white/10'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <motion.span
+                        className="text-2xl"
+                        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut'
+                        }}
+                      >
+                        💡
+                      </motion.span>
+                      <p className="text-white/70 text-sm italic">
+                        {selectedHoroscopeDetail === 'color'
+                          ? getColorExplanation(horoscope.luckyColor, user.zodiacSign as ZodiacSign).advice
+                          : getMoodExplanation(horoscope.mood, user.zodiacSign as ZodiacSign).advice
+                        }
+                      </p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+
+                {/* Close button */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setSelectedHoroscopeDetail(null)}
+                  className={`w-full mt-6 py-3 rounded-xl font-medium transition-all relative overflow-hidden ${
+                    isFairyTheme
+                      ? 'bg-gradient-to-r from-[#C4A0A5]/30 via-[#C4A0A5]/40 to-[#C4A0A5]/30 border border-[#C4A0A5]/40 text-white'
+                      : 'bg-gradient-to-r from-white/10 via-white/20 to-white/10 border border-white/20 text-white'
+                  }`}
+                >
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
+                  />
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Понятно
+                    <motion.span
+                      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                      animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      ✨
+                    </motion.span>
+                  </span>
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

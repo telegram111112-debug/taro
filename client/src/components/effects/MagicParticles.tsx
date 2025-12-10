@@ -1,3 +1,4 @@
+import { useMemo, memo } from 'react'
 import { motion } from 'framer-motion'
 import { useUserStore } from '../../store/useUserStore'
 
@@ -13,7 +14,7 @@ interface MagicParticlesProps {
   intensity?: 'light' | 'medium' | 'heavy'
 }
 
-export function MagicParticles({
+export const MagicParticles = memo(function MagicParticles({
   count,
   theme = 'auto',
   intensity = 'medium'
@@ -27,33 +28,43 @@ export function MagicParticles({
   const particleCount = count ?? (intensity === 'light' ? 8 : intensity === 'medium' ? 15 : 25)
   const symbols = actualTheme === 'fairy' ? fairySymbols : witchSymbols
 
+  // Мемоизируем случайные значения для каждой частицы
+  const particleData = useMemo(() => {
+    return [...Array(particleCount)].map((_, i) => ({
+      startX: Math.random() * 100,
+      duration: 8 + Math.random() * 12,
+      delay: Math.random() * 5,
+      sizeFairy: 0.6 + Math.random() * 0.8,
+      sizeWitch: 0.5 + Math.random() * 0.6,
+      xOffset1: (Math.random() - 0.5) * 50,
+      xOffset2: (Math.random() - 0.5) * 30,
+    }))
+  }, [particleCount])
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(particleCount)].map((_, i) => {
+      {particleData.map((particle, i) => {
         const symbol = symbols[i % symbols.length]
-        const startX = Math.random() * 100
-        const duration = 8 + Math.random() * 12
-        const delay = Math.random() * 5
-        const size = actualTheme === 'fairy'
-          ? (0.6 + Math.random() * 0.8)
-          : (0.5 + Math.random() * 0.6)
+        const size = actualTheme === 'fairy' ? particle.sizeFairy : particle.sizeWitch
 
         return (
           <motion.div
             key={i}
             className="absolute text-lg"
             style={{
-              left: `${startX}%`,
+              left: `${particle.startX}%`,
               top: '-5%',
               fontSize: `${size}rem`,
               opacity: actualTheme === 'fairy' ? 0.7 : 0.5,
+              willChange: 'transform',
+              transform: 'translateZ(0)',
             }}
             animate={{
               y: ['0vh', '110vh'],
               x: [
                 '0%',
-                `${(Math.random() - 0.5) * 50}%`,
-                `${(Math.random() - 0.5) * 30}%`,
+                `${particle.xOffset1}%`,
+                `${particle.xOffset2}%`,
                 '0%'
               ],
               rotate: actualTheme === 'fairy'
@@ -62,8 +73,8 @@ export function MagicParticles({
               scale: [1, 1.2, 0.8, 1],
             }}
             transition={{
-              duration,
-              delay,
+              duration: particle.duration,
+              delay: particle.delay,
               repeat: Infinity,
               ease: 'linear',
             }}
@@ -74,7 +85,7 @@ export function MagicParticles({
       })}
     </div>
   )
-}
+})
 
 // Легкая версия для страниц с контентом
 export function MagicParticlesLight() {

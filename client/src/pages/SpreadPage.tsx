@@ -83,6 +83,7 @@ export function SpreadPage() {
   useEffect(() => {
     showBackButton(() => navigate(-1))
     return () => hideBackButton()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!spreadConfig) {
@@ -288,7 +289,7 @@ export function SpreadPage() {
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-base flex-shrink-0 ${
                         isFairyTheme
                           ? 'bg-[#C4A0A5]/80 text-white'
-                          : 'bg-white/15 text-white'
+                          : 'bg-white/30 text-white border border-white/40'
                       }`}
                       style={{
                         textShadow: '0 1px 3px rgba(0,0,0,0.5)',
@@ -317,9 +318,94 @@ export function SpreadPage() {
               </div>
             </motion.div>
 
-            <Button onClick={handleStart} size="lg" variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-              Начать расклад {getThemeEmoji(selectedDeck, 'button')}
-            </Button>
+            {/* Epic Start Button */}
+            <motion.button
+              onClick={handleStart}
+              className={`relative overflow-hidden px-10 py-5 rounded-2xl font-bold text-lg transition-all ${
+                isFairyTheme
+                  ? 'bg-gradient-to-r from-[#C4A0A5] via-[#d4b0b5] to-[#C4A0A5] text-white'
+                  : 'bg-gradient-to-r from-[#3a3a3a] via-[#4a4a4a] to-[#3a3a3a] text-white border border-white/20'
+              }`}
+              style={{
+                boxShadow: isFairyTheme
+                  ? '0 8px 32px rgba(196, 160, 165, 0.4), 0 0 60px rgba(196, 160, 165, 0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
+                  : '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255,255,255,0.1)',
+              }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {/* Animated gradient overlay */}
+              <motion.div
+                className={`absolute inset-0 ${
+                  isFairyTheme
+                    ? 'bg-gradient-to-r from-transparent via-white/30 to-transparent'
+                    : 'bg-gradient-to-r from-transparent via-white/15 to-transparent'
+                }`}
+                animate={{ x: ['-200%', '200%'] }}
+                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
+              />
+
+              {/* Floating particles */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className={`absolute w-1.5 h-1.5 rounded-full ${
+                    isFairyTheme ? 'bg-white/50' : 'bg-white/30'
+                  }`}
+                  style={{
+                    left: `${15 + i * 14}%`,
+                    top: '50%',
+                  }}
+                  animate={{
+                    y: [-12, 12, -12],
+                    opacity: [0.2, 0.8, 0.2],
+                    scale: [0.5, 1.2, 0.5],
+                  }}
+                  transition={{
+                    duration: 2 + i * 0.3,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+
+              {/* Glowing border effect */}
+              <motion.div
+                className={`absolute -inset-[1px] rounded-2xl ${
+                  isFairyTheme
+                    ? 'bg-gradient-to-r from-[#C4A0A5]/0 via-white/50 to-[#C4A0A5]/0'
+                    : 'bg-gradient-to-r from-white/0 via-white/30 to-white/0'
+                }`}
+                animate={{
+                  opacity: [0.3, 0.7, 0.3],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{ zIndex: -1 }}
+              />
+
+              {/* Content */}
+              <span className="relative flex items-center justify-center gap-3">
+                <motion.span
+                  animate={{
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  {isFairyTheme ? '✨' : '🌙'}
+                </motion.span>
+                Начать расклад
+                <motion.span
+                  animate={{
+                    rotate: [0, -10, 10, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                >
+                  {isFairyTheme ? '🦋' : '✦'}
+                </motion.span>
+              </span>
+            </motion.button>
           </motion.div>
         )}
 
@@ -358,7 +444,7 @@ export function SpreadPage() {
                   className="absolute inset-0 -z-10 blur-3xl"
                   style={{
                     background: isFairyTheme
-                      ? 'radial-gradient(ellipse at center, rgba(252, 137, 172, 0.3) 0%, transparent 70%)'
+                      ? 'radial-gradient(ellipse at center, rgba(196, 160, 165, 0.3) 0%, transparent 70%)'
                       : 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
                   }}
                   animate={{
@@ -389,7 +475,7 @@ export function SpreadPage() {
                       className="absolute inset-0 -z-10 blur-xl rounded-xl"
                       style={{
                         background: isFairyTheme
-                          ? 'rgba(252, 137, 172, 0.4)'
+                          ? 'rgba(196, 160, 165, 0.4)'
                           : 'rgba(255, 255, 255, 0.4)',
                       }}
                       animate={{
@@ -413,7 +499,7 @@ export function SpreadPage() {
                         absolute -top-2 -right-2 w-6 h-6 rounded-full z-10
                         flex items-center justify-center text-xs font-bold
                         ${isFairyTheme
-                          ? 'bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-lg shadow-pink-500/50'
+                          ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/50'
                           : 'bg-gradient-to-br from-white to-gray-200 text-gray-800 shadow-lg shadow-white/30'
                         }
                       `}
@@ -503,7 +589,7 @@ export function SpreadPage() {
                     <div className={`px-3 py-1.5 rounded-full mb-2 backdrop-blur-sm ${
                       isWitchTheme
                         ? 'bg-black/50 border border-white/20'
-                        : 'bg-[#FC89AC]/30 border border-[#FC89AC]/40'
+                        : 'bg-[#C4A0A5]/30 border border-[#C4A0A5]/40'
                     }`}>
                       <p className={`text-sm text-center font-display font-medium ${
                         isWitchTheme ? 'text-white' : 'text-white'
@@ -540,7 +626,7 @@ export function SpreadPage() {
                         <motion.div
                           className="absolute -inset-2 rounded-xl blur-lg z-0"
                           style={{
-                            background: 'radial-gradient(ellipse at center, rgba(252, 137, 172, 0.4) 0%, transparent 70%)',
+                            background: 'radial-gradient(ellipse at center, rgba(196, 160, 165, 0.4) 0%, transparent 70%)',
                           }}
                           animate={{
                             opacity: [0.4, 0.7, 0.4],
@@ -584,7 +670,7 @@ export function SpreadPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-6"
             >
-              <Card variant={isWitchTheme ? 'mystic-witch' : 'mystic-fairy'} className={isWitchTheme ? 'border-white/20' : 'border-[#FC89AC]/30'}>
+              <Card variant={isWitchTheme ? 'mystic-witch' : 'mystic-fairy'} className={isWitchTheme ? 'border-white/20' : 'border-[#C4A0A5]/30'}>
                 <p className="text-white/90 leading-relaxed text-center italic">
                   {interpretation.greeting}
                 </p>
@@ -860,12 +946,12 @@ export function SpreadPage() {
                 <div className={`relative overflow-hidden rounded-3xl py-20 ${
                   isWitchTheme
                     ? 'bg-gradient-to-b from-[#1a1a1a]/40 to-[#2a2a2a]/30 border border-white/25 backdrop-blur-md'
-                    : 'bg-gradient-to-b from-[#FC89AC]/20 to-[#F472B6]/15 border border-[#FC89AC]/50 backdrop-blur-md'
+                    : 'bg-gradient-to-b from-[#C4A0A5]/20 to-[#B090A0]/15 border border-[#C4A0A5]/50 backdrop-blur-md'
                 }`}>
                   {/* Внешнее свечение контейнера */}
                   <motion.div
                     className={`absolute -inset-1 rounded-3xl blur-xl ${
-                      isWitchTheme ? 'bg-white/10' : 'bg-[#FC89AC]/20'
+                      isWitchTheme ? 'bg-white/10' : 'bg-[#C4A0A5]/20'
                     }`}
                     animate={{
                       opacity: [0.3, 0.6, 0.3],
@@ -879,7 +965,7 @@ export function SpreadPage() {
                     <motion.span
                       key={i}
                       className={`absolute text-3xl ${
-                        isWitchTheme ? 'text-white/50' : 'text-[#FC89AC]/60'
+                        isWitchTheme ? 'text-white/50' : 'text-[#C4A0A5]/60'
                       }`}
                       style={{
                         top: i < 2 ? '8%' : i < 4 ? '45%' : '82%',
@@ -909,7 +995,7 @@ export function SpreadPage() {
                         className={`absolute rounded-full ${
                           ring % 2 === 0 ? 'border-2' : 'border border-dashed'
                         } ${
-                          isWitchTheme ? 'border-white/35' : 'border-[#FC89AC]/50'
+                          isWitchTheme ? 'border-white/35' : 'border-[#C4A0A5]/50'
                         }`}
                         style={{
                           width: 60 + ring * 45,
@@ -940,7 +1026,7 @@ export function SpreadPage() {
                         className={`absolute rounded-full ${
                           isWitchTheme
                             ? i % 3 === 0 ? 'bg-white' : i % 3 === 1 ? 'bg-white/80' : 'bg-white/60'
-                            : i % 3 === 0 ? 'bg-[#FC89AC]' : i % 3 === 1 ? 'bg-[#F472B6]' : 'bg-[#E879F9]'
+                            : i % 3 === 0 ? 'bg-[#C4A0A5]' : i % 3 === 1 ? 'bg-[#B090A0]' : 'bg-[#d4b0b5]'
                         }`}
                         style={{
                           width: 3 + (i % 4),
@@ -973,7 +1059,7 @@ export function SpreadPage() {
                       <motion.div
                         key={`star-${i}`}
                         className={`absolute ${
-                          isWitchTheme ? 'text-white' : 'text-[#FC89AC]'
+                          isWitchTheme ? 'text-white' : 'text-[#C4A0A5]'
                         }`}
                         style={{
                           fontSize: 10 + (i % 3) * 4,
@@ -1004,7 +1090,7 @@ export function SpreadPage() {
                       className={`absolute left-1/2 top-1/2 origin-bottom ${
                         isWitchTheme
                           ? 'bg-gradient-to-t from-white/50 via-white/20 to-transparent'
-                          : 'bg-gradient-to-t from-[#FC89AC]/60 via-[#FC89AC]/25 to-transparent'
+                          : 'bg-gradient-to-t from-[#C4A0A5]/60 via-[#C4A0A5]/25 to-transparent'
                       }`}
                       style={{
                         width: 2 + (i % 2),
@@ -1030,7 +1116,7 @@ export function SpreadPage() {
                     <motion.div
                       key={`wave-${wave}`}
                       className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
-                        isWitchTheme ? 'border-white/40' : 'border-[#FC89AC]/50'
+                        isWitchTheme ? 'border-white/40' : 'border-[#C4A0A5]/50'
                       }`}
                       initial={{ width: 20, height: 20, opacity: 0.8 }}
                       animate={{
@@ -1050,7 +1136,7 @@ export function SpreadPage() {
                   {/* Центральное свечение - 4 слоя */}
                   <motion.div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full blur-3xl ${
-                      isWitchTheme ? 'bg-white/25' : 'bg-[#FC89AC]/35'
+                      isWitchTheme ? 'bg-white/25' : 'bg-[#C4A0A5]/35'
                     }`}
                     animate={{
                       scale: [1, 1.4, 1.1, 1.3, 1],
@@ -1060,7 +1146,7 @@ export function SpreadPage() {
                   />
                   <motion.div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full blur-2xl ${
-                      isWitchTheme ? 'bg-white/40' : 'bg-[#FC89AC]/50'
+                      isWitchTheme ? 'bg-white/40' : 'bg-[#C4A0A5]/50'
                     }`}
                     animate={{
                       scale: [1, 1.6, 1.2, 1.5, 1],
@@ -1070,7 +1156,7 @@ export function SpreadPage() {
                   />
                   <motion.div
                     className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full blur-xl ${
-                      isWitchTheme ? 'bg-white/60' : 'bg-[#FC89AC]/70'
+                      isWitchTheme ? 'bg-white/60' : 'bg-[#C4A0A5]/70'
                     }`}
                     animate={{
                       scale: [1, 2, 1.3, 1.8, 1],
@@ -1106,12 +1192,12 @@ export function SpreadPage() {
                       className={`w-20 h-28 rounded-xl relative ${
                         isWitchTheme
                           ? 'bg-gradient-to-br from-[#4a4a4a] via-[#3a3a3a] to-[#2a2a2a] border-2 border-white/60'
-                          : 'bg-gradient-to-br from-[#fce7f3] via-[#fbcfe8] to-[#f9a8d4] border-2 border-[#FC89AC]/70'
+                          : 'bg-gradient-to-br from-[#e8d5d8] via-[#d4b0b5] to-[#C4A0A5] border-2 border-[#C4A0A5]/70'
                       }`}
                       style={{
                         boxShadow: isWitchTheme
                           ? '0 0 50px rgba(255,255,255,0.7), 0 0 100px rgba(255,255,255,0.4), 0 0 150px rgba(255,255,255,0.2)'
-                          : '0 0 50px rgba(252,137,172,0.7), 0 0 100px rgba(252,137,172,0.4), 0 0 150px rgba(252,137,172,0.2)',
+                          : '0 0 50px rgba(196,160,165,0.7), 0 0 100px rgba(196,160,165,0.4), 0 0 150px rgba(196,160,165,0.2)',
                         transformStyle: 'preserve-3d',
                       }}
                     >
@@ -1125,7 +1211,7 @@ export function SpreadPage() {
                         transition={{ duration: 2.3, repeat: Infinity, ease: 'easeInOut' }}
                       >
                         <span className={`text-3xl ${
-                          isWitchTheme ? 'text-white/70' : 'text-[#FC89AC]/80'
+                          isWitchTheme ? 'text-white/70' : 'text-white/80'
                         }`}>
                           {isWitchTheme ? '☽' : '♡'}
                         </span>
@@ -1154,7 +1240,7 @@ export function SpreadPage() {
                       style={{
                         textShadow: isWitchTheme
                           ? '0 0 20px rgba(255,255,255,0.5)'
-                          : '0 0 20px rgba(252,137,172,0.5)',
+                          : '0 0 20px rgba(196,160,165,0.5)',
                       }}
                     >
                       Вытягиваем карту...
@@ -1181,7 +1267,7 @@ export function SpreadPage() {
                         <motion.div
                           key={dot}
                           className={`w-1.5 h-1.5 rounded-full ${
-                            isWitchTheme ? 'bg-white/50' : 'bg-[#FC89AC]/60'
+                            isWitchTheme ? 'bg-white/50' : 'bg-[#C4A0A5]/60'
                           }`}
                           animate={{
                             scale: [0.5, 1.5, 0.5],
@@ -1467,7 +1553,7 @@ export function SpreadPage() {
             )}
 
             {/* Feedback */}
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-4">
               <Button variant="secondary" className="flex-1">
                 Не попало {isWitchTheme ? '🖤' : '💔'}
               </Button>
@@ -1481,6 +1567,15 @@ export function SpreadPage() {
                 В точку! {getThemeEmoji(selectedDeck, 'love')}
               </button>
             </div>
+
+            {/* На главную */}
+            <Button
+              onClick={() => navigate('/')}
+              variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
+              className="w-full"
+            >
+              На главную 🏠
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -97,20 +97,20 @@ export function HomePage() {
             <motion.div
               className={`w-full rounded-xl py-2.5 px-4 flex items-center justify-center gap-2 ${
                 isFairyTheme
-                  ? 'bg-gradient-to-r from-[#FC89AC]/20 to-pink-500/20 border border-[#FC89AC]/30'
-                  : 'bg-gradient-to-r from-slate-500/20 to-slate-600/20 border border-slate-500/30'
+                  ? 'bg-gradient-to-r from-[#C4A0A5]/20 to-pink-500/20 border border-[#C4A0A5]/30'
+                  : 'bg-gradient-to-r from-black/20 to-black/30 border border-white/20'
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span className={`font-medium text-sm ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+              <span className={`font-medium text-sm ${isFairyTheme ? 'text-white' : 'text-white/80'}`}>
                 {isFairyTheme ? 'Спросить карты' : 'Задать вопрос'}
               </span>
               {/* Icon with glow - после текста */}
               <div className="relative">
                 <motion.div
                   className={`absolute inset-0 rounded-full blur-md ${
-                    isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-400'
+                    isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/60'
                   }`}
                   animate={{
                     scale: [1, 1.3, 1],
@@ -161,7 +161,7 @@ export function HomePage() {
             <div className="relative flex items-center gap-4">
               <motion.div
                 className={`w-20 h-28 rounded-xl overflow-hidden flex items-center justify-center bg-cover bg-center border ${
-                  isFairyTheme ? 'border-[#FC89AC]/20' : 'border-slate-400/30'
+                  isFairyTheme ? 'border-[#C4A0A5]/20' : 'border-white/20'
                 }`}
                 style={{
                   backgroundImage: isFairyTheme
@@ -208,8 +208,8 @@ export function HomePage() {
                     <motion.div
                       className={`absolute inset-0 rounded-xl blur-md ${
                         isFairyTheme
-                          ? 'bg-[#FC89AC]/40'
-                          : 'bg-slate-400/60'
+                          ? 'bg-[#C4A0A5]/40'
+                          : 'bg-white/40'
                       }`}
                       animate={{
                         opacity: [0.4, 0.8, 0.4],
@@ -261,7 +261,7 @@ export function HomePage() {
               <p className="text-white/60 text-sm">Лунная фаза</p>
               <p className="text-white font-medium">{getMoonName(moonPhase)}</p>
             </div>
-            <span className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/60' : 'text-slate-500'}`}>
+            <span className={`text-xs ${isFairyTheme ? 'text-[#C4A0A5]/60' : 'text-white/50'}`}>
               Подробнее
             </span>
           </div>
@@ -314,7 +314,7 @@ export function HomePage() {
         className="mt-4"
       >
         <Link to="/referrals">
-          <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className={isFairyTheme ? 'border-[#FC89AC]/15' : 'border-slate-500/20'}>
+          <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} className={isFairyTheme ? 'border-[#C4A0A5]/15' : 'border-white/20'}>
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <p className="text-white font-medium">Пригласи подругу {getThemeEmoji(user?.deckTheme, 'love')}</p>
@@ -350,7 +350,7 @@ export function HomePage() {
             >
               <Card
                 variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-                className={`${isFairyTheme ? 'border-[#FC89AC]/30' : 'border-slate-400/30'} overflow-hidden flex flex-col h-full`}
+                className={`${isFairyTheme ? 'border-[#C4A0A5]/30' : 'border-white/20'} overflow-hidden flex flex-col h-full`}
               >
                 {/* Header with animated moon cycle */}
                 <div className="text-center pb-3 border-b border-white/10 flex-shrink-0">
@@ -400,7 +400,7 @@ export function HomePage() {
                             {isCurrentPhase && (
                               <motion.div
                                 className={`absolute -inset-2 rounded-full blur-lg ${
-                                  isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-300'
+                                  isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/70'
                                 }`}
                                 animate={{
                                   opacity: [0.3, 0.6, 0.3],
@@ -416,7 +416,7 @@ export function HomePage() {
                     {/* Center glow */}
                     <motion.div
                       className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full blur-xl ${
-                        isFairyTheme ? 'bg-[#FC89AC]/50' : 'bg-slate-400/50'
+                        isFairyTheme ? 'bg-[#C4A0A5]/50' : 'bg-white/50'
                       }`}
                       animate={{
                         scale: [1, 1.5, 1],
@@ -428,7 +428,7 @@ export function HomePage() {
                   <h3 className="text-white font-display font-bold text-xl">
                     Лунный календарь
                   </h3>
-                  <p className={`text-sm mt-0.5 ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
+                  <p className={`text-sm mt-0.5 ${isFairyTheme ? 'text-[#C4A0A5]/70' : 'text-white/60'}`}>
                     {moonPhasesInfo[moonPhase].name} — {moonPhasesInfo[moonPhase].description}
                   </p>
                 </div>
@@ -440,8 +440,8 @@ export function HomePage() {
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
                       activeTab === 'general'
                         ? isFairyTheme
-                          ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
-                          : 'bg-slate-400 text-slate-900 shadow-lg shadow-slate-400/30'
+                          ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
+                          : 'bg-white/70 text-black shadow-lg shadow-white/30'
                         : 'text-white/60 hover:text-white/80'
                     }`}
                     whileHover={{ scale: 1.02 }}
@@ -461,8 +461,8 @@ export function HomePage() {
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
                       activeTab === 'beauty'
                         ? isFairyTheme
-                          ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
-                          : 'bg-slate-400 text-slate-900 shadow-lg shadow-slate-400/30'
+                          ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
+                          : 'bg-white/70 text-black shadow-lg shadow-white/30'
                         : 'text-white/60 hover:text-white/80'
                     }`}
                     whileHover={{ scale: 1.02 }}
@@ -482,7 +482,7 @@ export function HomePage() {
                   className="flex-1 overflow-y-auto overscroll-contain py-3 px-1"
                   style={{
                     scrollbarWidth: 'thin',
-                    scrollbarColor: isFairyTheme ? '#FC89AC40 transparent' : '#64748b40 transparent'
+                    scrollbarColor: isFairyTheme ? '#C4A0A540 transparent' : '#64748b40 transparent'
                   }}
                 >
                   <AnimatePresence mode="wait">
@@ -508,8 +508,8 @@ export function HomePage() {
                               className={`rounded-2xl transition-all duration-300 overflow-hidden ${
                                 isCurrentPhase
                                   ? isFairyTheme
-                                    ? 'bg-gradient-to-r from-[#FC89AC]/25 to-pink-500/15 border border-[#FC89AC]/40 shadow-lg shadow-[#FC89AC]/10'
-                                    : 'bg-gradient-to-r from-slate-500/25 to-slate-600/15 border border-slate-400/40 shadow-lg shadow-slate-500/10'
+                                    ? 'bg-gradient-to-r from-[#C4A0A5]/25 to-pink-500/15 border border-[#C4A0A5]/40 shadow-lg shadow-[#C4A0A5]/10'
+                                    : 'bg-gradient-to-r from-black/25 to-black/15 border border-white/30 shadow-lg shadow-black/10'
                                   : 'bg-white/5 hover:bg-white/8'
                               }`}
                             >
@@ -547,7 +547,7 @@ export function HomePage() {
                                   {isCurrentPhase && (
                                     <motion.div
                                       className={`absolute -inset-2 rounded-full blur-md ${
-                                        isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-slate-400/40'
+                                        isFairyTheme ? 'bg-[#C4A0A5]/40' : 'bg-white/40'
                                       }`}
                                       animate={{
                                         opacity: [0.3, 0.6, 0.3],
@@ -569,8 +569,8 @@ export function HomePage() {
                                         animate={{ scale: 1 }}
                                         className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                                           isFairyTheme
-                                            ? 'bg-[#FC89AC] text-white'
-                                            : 'bg-slate-400 text-slate-900'
+                                            ? 'bg-[#C4A0A5] text-white'
+                                            : 'bg-white/70 text-black'
                                         }`}
                                       >
                                         сейчас
@@ -586,7 +586,7 @@ export function HomePage() {
                                 <motion.svg
                                   animate={{ rotate: isExpanded ? 180 : 0 }}
                                   transition={{ duration: 0.2 }}
-                                  className={`w-4 h-4 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}
+                                  className={`w-4 h-4 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/60'}`}
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -605,14 +605,14 @@ export function HomePage() {
                                     transition={{ duration: 0.2 }}
                                     className="overflow-hidden"
                                   >
-                                    <div className={`px-3 pb-3 pt-0 border-t ${isFairyTheme ? 'border-[#FC89AC]/20' : 'border-slate-500/20'}`}>
+                                    <div className={`px-3 pb-3 pt-0 border-t ${isFairyTheme ? 'border-[#C4A0A5]/20' : 'border-white/20'}`}>
                                       <p className={`text-xs leading-relaxed mt-2 ${isCurrentPhase ? 'text-white/80' : 'text-white/60'}`}>
                                         {info.influence}
                                       </p>
                                       <p className={`text-xs mt-2 leading-relaxed ${
                                         isFairyTheme
-                                          ? 'text-[#FC89AC]'
-                                          : 'text-slate-300'
+                                          ? 'text-[#C4A0A5]'
+                                          : 'text-white/70'
                                       }`}>
                                         {info.advice}
                                       </p>
@@ -646,8 +646,8 @@ export function HomePage() {
                               className={`rounded-2xl overflow-hidden ${
                                 isCurrentPhase
                                   ? isFairyTheme
-                                    ? 'bg-gradient-to-br from-[#FC89AC]/30 via-pink-500/20 to-rose-500/15 border border-[#FC89AC]/50 shadow-xl shadow-[#FC89AC]/20'
-                                    : 'bg-gradient-to-br from-slate-500/30 via-slate-600/20 to-slate-700/15 border border-slate-400/50 shadow-xl shadow-slate-500/20'
+                                    ? 'bg-gradient-to-br from-[#C4A0A5]/30 via-pink-500/20 to-rose-500/15 border border-[#C4A0A5]/50 shadow-xl shadow-[#C4A0A5]/20'
+                                    : 'bg-gradient-to-br from-black/30 via-black/20 to-black/15 border border-white/30 shadow-xl shadow-black/20'
                                   : 'bg-white/5 hover:bg-white/8'
                               }`}
                             >
@@ -678,7 +678,7 @@ export function HomePage() {
                                     </span>
                                     {isCurrentPhase && (
                                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                        isFairyTheme ? 'bg-[#FC89AC] text-white' : 'bg-slate-400 text-slate-900'
+                                        isFairyTheme ? 'bg-[#C4A0A5] text-white' : 'bg-white/70 text-black'
                                       }`}>
                                         сейчас
                                       </span>
@@ -690,7 +690,7 @@ export function HomePage() {
                                 </div>
                                 <motion.svg
                                   animate={{ rotate: isExpanded ? 180 : 0 }}
-                                  className={`w-4 h-4 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-400'}`}
+                                  className={`w-4 h-4 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/60'}`}
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   stroke="currentColor"
@@ -709,7 +709,7 @@ export function HomePage() {
                                     transition={{ duration: 0.2 }}
                                     className="overflow-hidden"
                                   >
-                                    <div className={`px-3 pb-3 space-y-3 border-t ${isFairyTheme ? 'border-[#FC89AC]/20' : 'border-slate-500/20'}`}>
+                                    <div className={`px-3 pb-3 space-y-3 border-t ${isFairyTheme ? 'border-[#C4A0A5]/20' : 'border-white/20'}`}>
                                       {/* Recommended */}
                                       <div className="mt-3">
                                         <div className="flex items-center gap-1.5 mb-2">
@@ -719,7 +719,7 @@ export function HomePage() {
                                           >
                                             {isFairyTheme ? '💖' : '✓'}
                                           </motion.span>
-                                          <span className={`text-xs font-semibold ${isFairyTheme ? 'text-[#FC89AC]' : 'text-green-400'}`}>
+                                          <span className={`text-xs font-semibold ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-green-400'}`}>
                                             Рекомендуется
                                           </span>
                                         </div>
@@ -731,10 +731,10 @@ export function HomePage() {
                                               animate={{ opacity: 1, x: 0 }}
                                               transition={{ delay: i * 0.05 }}
                                               className={`flex items-center gap-2 text-xs ${
-                                                isFairyTheme ? 'text-pink-200' : 'text-slate-200'
+                                                isFairyTheme ? 'text-pink-200' : 'text-white/80'
                                               }`}
                                             >
-                                              <span className={`w-1 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]' : 'bg-green-400'}`} />
+                                              <span className={`w-1 h-1 rounded-full ${isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-green-400'}`} />
                                               {item}
                                             </motion.div>
                                           ))}
@@ -762,7 +762,7 @@ export function HomePage() {
                                               animate={{ opacity: 1, x: 0 }}
                                               transition={{ delay: i * 0.05 + 0.2 }}
                                               className={`flex items-center gap-2 text-xs ${
-                                                isFairyTheme ? 'text-rose-200/70' : 'text-slate-300/70'
+                                                isFairyTheme ? 'text-rose-200/70' : 'text-white/60'
                                               }`}
                                             >
                                               <span className={`w-1 h-1 rounded-full ${isFairyTheme ? 'bg-rose-400' : 'bg-red-400'}`} />
@@ -795,8 +795,8 @@ export function HomePage() {
                     }}
                     className={`w-full py-3 rounded-xl font-medium text-sm transition-all ${
                       isFairyTheme
-                        ? 'bg-gradient-to-r from-[#FC89AC] to-pink-500 text-white shadow-lg shadow-[#FC89AC]/30'
-                        : 'bg-gradient-to-r from-slate-500 to-slate-600 text-white shadow-lg shadow-slate-500/30'
+                        ? 'bg-gradient-to-r from-[#C4A0A5] to-pink-500 text-white shadow-lg shadow-[#C4A0A5]/30'
+                        : 'bg-gradient-to-r from-white/60 to-white/50 text-black shadow-lg shadow-white/30'
                     }`}
                   >
                     Понятно

@@ -17,6 +17,7 @@ import { getCurrentFairyBackground, getFairyBackgroundStyle } from '../../lib/fa
 import { getCurrentWitchBackground, getWitchBackgroundStyle } from '../../lib/witchBackgrounds'
 import { getCurrentDayTheme, getDayGradient } from '../../lib/dayThemes'
 import { allTarotCards } from '../../data/tarotCards'
+import { getZodiacEmoji, getZodiacCardExplanation } from '../../lib/zodiacEmojis'
 import type { DeckTheme, Card as TarotCardType } from '../../types'
 
 type DailyCardStep = 'deck_select' | 'ritual' | 'shuffle' | 'reveal' | 'interpretation'
@@ -39,6 +40,7 @@ export function DailyCardPage() {
   const [isReversed, setIsReversed] = useState(false)
   const [showFullInterpretation, setShowFullInterpretation] = useState(false)
   const [feedbackGiven, setFeedbackGiven] = useState(false)
+  const [selectedZodiac, setSelectedZodiac] = useState<string | null>(null)
 
   const themeConfig = getThemeConfig(selectedDeck)
   const moonPhase = getMoonPhase(new Date())
@@ -66,6 +68,7 @@ export function DailyCardPage() {
   useEffect(() => {
     showBackButton(() => navigate(-1))
     return () => hideBackButton()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // If already has today's reading, show it
@@ -109,8 +112,7 @@ export function DailyCardPage() {
   const handleFeedback = (feedback: 'positive' | 'negative') => {
     hapticFeedback('notification', feedback === 'positive' ? 'success' : 'warning')
     setFeedbackGiven(true)
-    // Save feedback to API
-    console.log('Feedback:', feedback)
+    // TODO: Save feedback to API
   }
 
   const handleShare = () => {
@@ -192,7 +194,7 @@ export function DailyCardPage() {
               {/* Backdrop panel for readability - розовый оттенок для фей */}
               <div className={`rounded-2xl p-6 backdrop-blur-md border ${
                 selectedDeck === 'fairy'
-                  ? 'bg-[#FC89AC]/30 border-[#FC89AC]/50'
+                  ? 'bg-[#C4A0A5]/30 border-[#C4A0A5]/50'
                   : 'bg-black/60 border-white/10'
               }`}>
                 <motion.div
@@ -224,7 +226,7 @@ export function DailyCardPage() {
             >
               <div className={`rounded-xl p-4 backdrop-blur-md border ${
                 selectedDeck === 'fairy'
-                  ? 'bg-[#FC89AC]/30 border-[#FC89AC]/50'
+                  ? 'bg-[#C4A0A5]/30 border-[#C4A0A5]/50'
                   : 'bg-white/5 border-white/10'
               }`}>
                 <div className="flex items-center justify-center gap-4">
@@ -263,10 +265,10 @@ export function DailyCardPage() {
             >
               <div className={`backdrop-blur-md rounded-full px-4 py-2 ${
                 selectedDeck === 'fairy'
-                  ? 'bg-[#FC89AC]/30 border border-[#FC89AC]/50'
-                  : 'bg-slate-700/40 border border-slate-500/30'
+                  ? 'bg-[#C4A0A5]/30 border border-[#C4A0A5]/50'
+                  : 'bg-black/40 border border-white/20'
               }`}>
-                <p className={`text-sm font-medium ${selectedDeck === 'fairy' ? 'text-white drop-shadow-sm' : 'text-slate-300'}`}>
+                <p className={`text-sm font-medium ${selectedDeck === 'fairy' ? 'text-white drop-shadow-sm' : 'text-white/70'}`}>
                   {selectedDeck === 'fairy' ? '✨' : '🌙'} {dayTheme.dayName} — {dayTheme.mood}
                 </p>
               </div>
@@ -446,7 +448,7 @@ export function DailyCardPage() {
 
                 {/* Основное послание */}
                 <div>
-                  <h3 className={`text-sm font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                  <h3 className={`text-sm font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#C4A0A5]' : 'text-white/70'}`}>
                     <span>{selectedDeck === 'fairy' ? '🦋' : '🔮'}</span> Послание для тебя
                   </h3>
                   <p className="text-white/90 leading-relaxed whitespace-pre-line">
@@ -468,6 +470,36 @@ export function DailyCardPage() {
                   ))}
                 </div>
 
+                {/* Астрологическая связь - кликабельные знаки зодиака (всегда видны) */}
+                {drawnCard.zodiacConnections && drawnCard.zodiacConnections.length > 0 && (
+                  <div className="flex flex-col items-center gap-3 pt-4 border-t border-white/10">
+                    <div className="flex items-center justify-center gap-4 text-white/50 text-sm">
+                      <span>⚡ Элемент: {drawnCard.element}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
+                      {drawnCard.zodiacConnections.map((sign) => (
+                        <motion.button
+                          key={sign}
+                          onClick={() => {
+                            hapticFeedback('selection')
+                            setSelectedZodiac(sign)
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                            selectedDeck === 'fairy'
+                              ? 'bg-[#C4A0A5]/20 border border-[#C4A0A5]/30 text-[#C4A0A5] hover:bg-[#C4A0A5]/30'
+                              : 'bg-black/40 border border-white/20 text-white/70 hover:bg-black/50 hover:text-white'
+                          }`}
+                        >
+                          {getZodiacEmoji(sign)} {sign}
+                        </motion.button>
+                      ))}
+                    </div>
+                    <p className="text-white/40 text-xs">Нажми на знак, чтобы узнать больше</p>
+                  </div>
+                )}
+
                 {/* Развёрнутая трактовка */}
                 <AnimatePresence>
                   {showFullInterpretation && (
@@ -479,7 +511,7 @@ export function DailyCardPage() {
                     >
                       {/* В любви */}
                       <div>
-                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#C4A0A5]' : 'text-white/70'}`}>
                           <span>{selectedDeck === 'fairy' ? '💕' : '🖤'}</span> В любви и отношениях
                         </h3>
                         <p className="text-white/80 leading-relaxed whitespace-pre-line">
@@ -491,7 +523,7 @@ export function DailyCardPage() {
 
                       {/* В карьере */}
                       <div>
-                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#FC89AC]/80' : 'text-slate-400'}`}>
+                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#C4A0A5]/80' : 'text-white/60'}`}>
                           <span>💼</span> В делах и финансах
                         </h3>
                         <p className="text-white/80 leading-relaxed whitespace-pre-line">
@@ -502,8 +534,8 @@ export function DailyCardPage() {
                       </div>
 
                       {/* Совет */}
-                      <div className={`bg-gradient-to-r rounded-xl p-4 border ${selectedDeck === 'fairy' ? 'from-[#FC89AC]/10 to-pink-500/10 border-[#FC89AC]/20' : 'from-slate-500/10 to-slate-600/10 border-slate-500/20'}`}>
-                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                      <div className={`bg-gradient-to-r rounded-xl p-4 border ${selectedDeck === 'fairy' ? 'from-[#C4A0A5]/10 to-pink-500/10 border-[#C4A0A5]/20' : 'bg-black/40 border-white/20'}`}>
+                        <h3 className={`font-medium mb-3 flex items-center gap-2 ${selectedDeck === 'fairy' ? 'text-[#C4A0A5]' : 'text-white/70'}`}>
                           <span>💡</span> Совет карты
                         </h3>
                         <p className="text-white/90 leading-relaxed italic whitespace-pre-line">
@@ -512,14 +544,6 @@ export function DailyCardPage() {
                             : drawnCard.meaningUpright.advice}
                         </p>
                       </div>
-
-                      {/* Астрологическая связь */}
-                      {drawnCard.zodiacConnections && drawnCard.zodiacConnections.length > 0 && (
-                        <div className="flex items-center justify-center gap-4 text-white/50 text-sm">
-                          <span>⚡ Элемент: {drawnCard.element}</span>
-                          <span>♈ {drawnCard.zodiacConnections.join(', ')}</span>
-                        </div>
-                      )}
 
                       {/* Особое для знака зодиака */}
                       {user?.zodiacSign && drawnCard.zodiacConnections?.includes(user.zodiacSign) && (
@@ -545,7 +569,7 @@ export function DailyCardPage() {
                 {/* Кнопка развернуть/свернуть */}
                 <button
                   onClick={() => setShowFullInterpretation(!showFullInterpretation)}
-                  className={`w-full py-3 text-center text-sm transition-colors border-t border-white/10 mt-2 ${selectedDeck === 'fairy' ? 'text-[#FC89AC] hover:text-[#FC89AC]/80' : 'text-slate-400 hover:text-slate-300'}`}
+                  className={`w-full py-3 text-center text-sm transition-colors border-t border-white/10 mt-2 ${selectedDeck === 'fairy' ? 'text-[#C4A0A5] hover:text-[#C4A0A5]/80' : 'text-white/60 hover:text-white/80'}`}
                 >
                   {showFullInterpretation ? '↑ Свернуть' : '↓ Читать полную трактовку...'}
                 </button>
@@ -567,6 +591,7 @@ export function DailyCardPage() {
                     💔 Мимо
                   </Button>
                   <Button
+                    variant={selectedDeck === 'fairy' ? 'glass-fairy' : 'glass-witch'}
                     className="flex-1"
                     onClick={() => handleFeedback('positive')}
                   >
@@ -598,6 +623,198 @@ export function DailyCardPage() {
             </div>
 
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Модальное окно с объяснением связи знака зодиака и карты */}
+      <AnimatePresence>
+        {selectedZodiac && drawnCard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedZodiac(null)}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            />
+
+            {/* Modal content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 50 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative w-full max-w-sm rounded-3xl overflow-hidden ${
+                selectedDeck === 'fairy'
+                  ? 'bg-gradient-to-b from-[#C4A0A5]/30 to-[#8B6B70]/30'
+                  : 'bg-gradient-to-b from-black/80 to-gray-900/80'
+              } backdrop-blur-xl border ${
+                selectedDeck === 'fairy'
+                  ? 'border-[#C4A0A5]/30'
+                  : 'border-white/10'
+              } shadow-2xl`}
+            >
+              {/* Decorative top gradient */}
+              <div className={`absolute top-0 left-0 right-0 h-1 ${
+                selectedDeck === 'fairy'
+                  ? 'bg-gradient-to-r from-transparent via-[#C4A0A5] to-transparent'
+                  : 'bg-gradient-to-r from-transparent via-white/40 to-transparent'
+              }`} />
+
+              <div className="relative p-6">
+                {/* Header with zodiac symbol */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', delay: 0.1 }}
+                  className="flex justify-center mb-4"
+                >
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl ${
+                    selectedDeck === 'fairy'
+                      ? 'bg-[#C4A0A5]/20 border-2 border-[#C4A0A5]/40'
+                      : 'bg-white/10 border-2 border-white/20'
+                  }`}>
+                    <motion.span
+                      animate={{
+                        rotate: [0, 5, -5, 0],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
+                    >
+                      {getZodiacEmoji(selectedZodiac)}
+                    </motion.span>
+                  </div>
+                </motion.div>
+
+                {/* Connection badge */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.15, type: 'spring' }}
+                  className="flex justify-center mb-2"
+                >
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 ${
+                    selectedDeck === 'fairy'
+                      ? 'bg-[#C4A0A5]/20 text-[#C4A0A5] border border-[#C4A0A5]/30'
+                      : 'bg-white/10 text-white/70 border border-white/20'
+                  }`}>
+                    <motion.span
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                      🔗
+                    </motion.span>
+                    <span>Астрологическая связь</span>
+                  </div>
+                </motion.div>
+
+                {/* Title */}
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className={`text-xl font-semibold text-center mb-4 ${
+                    selectedDeck === 'fairy' ? 'text-[#C4A0A5]' : 'text-white'
+                  }`}
+                >
+                  {getZodiacCardExplanation(selectedZodiac, drawnCard.nameRu, drawnCard.element).title}
+                </motion.h3>
+
+                {/* Explanation text */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-4"
+                >
+                  <p className="text-white/80 text-sm leading-relaxed text-center">
+                    {getZodiacCardExplanation(selectedZodiac, drawnCard.nameRu, drawnCard.element).explanation}
+                  </p>
+
+                  {/* Divider */}
+                  <div className={`h-px w-full ${
+                    selectedDeck === 'fairy'
+                      ? 'bg-gradient-to-r from-transparent via-[#C4A0A5]/30 to-transparent'
+                      : 'bg-gradient-to-r from-transparent via-white/20 to-transparent'
+                  }`} />
+
+                  {/* Daily message */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+                    className={`p-4 rounded-xl ${
+                      selectedDeck === 'fairy'
+                        ? 'bg-[#C4A0A5]/10 border border-[#C4A0A5]/20'
+                        : 'bg-white/5 border border-white/10'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <motion.span
+                        className="text-2xl"
+                        animate={{
+                          scale: [1, 1.3, 1],
+                          rotate: [0, 15, -15, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: 'easeInOut'
+                        }}
+                      >
+                        ✨
+                      </motion.span>
+                      <p className="text-white/70 text-sm italic">
+                        {getZodiacCardExplanation(selectedZodiac, drawnCard.nameRu, drawnCard.element).dailyMessage}
+                      </p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+
+                {/* Close button */}
+                <motion.button
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.6, type: 'spring', stiffness: 200 }}
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setSelectedZodiac(null)}
+                  className={`w-full mt-6 py-3 rounded-xl font-medium transition-all relative overflow-hidden ${
+                    selectedDeck === 'fairy'
+                      ? 'bg-gradient-to-r from-[#C4A0A5]/30 via-[#C4A0A5]/40 to-[#C4A0A5]/30 border border-[#C4A0A5]/40 text-white'
+                      : 'bg-gradient-to-r from-white/10 via-white/20 to-white/10 border border-white/20 text-white'
+                  }`}
+                >
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'linear', repeatDelay: 1 }}
+                  />
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Понятно
+                    <motion.span
+                      animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      ✨
+                    </motion.span>
+                  </span>
+                </motion.button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

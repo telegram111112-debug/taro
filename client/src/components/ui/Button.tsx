@@ -39,7 +39,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       'glass-fairy':
         'bg-[#C4A0A5] backdrop-blur-md border border-[#C4A0A5]/40 text-white shadow-lg shadow-[#C4A0A5]/30 hover:bg-[#d4b0b5]',
       'glass-witch':
-        'bg-slate-500/20 backdrop-blur-md border border-slate-400/30 text-white shadow-lg shadow-slate-400/20 hover:bg-slate-500/30',
+        'bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-lg shadow-black/20 hover:bg-black/50',
     }
 
     const sizes = {

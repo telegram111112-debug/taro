@@ -26,7 +26,7 @@ export function SurpriseDemo() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className={`text-3xl font-display font-bold mb-4 ${
-          isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+          isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
         }`}>
           Демо: Сюрприз-карта
         </h1>

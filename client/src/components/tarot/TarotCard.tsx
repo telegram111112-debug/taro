@@ -327,7 +327,7 @@ function CardFace({ card, theme }: { card: Card; theme: DeckTheme }) {
 
   // Witch theme (default)
   return (
-    <div className="w-full h-full bg-gradient-to-b from-gray-900 via-purple-950 to-gray-900 p-2">
+    <div className="w-full h-full bg-gradient-to-b from-gray-900 via-black to-gray-900 p-2">
       {/* Card number */}
       <div className="text-center text-white text-xs font-medium opacity-60">
         {card.arcana === 'major' ? romanNumeral(card.number) : card.number}

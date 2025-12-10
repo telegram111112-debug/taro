@@ -26,12 +26,12 @@ export function Card({
     solid: 'bg-mystic-900/80 border border-mystic-700/30',
     // Witch theme variants - тёмно-серый с прозрачностью
     'mystic-witch':
-      'bg-gradient-to-b from-slate-800/15 to-slate-900/20 backdrop-blur-md border border-slate-500/20 shadow-slate-500/10',
-    'glass-witch': 'bg-slate-900/10 backdrop-blur-md border border-slate-500/15',
-    // Fairy theme variants - нежный розовый #FC89AC с прозрачностью
+      'bg-gradient-to-b from-black/15 to-black/20 backdrop-blur-md border border-white/20 shadow-black/10',
+    'glass-witch': 'bg-black/10 backdrop-blur-md border border-white/15',
+    // Fairy theme variants - нежный розовый #C4A0A5 с прозрачностью
     'mystic-fairy':
-      'bg-[#FC89AC]/15 backdrop-blur-md border border-[#FC89AC]/20 shadow-[#FC89AC]/10',
-    'glass-fairy': 'bg-[#FC89AC]/15 backdrop-blur-md border border-[#FC89AC]/15',
+      'bg-[#C4A0A5]/15 backdrop-blur-md border border-[#C4A0A5]/20 shadow-[#C4A0A5]/10',
+    'glass-fairy': 'bg-[#C4A0A5]/15 backdrop-blur-md border border-[#C4A0A5]/15',
   }
 
   const paddings = {

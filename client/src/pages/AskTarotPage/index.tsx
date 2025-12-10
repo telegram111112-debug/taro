@@ -78,8 +78,6 @@ export function AskTarotPage() {
     const userId = user?.id || `temp-${Date.now()}`
 
     try {
-      console.log('Sending tarot ask request...', { userId, question, card: drawnCard.nameRu })
-
       // Отправляем запрос на сервер с Claude API
       const response = await tarotApi.ask(
         userId,
@@ -96,8 +94,6 @@ export function AskTarotPage() {
         },
         isReversed
       )
-
-      console.log('Tarot API response:', response.data)
 
       if (response.data.success && response.data.reading) {
         setTarotAnswer(response.data.reading)
@@ -233,8 +229,8 @@ export function AskTarotPage() {
                       className={`
                         px-3 py-1.5 rounded-full text-xs transition-all
                         ${isFairyTheme
-                          ? 'bg-[#FC89AC]/30 text-white hover:bg-[#FC89AC]/40 border border-[#FC89AC]/40'
-                          : 'bg-slate-500/30 text-slate-200 hover:bg-slate-500/40 border border-slate-400/30'
+                          ? 'bg-[#C4A0A5]/30 text-white hover:bg-[#C4A0A5]/40 border border-[#C4A0A5]/40'
+                          : 'bg-black/40 text-white/80 hover:bg-black/50 border border-white/20'
                         }
                       `}
                     >
@@ -250,7 +246,7 @@ export function AskTarotPage() {
                 disabled={!question.trim()}
                 size="lg"
                 variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-                className={`w-full ${isFairyTheme ? 'bg-[#FC89AC]/80' : 'bg-slate-600/80'}`}
+                className={`w-full ${isFairyTheme ? 'bg-[#C4A0A5]/80' : 'bg-black/40 border border-white/20 hover:bg-black/50'}`}
               >
                 {isFairyTheme ? 'Спросить карты 💫' : 'Вопросить судьбу 🌙'}
               </Button>
@@ -266,12 +262,16 @@ export function AskTarotPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
-            style={
-              isFairyTheme
-                ? getFairyBackgroundStyle(fairyBackground)
-                : getWitchBackgroundStyle(witchBackground)
-            }
           >
+            {/* Unique background for shuffle screen */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10"
+              style={{
+                backgroundImage: isFairyTheme
+                  ? 'url(/backgrounds/ask-shuffle-fairy.jpg)'
+                  : 'url(/backgrounds/ask-shuffle-witch.jpg)',
+              }}
+            />
             <div className={`absolute inset-0 ${
               isFairyTheme
                 ? 'bg-gradient-to-b from-black/30 via-black/10 to-black/50'
@@ -288,10 +288,10 @@ export function AskTarotPage() {
             >
               <div className={`backdrop-blur-md rounded-2xl p-4 max-w-md mx-auto border ${
                 isFairyTheme
-                  ? 'bg-black/30 border-[#FC89AC]/20'
-                  : 'bg-black/40 border-slate-500/20'
+                  ? 'bg-black/30 border-[#C4A0A5]/20'
+                  : 'bg-black/40 border-white/20'
               }`}>
-                <p className={`text-xs mb-1.5 text-center ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-white/50'}`}>
+                <p className={`text-xs mb-1.5 text-center ${isFairyTheme ? 'text-[#C4A0A5]/70' : 'text-white/50'}`}>
                   Твой вопрос:
                 </p>
                 <p className="text-white text-sm text-center leading-relaxed">
@@ -333,10 +333,20 @@ export function AskTarotPage() {
             exit={{ opacity: 0 }}
             className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
           >
+            {/* Unique background for reveal screen */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10"
+              style={{
+                backgroundImage: isFairyTheme
+                  ? 'url(/backgrounds/ask-reveal-fairy.jpg)'
+                  : 'url(/backgrounds/ask-reveal-witch.jpg)',
+              }}
+            />
+            {/* Overlay gradient */}
             <div className={`absolute inset-0 ${
               isFairyTheme
-                ? 'bg-gradient-to-b from-[#FC89AC]/30 via-black/50 to-black/80'
-                : 'bg-gradient-to-b from-slate-800/80 via-slate-900/60 to-black/80'
+                ? 'bg-gradient-to-b from-black/30 via-black/40 to-black/60'
+                : 'bg-gradient-to-b from-black/40 via-black/50 to-black/70'
             }`} />
 
             <FallingElements theme={selectedDeck} intensity="medium" />
@@ -359,8 +369,18 @@ export function AskTarotPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen p-4 pb-24"
+            className="min-h-screen p-4 pb-24 relative"
           >
+            {/* Unique background for answer screen */}
+            <div
+              className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
+              style={{
+                backgroundImage: isFairyTheme
+                  ? 'url(/backgrounds/ask-answer-fairy.jpg)'
+                  : 'url(/backgrounds/ask-answer-witch.jpg)',
+              }}
+            />
+            <div className={`fixed inset-0 -z-10 ${isFairyTheme ? 'bg-black/60' : 'bg-black/70'}`} />
             {/* Card display */}
             <div className="flex justify-center mb-6">
               <TarotCard
@@ -395,7 +415,7 @@ export function AskTarotPage() {
                   >
                     {isFairyTheme ? '✨' : '🌙'}
                   </motion.span>
-                  <p className={`mt-2 ${isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'}`}>
+                  <p className={`mt-2 ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/70'}`}>
                     {tarotAnswer.greeting}
                   </p>
                 </motion.div>
@@ -407,7 +427,7 @@ export function AskTarotPage() {
                   transition={{ delay: 0.2 }}
                 >
                   <h3 className={`text-sm font-medium mb-2 flex items-center gap-2 ${
-                    isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'
+                    isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/70'
                   }`}>
                     <span>{isFairyTheme ? '🦋' : '🔮'}</span> Значение карты
                   </h3>
@@ -423,12 +443,12 @@ export function AskTarotPage() {
                   transition={{ delay: 0.4 }}
                   className={`p-4 rounded-xl ${
                     isFairyTheme
-                      ? 'bg-gradient-to-r from-[#FC89AC]/10 to-pink-500/10 border border-[#FC89AC]/20'
-                      : 'bg-gradient-to-r from-slate-500/10 to-slate-600/10 border border-slate-500/20'
+                      ? 'bg-gradient-to-r from-[#C4A0A5]/10 to-[#B090A0]/10 border border-[#C4A0A5]/20'
+                      : 'bg-black/40 border border-white/20'
                   }`}
                 >
                   <h3 className={`text-sm font-medium mb-2 flex items-center gap-2 ${
-                    isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300'
+                    isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/70'
                   }`}>
                     <span>{isFairyTheme ? '💕' : '🌟'}</span> Ответ карт
                   </h3>
@@ -444,7 +464,7 @@ export function AskTarotPage() {
                   transition={{ delay: 0.6 }}
                 >
                   <p className={`text-sm italic ${
-                    isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-300/70'
+                    isFairyTheme ? 'text-[#C4A0A5]/70' : 'text-white/60'
                   }`}>
                     {tarotAnswer.advice}
                   </p>
@@ -462,8 +482,8 @@ export function AskTarotPage() {
                       key={i}
                       className={`px-2 py-1 rounded-full text-xs ${
                         isFairyTheme
-                          ? 'bg-[#FC89AC]/10 text-[#FC89AC]/60'
-                          : 'bg-slate-500/10 text-slate-300/60'
+                          ? 'bg-[#C4A0A5]/10 text-[#C4A0A5]/60'
+                          : 'bg-black/30 text-white/60'
                       }`}
                     >
                       {keyword}

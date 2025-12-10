@@ -53,10 +53,11 @@ export function Navigation() {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 100, opacity: 0 }}
       transition={{ duration: 0.3 }}
+      style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       className={clsx(
       "fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t safe-area-bottom z-40",
       isFairyTheme
-        ? "bg-[#FC89AC]/20 border-[#FC89AC]/20"
+        ? "bg-[#C4A0A5]/20 border-[#C4A0A5]/20"
         : "bg-[#2a2a2a]/95 border-[#3a3a3a]/50"
     )}>
       <div className="flex items-center justify-around h-16">
@@ -80,9 +81,10 @@ export function Navigation() {
                   className={clsx(
                     'w-10 h-10 rounded-full overflow-hidden',
                     isActive && (isFairyTheme
-                      ? 'ring-2 ring-[#FC89AC] ring-offset-1 ring-offset-transparent'
-                      : 'ring-2 ring-slate-400 ring-offset-1 ring-offset-transparent')
+                      ? 'ring-2 ring-[#C4A0A5] ring-offset-1 ring-offset-transparent'
+                      : 'ring-2 ring-white/60 ring-offset-1 ring-offset-transparent')
                   )}
+                  style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                   animate={isActive ? { scale: [1, 1.1, 1] } : {}}
                   transition={{ duration: 0.3 }}
                 >
@@ -95,6 +97,7 @@ export function Navigation() {
               ) : (
                 <motion.span
                   className="text-xl"
+                  style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                   animate={isActive ? { scale: [1, 1.2, 1] } : {}}
                   transition={{ duration: 0.3 }}
                 >
@@ -109,8 +112,10 @@ export function Navigation() {
                   layoutId="nav-indicator"
                   className={clsx(
                     'absolute bottom-1 w-1 h-1 rounded-full',
-                    isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-400'
+                    isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/60'
                   )}
+                  style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
             </NavLink>

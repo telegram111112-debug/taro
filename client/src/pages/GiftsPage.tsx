@@ -113,6 +113,7 @@ export function GiftsPage() {
                           </span>
                           <Button
                             size="sm"
+                            variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
                             onClick={() => handleUseGift(gift.type)}
                           >
                             Использовать {getThemeEmoji(user?.deckTheme, 'button')}

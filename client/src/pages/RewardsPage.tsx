@@ -24,14 +24,14 @@ export function RewardsPage() {
 
   // Theme colors matching HomePage
   const themeColors = {
-    // Witch: slate/gray tones, Fairy: #C4A0A5 muted pink
-    primary: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-slate-500 to-slate-600',
-    secondary: isFairyTheme ? 'from-[#C4A0A5]/25 to-[#B090A0]/25' : 'from-slate-500/20 to-slate-600/20',
-    accent: isFairyTheme ? 'text-white' : 'text-slate-300',
-    accentBg: isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-slate-500',
-    border: isFairyTheme ? 'border-[#C4A0A5]/40' : 'border-slate-500/30',
-    glow: isFairyTheme ? 'rgba(196, 160, 165, 0.5)' : 'rgba(148, 163, 184, 0.4)',
-    progressBg: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-slate-400 to-slate-500',
+    // Witch: neutral gray tones, Fairy: #C4A0A5 muted pink
+    primary: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-white/60 to-white/50',
+    secondary: isFairyTheme ? 'from-[#C4A0A5]/25 to-[#B090A0]/25' : 'from-black/20 to-black/30',
+    accent: isFairyTheme ? 'text-white' : 'text-white/80',
+    accentBg: isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/50',
+    border: isFairyTheme ? 'border-[#C4A0A5]/40' : 'border-white/20',
+    glow: isFairyTheme ? 'rgba(196, 160, 165, 0.5)' : 'rgba(255, 255, 255, 0.4)',
+    progressBg: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-white/60 to-white/50',
   }
 
   // Theme-specific emojis
@@ -45,7 +45,7 @@ export function RewardsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <motion.div
-          className={`w-10 h-10 border-2 ${isFairyTheme ? 'border-[#FC89AC]' : 'border-slate-400'} border-t-transparent rounded-full`}
+          className={`w-10 h-10 border-2 ${isFairyTheme ? 'border-[#C4A0A5]' : 'border-white/60'} border-t-transparent rounded-full`}
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         />
@@ -76,7 +76,11 @@ export function RewardsPage() {
           <div className="relative">
             <motion.div
               className={`w-32 h-32 rounded-full bg-gradient-to-br ${themeColors.primary} flex flex-col items-center justify-center shadow-2xl`}
-              style={{ boxShadow: `0 0 40px ${themeColors.glow}` }}
+              style={{
+                boxShadow: `0 0 40px ${themeColors.glow}`,
+                willChange: 'transform, box-shadow',
+                transform: 'translateZ(0)',
+              }}
               animate={{ boxShadow: [`0 0 30px ${themeColors.glow}`, `0 0 50px ${themeColors.glow}`, `0 0 30px ${themeColors.glow}`] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -107,6 +111,7 @@ export function RewardsPage() {
                   {isNext && (
                     <motion.span
                       className={`absolute -top-4 text-sm ${isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/60'}`}
+                      style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
                       animate={{
                         y: [-2, 2, -2],
                         opacity: [0.5, 1, 0.5],
@@ -124,6 +129,7 @@ export function RewardsPage() {
                       className={`absolute -inset-1 rounded-full ${
                         isFairyTheme ? 'bg-[#C4A0A5]/30' : 'bg-white/20'
                       }`}
+                      style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
                       animate={{
                         scale: [1, 1.5, 1],
                         opacity: [0.5, 0, 0.5],
@@ -159,6 +165,7 @@ export function RewardsPage() {
               className={`absolute -inset-1 rounded-full blur-md ${
                 isFairyTheme ? 'bg-[#C4A0A5]/20' : 'bg-white/10'
               }`}
+              style={{ willChange: 'opacity', transform: 'translateZ(0)' }}
               animate={{
                 opacity: [0.3, 0.5, 0.3],
               }}
@@ -177,6 +184,7 @@ export function RewardsPage() {
                 {/* Shimmer effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                  style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                   animate={{ x: ['-100%', '200%'] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
                 />
@@ -191,6 +199,8 @@ export function RewardsPage() {
                     style={{
                       left: `${20 + i * 15}%`,
                       top: '50%',
+                      willChange: 'transform, opacity',
+                      transform: 'translateZ(0)',
                     }}
                     animate={{
                       y: [-4, 4, -4],
@@ -220,7 +230,11 @@ export function RewardsPage() {
                           : 'bg-white border-white/50 shadow-lg shadow-white/30'
                         : 'bg-white/20 border-white/30'
                     }`}
-                    style={{ left: `${position}%`, transform: 'translate(-50%, -50%)' }}
+                    style={{
+                      left: `${position}%`,
+                      transform: 'translate(-50%, -50%) translateZ(0)',
+                      willChange: achieved ? 'transform, box-shadow' : 'auto',
+                    }}
                     animate={achieved ? {
                       scale: [1, 1.3, 1],
                       boxShadow: isFairyTheme
@@ -243,6 +257,8 @@ export function RewardsPage() {
                 style={{
                   left: `${10 + i * 15}%`,
                   top: i % 2 === 0 ? '-8px' : 'calc(100% + 4px)',
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)',
                 }}
                 animate={{
                   y: i % 2 === 0 ? [-3, 3, -3] : [3, -3, 3],
@@ -343,11 +359,24 @@ export function RewardsPage() {
           className={`rounded-2xl p-4 bg-gradient-to-br ${themeColors.secondary} ${themeColors.border} border mb-4`}
         >
           <div className="flex items-center gap-4">
-            <img
-              src={isFairyTheme ? '/icons/rewards-gift-fairy.png' : '/icons/rewards-gift-witch.png'}
-              alt="Gift"
-              className="w-36 h-36 object-contain flex-shrink-0"
-            />
+            <motion.div
+              className="relative flex-shrink-0"
+              style={{ willChange: 'filter', transform: 'translateZ(0)' }}
+              animate={{
+                filter: [
+                  'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+                  'drop-shadow(0 0 15px rgba(255,255,255,0.5))',
+                  'drop-shadow(0 0 8px rgba(255,255,255,0.3))',
+                ],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <img
+                src={isFairyTheme ? '/icons/rewards-gift-fairy.png' : '/icons/rewards-gift-witch.png'}
+                alt="Gift"
+                className="w-36 h-36 object-contain brightness-125 contrast-110"
+              />
+            </motion.div>
             <div className="flex-1">
               <p className="text-white font-medium text-sm">1 подруга = 1 расклад</p>
               <p className="text-white/60 text-xs" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>Вы обе получите подарок</p>
@@ -364,7 +393,7 @@ export function RewardsPage() {
           <Button
             onClick={() => navigate('/referrals')}
             variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-            className={`w-full py-4 ${isFairyTheme ? '!bg-[#C4A0A5] hover:!bg-[#d4b0b5] border-[#C4A0A5]/40' : 'bg-gradient-to-r from-slate-500 to-slate-600'}`}
+            className={`w-full py-4 ${isFairyTheme ? '!bg-[#C4A0A5] hover:!bg-[#d4b0b5] border-[#C4A0A5]/40' : 'bg-gradient-to-r from-white/60 to-white/50 text-black'}`}
           >
             Пригласить подругу
           </Button>

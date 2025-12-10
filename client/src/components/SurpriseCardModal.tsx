@@ -59,7 +59,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
               <motion.div
                 key={i}
                 className={`absolute w-2 h-2 rounded-full ${
-                  isFairyTheme ? 'bg-[#FC89AC]' : 'bg-purple-400'
+                  isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/60'
                 }`}
                 initial={{
                   x: '50vw',
@@ -105,7 +105,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                     {isFairyTheme ? '✨' : '🔮'}
                   </motion.div>
                   <h2 className={`text-2xl font-display font-bold ${
-                    isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+                    isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
                   }`}>
                     Карта сама выпрыгнула из колоды!
                   </h2>
@@ -140,7 +140,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                   {/* Glow effect */}
                   <motion.div
                     className={`absolute inset-0 rounded-2xl blur-xl ${
-                      isFairyTheme ? 'bg-[#FC89AC]' : 'bg-purple-500'
+                      isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/50'
                     }`}
                     animate={{
                       opacity: [0.3, 0.7, 0.3],
@@ -189,7 +189,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                   {/* Glow effect */}
                   <motion.div
                     className={`absolute inset-0 rounded-2xl blur-xl ${
-                      isFairyTheme ? 'bg-[#FC89AC]' : 'bg-purple-500'
+                      isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-white/50'
                     }`}
                     animate={{
                       opacity: [0.5, 0.9, 0.5],
@@ -207,8 +207,8 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                   >
                     <div className={`w-full h-full flex flex-col items-center justify-center p-4 ${
                       isFairyTheme
-                        ? 'bg-gradient-to-b from-[#FC89AC]/30 to-pink-900/80'
-                        : 'bg-gradient-to-b from-purple-800/50 to-purple-950/90'
+                        ? 'bg-gradient-to-b from-[#C4A0A5]/30 to-pink-900/80'
+                        : 'bg-gradient-to-b from-black/50 to-black/90'
                     }`}>
                       <div className="text-6xl mb-4">
                         {randomCard.arcana === 'major' ? '🌟' :
@@ -249,7 +249,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                   transition={{ delay: 1 }}
                 >
                   <h3 className={`text-2xl font-display font-bold mb-2 ${
-                    isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+                    isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
                   }`}>
                     {randomCard.nameRu}
                     {isReversed && ' (перевёрнутая)'}
@@ -276,8 +276,8 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
               >
                 <div className={`rounded-3xl p-6 ${
                   isFairyTheme
-                    ? 'bg-gradient-to-b from-[#FC89AC]/20 to-pink-900/40'
-                    : 'bg-gradient-to-b from-purple-800/30 to-purple-950/50'
+                    ? 'bg-gradient-to-b from-[#C4A0A5]/20 to-pink-900/40'
+                    : 'bg-gradient-to-b from-black/30 to-black/50'
                 } backdrop-blur-xl border border-white/10`}>
                   <div className="text-center mb-6">
                     <div className="text-4xl mb-2">
@@ -287,7 +287,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                        randomCard.suit === 'swords' ? '💨' : '🌍'}
                     </div>
                     <h3 className={`text-2xl font-display font-bold ${
-                      isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+                      isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
                     }`}>
                       {randomCard.nameRu}
                       {isReversed && ' (перевёрнутая)'}
@@ -297,7 +297,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
                   <div className="space-y-4 text-white/80 text-sm leading-relaxed">
                     <div>
                       <h4 className={`font-semibold mb-2 ${
-                        isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+                        isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
                       }`}>
                         Общее значение
                       </h4>
@@ -310,7 +310,7 @@ export function SurpriseCardModal({ isOpen, onClose }: SurpriseCardModalProps) {
 
                     <div>
                       <h4 className={`font-semibold mb-2 ${
-                        isFairyTheme ? 'text-[#FC89AC]' : 'text-purple-300'
+                        isFairyTheme ? 'text-[#C4A0A5]' : 'text-white/80'
                       }`}>
                         Совет дня
                       </h4>

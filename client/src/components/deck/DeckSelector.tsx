@@ -72,8 +72,8 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
             absolute top-6 left-4 z-20 flex items-center gap-2 px-4 py-2.5 rounded-2xl
             backdrop-blur-md transition-all duration-300
             ${user?.deckTheme === 'fairy'
-              ? 'bg-[#FC89AC]/20 border border-[#FC89AC]/30 text-white hover:bg-[#FC89AC]/30'
-              : 'bg-slate-500/20 border border-slate-400/30 text-white hover:bg-slate-500/30'
+              ? 'bg-[#C4A0A5]/20 border border-[#C4A0A5]/30 text-white hover:bg-[#C4A0A5]/30'
+              : 'bg-black/40 border border-white/20 text-white hover:bg-black/50'
             }
           `}
         >
@@ -207,7 +207,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 className={`
                   absolute inset-0 w-full h-full rounded-2xl overflow-hidden
                   ${selectedDeck === 'fairy'
-                    ? 'ring-2 ring-pink-400/50'
+                    ? 'ring-2 ring-[#C4A0A5]/50'
                     : 'ring-1 ring-white/10'
                   }
                 `}
@@ -237,7 +237,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 absolute inset-0 w-full h-full rounded-2xl overflow-hidden
                 transition-all duration-300
                 ${selectedDeck === 'fairy'
-                  ? 'ring-4 ring-pink-400 shadow-lg shadow-pink-400/50'
+                  ? 'ring-4 ring-[#C4A0A5] shadow-lg shadow-[#C4A0A5]/50'
                   : 'ring-2 ring-white/20 hover:ring-white/40'
                 }
               `}
@@ -323,7 +323,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 rounded-3xl p-6 max-w-sm w-full
                 ${selectedDeck === 'witch'
                   ? 'bg-[#3a3a3a] border border-white/20'
-                  : 'bg-gradient-to-b from-pink-950 via-rose-950 to-pink-950 border border-pink-400/20'
+                  : 'bg-gradient-to-b from-[#3a2a2d] via-[#2f2325] to-[#3a2a2d] border border-[#C4A0A5]/30'
                 }
               `}
               onClick={(e) => e.stopPropagation()}
@@ -351,7 +351,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                     flex-1 py-3 rounded-xl font-medium transition-all
                     ${selectedDeck === 'witch'
                       ? 'bg-[#2a2a2a] text-white border border-white/20 hover:bg-[#4a4a4a]'
-                      : 'bg-pink-100/10 text-pink-200 border border-pink-300/20 hover:bg-pink-100/20'
+                      : 'bg-[#C4A0A5]/10 text-[#C4A0A5] border border-[#C4A0A5]/20 hover:bg-[#C4A0A5]/20'
                     }
                   `}
                 >
@@ -363,7 +363,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                     flex-1 py-3 rounded-xl font-medium transition-all
                     ${selectedDeck === 'witch'
                       ? 'bg-[#4a4a4a] text-white border border-white/30 shadow-lg shadow-black/30 hover:bg-[#5a5a5a]'
-                      : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white border border-pink-300/30 shadow-lg shadow-pink-400/50'
+                      : 'bg-[#C4A0A5] text-white border border-[#C4A0A5]/30 shadow-lg shadow-[#C4A0A5]/50 hover:bg-[#d4b0b5]'
                     }
                   `}
                 >

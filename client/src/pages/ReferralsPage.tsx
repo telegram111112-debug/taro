@@ -119,7 +119,7 @@ export function ReferralsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <motion.div
-          className={`w-10 h-10 border-2 border-t-transparent rounded-full ${isFairyTheme ? 'border-[#FC89AC]' : 'border-[#5a5a5a]'}`}
+          className={`w-10 h-10 border-2 border-t-transparent rounded-full ${isFairyTheme ? 'border-[#C4A0A5]' : 'border-[#5a5a5a]'}`}
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         />
@@ -193,10 +193,10 @@ export function ReferralsPage() {
             className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'friends'
                 ? isFairyTheme
-                  ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
+                  ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
                   : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
-                  ? 'bg-[#FC89AC]/20 text-white/70'
+                  ? 'bg-[#C4A0A5]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
@@ -210,10 +210,10 @@ export function ReferralsPage() {
             className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'invite'
                 ? isFairyTheme
-                  ? 'bg-[#FC89AC] text-white shadow-lg shadow-[#FC89AC]/30'
+                  ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
                   : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
                 : isFairyTheme
-                  ? 'bg-[#FC89AC]/20 text-white/70'
+                  ? 'bg-[#C4A0A5]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
             }`}
           >
@@ -244,7 +244,7 @@ export function ReferralsPage() {
                       }}
                       className={`p-4 rounded-2xl cursor-pointer active:scale-[0.98] transition-all ${
                         isFairyTheme
-                          ? 'bg-[#FC89AC]/15 border border-[#FC89AC]/30 backdrop-blur-sm'
+                          ? 'bg-[#C4A0A5]/15 border border-[#C4A0A5]/30 backdrop-blur-sm'
                           : 'bg-[#2a2a2a]/90 border border-[#3a3a3a]/50 backdrop-blur-sm'
                       }`}
                     >
@@ -261,7 +261,7 @@ export function ReferralsPage() {
                         ) : (
                           <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${
                             isFairyTheme
-                              ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]'
+                              ? 'bg-gradient-to-br from-[#C4A0A5] to-[#E879F9]'
                               : 'bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]'
                           }`}>
                             {friend.name.charAt(0)}
@@ -339,6 +339,7 @@ export function ReferralsPage() {
                           className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
                             isFairyTheme ? 'bg-white/80' : 'bg-white/70'
                           }`}
+                          style={{ willChange: 'transform, box-shadow', transform: 'translateZ(0)' }}
                           animate={{
                             scale: [1, 1.3, 1],
                             boxShadow: isFairyTheme
@@ -353,7 +354,7 @@ export function ReferralsPage() {
                 </div>
               ) : (
                 <div className={`text-center py-12 rounded-2xl ${
-                  isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-[#2a2a2a]/80'
+                  isFairyTheme ? 'bg-[#C4A0A5]/10' : 'bg-[#2a2a2a]/80'
                 }`}>
                   <motion.div
                     className="text-5xl mb-4"
@@ -426,7 +427,7 @@ export function ReferralsPage() {
                       copied
                         ? 'bg-green-500 text-white'
                         : isFairyTheme
-                          ? 'bg-[#FC89AC] text-white'
+                          ? 'bg-[#C4A0A5] text-white'
                           : 'bg-[#4a4a4a] text-white'
                     }`}
                   >
@@ -468,14 +469,112 @@ export function ReferralsPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + i * 0.1 }}
                       className={`flex items-center gap-3 p-3 rounded-xl ${
-                        isFairyTheme ? 'bg-[#FC89AC]/15' : 'bg-[#3a3a3a]/60'
+                        isFairyTheme ? 'bg-[#C4A0A5]/15' : 'bg-[#3a3a3a]/60'
                       }`}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        isFairyTheme ? 'bg-[#FC89AC] text-white' : 'bg-[#4a4a4a] text-white'
-                      }`}>
-                        {item.step}
-                      </div>
+                      {isFairyTheme ? (
+                        <div className="relative flex items-center justify-center w-8">
+                          {/* Блёстки вокруг цифры */}
+                          {[...Array(4)].map((_, sparkleIndex) => (
+                            <motion.span
+                              key={sparkleIndex}
+                              className="absolute text-xs"
+                              style={{
+                                top: sparkleIndex === 0 ? '-4px' : sparkleIndex === 1 ? '50%' : sparkleIndex === 2 ? 'auto' : '50%',
+                                bottom: sparkleIndex === 2 ? '-4px' : 'auto',
+                                left: sparkleIndex === 3 ? '-6px' : sparkleIndex === 1 ? 'auto' : '50%',
+                                right: sparkleIndex === 1 ? '-6px' : 'auto',
+                                transform: 'translate(-50%, -50%)',
+                              }}
+                              animate={{
+                                opacity: [0.3, 1, 0.3],
+                                scale: [0.6, 1.2, 0.6],
+                              }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                delay: i * 0.2 + sparkleIndex * 0.3,
+                                ease: 'easeInOut',
+                              }}
+                            >
+                              ✦
+                            </motion.span>
+                          ))}
+                          <motion.span
+                            className="text-xl font-bold relative z-10"
+                            style={{
+                              background: 'linear-gradient(135deg, #C4A0A5, #E8C4CA, #C4A0A5)',
+                              backgroundSize: '200% 200%',
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                              filter: 'drop-shadow(0 0 6px rgba(196, 160, 165, 0.5))',
+                            }}
+                            animate={{
+                              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                              scale: [1, 1.08, 1],
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              delay: i * 0.3,
+                              ease: 'easeInOut',
+                            }}
+                          >
+                            {item.step}
+                          </motion.span>
+                        </div>
+                      ) : (
+                        <div className="relative flex items-center justify-center w-8">
+                          {/* Полумесяцы вокруг цифры */}
+                          {[...Array(4)].map((_, moonIndex) => (
+                            <motion.span
+                              key={moonIndex}
+                              className="absolute text-xs text-white/70"
+                              style={{
+                                top: moonIndex === 0 ? '-4px' : moonIndex === 1 ? '50%' : moonIndex === 2 ? 'auto' : '50%',
+                                bottom: moonIndex === 2 ? '-4px' : 'auto',
+                                left: moonIndex === 3 ? '-6px' : moonIndex === 1 ? 'auto' : '50%',
+                                right: moonIndex === 1 ? '-6px' : 'auto',
+                                transform: `translate(-50%, -50%) rotate(${moonIndex * 45 - 45}deg)`,
+                              }}
+                              animate={{
+                                opacity: [0.3, 1, 0.3],
+                                scale: [0.6, 1.2, 0.6],
+                              }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                delay: i * 0.2 + moonIndex * 0.3,
+                                ease: 'easeInOut',
+                              }}
+                            >
+                              ☽
+                            </motion.span>
+                          ))}
+                          <motion.span
+                            className="text-xl font-bold relative z-10"
+                            style={{
+                              background: 'linear-gradient(135deg, #ffffff, #e0e0e0, #ffffff)',
+                              backgroundSize: '200% 200%',
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                              filter: 'drop-shadow(0 0 6px rgba(255, 255, 255, 0.4))',
+                            }}
+                            animate={{
+                              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                              scale: [1, 1.08, 1],
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              delay: i * 0.3,
+                              ease: 'easeInOut',
+                            }}
+                          >
+                            {item.step}
+                          </motion.span>
+                        </div>
+                      )}
                       <span className="text-white text-sm flex-1">{item.text}</span>
                       <span className="text-xl">{item.emoji}</span>
                     </motion.div>
@@ -518,7 +617,8 @@ export function ReferralsPage() {
                     height: '120%',
                     left: `${15 + i * 17}%`,
                     bottom: '-20%',
-                    transform: `rotate(${-15 + i * 7}deg)`,
+                    transform: `rotate(${-15 + i * 7}deg) translateZ(0)`,
+                    willChange: 'transform, opacity, width',
                   }}
                   animate={{
                     opacity: [0, 0.6, 0],
@@ -550,6 +650,8 @@ export function ReferralsPage() {
                     height: 3 + (i % 5) * 2,
                     left: `${3 + (i * 3.3) % 94}%`,
                     top: `${5 + (i * 5.7) % 90}%`,
+                    willChange: 'transform, opacity',
+                    transform: 'translateZ(0)',
                   }}
                   animate={{
                     y: [-40, 40, -40],
@@ -574,6 +676,8 @@ export function ReferralsPage() {
                   style={{
                     left: `${8 + i * 9}%`,
                     top: `${15 + (i % 4) * 20}%`,
+                    willChange: 'transform, opacity',
+                    transform: 'translateZ(0)',
                   }}
                   animate={{
                     y: [-25, 25, -25],
@@ -606,6 +710,8 @@ export function ReferralsPage() {
                     height: '30px',
                     left: `${10 + i * 11}%`,
                     bottom: '10%',
+                    willChange: 'transform, opacity',
+                    transform: 'translateZ(0)',
                   }}
                   animate={{
                     y: [0, -100, -200],
@@ -627,6 +733,7 @@ export function ReferralsPage() {
               className={`absolute w-80 h-80 rounded-full blur-3xl ${
                 isFairyTheme ? 'bg-[#C4A0A5]/40' : 'bg-[#4a4a4a]/35'
               }`}
+              style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.3, 0.6, 0.3],
@@ -638,6 +745,7 @@ export function ReferralsPage() {
               className={`absolute w-56 h-56 rounded-full blur-2xl ${
                 isFairyTheme ? 'bg-white/25' : 'bg-white/15'
               }`}
+              style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
               animate={{
                 scale: [1.2, 0.9, 1.2],
                 opacity: [0.2, 0.5, 0.2],
@@ -650,6 +758,7 @@ export function ReferralsPage() {
               className={`absolute w-40 h-40 rounded-full blur-xl ${
                 isFairyTheme ? 'bg-[#d4b0b5]/30' : 'bg-[#5a5a5a]/25'
               }`}
+              style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
               animate={{
                 scale: [0.8, 1.4, 0.8],
                 opacity: [0.2, 0.4, 0.2],
@@ -844,12 +953,14 @@ export function ReferralsPage() {
                           className={`absolute inset-0 rounded-full ${
                             isFairyTheme ? 'bg-white/30' : 'bg-white/20'
                           }`}
+                          style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
                           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
                       )}
                       <motion.div
                         className="w-6 h-6 rounded-full absolute top-1 shadow-lg bg-white"
+                        style={{ willChange: 'transform, box-shadow', transform: 'translateZ(0)' }}
                         animate={{
                           left: shareEnabled ? '1.75rem' : '0.25rem',
                           scale: shareEnabled ? [1, 1.2, 1] : 1,
@@ -993,13 +1104,13 @@ export function ReferralsPage() {
             >
               {/* Handle */}
               <div className="flex justify-center pt-3 pb-2">
-                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-[#4a4a4a]'}`} />
+                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#C4A0A5]/40' : 'bg-[#4a4a4a]'}`} />
               </div>
 
               {/* Header */}
               <div className="px-5 pb-4 flex items-center gap-4 border-b border-white/10">
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-xl ${
-                  isFairyTheme ? 'bg-gradient-to-br from-[#FC89AC] to-[#E879F9]' : 'bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]'
+                  isFairyTheme ? 'bg-gradient-to-br from-[#C4A0A5] to-[#E879F9]' : 'bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]'
                 }`}>
                   {selectedFriend.name.charAt(0)}
                 </div>
@@ -1012,7 +1123,7 @@ export function ReferralsPage() {
                 <button
                   onClick={() => setSelectedFriend(null)}
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
-                    isFairyTheme ? 'bg-[#FC89AC]/20 text-white' : 'bg-[#3a3a3a] text-gray-400'
+                    isFairyTheme ? 'bg-[#C4A0A5]/20 text-white' : 'bg-[#3a3a3a] text-gray-400'
                   }`}
                 >
                   ×
@@ -1036,7 +1147,7 @@ export function ReferralsPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.1 }}
                           className={`p-4 rounded-xl ${
-                            isFairyTheme ? 'bg-[#FC89AC]/10' : 'bg-[#2a2a2a]/80'
+                            isFairyTheme ? 'bg-[#C4A0A5]/10' : 'bg-[#2a2a2a]/80'
                           }`}
                         >
                           <div className="flex items-center gap-2 mb-2">
@@ -1061,7 +1172,7 @@ export function ReferralsPage() {
               </div>
 
               {/* Footer */}
-              <div className={`px-5 py-4 border-t ${isFairyTheme ? 'border-[#FC89AC]/20' : 'border-[#3a3a3a]'}`}>
+              <div className={`px-5 py-4 border-t ${isFairyTheme ? 'border-[#C4A0A5]/20' : 'border-[#3a3a3a]'}`}>
                 <Button
                   onClick={() => setSelectedFriend(null)}
                   variant="secondary"
