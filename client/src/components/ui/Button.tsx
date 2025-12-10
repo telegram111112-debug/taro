@@ -37,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       danger:
         'bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30',
       'glass-fairy':
-        'bg-[#FC89AC]/20 backdrop-blur-md border border-[#FC89AC]/30 text-white shadow-lg shadow-[#FC89AC]/20 hover:bg-[#FC89AC]/30',
+        'bg-[#FC89AC]/80 backdrop-blur-md border border-[#FC89AC]/40 text-white shadow-lg shadow-[#FC89AC]/30 hover:bg-[#FC89AC]/90',
       'glass-witch':
         'bg-slate-500/20 backdrop-blur-md border border-slate-400/30 text-white shadow-lg shadow-slate-400/20 hover:bg-slate-500/30',
     }

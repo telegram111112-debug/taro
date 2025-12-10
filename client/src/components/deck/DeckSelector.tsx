@@ -72,8 +72,8 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
             absolute top-6 left-4 z-20 flex items-center gap-2 px-4 py-2.5 rounded-2xl
             backdrop-blur-md transition-all duration-300
             ${user?.deckTheme === 'fairy'
-              ? 'bg-[#FC89AC]/20 border border-[#FC89AC]/30 text-[#FC89AC] hover:bg-[#FC89AC]/30'
-              : 'bg-slate-500/20 border border-slate-400/30 text-slate-300 hover:bg-slate-500/30'
+              ? 'bg-[#FC89AC]/20 border border-[#FC89AC]/30 text-white hover:bg-[#FC89AC]/30'
+              : 'bg-slate-500/20 border border-slate-400/30 text-white hover:bg-slate-500/30'
             }
           `}
         >
@@ -280,7 +280,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                 w-full py-4 text-lg rounded-2xl font-medium transition-all
                 ${selectedDeck === 'witch'
                   ? 'bg-[#3a3a3a] text-white border border-white/20 shadow-lg shadow-black/30 hover:bg-[#4a4a4a]'
-                  : 'bg-gradient-to-r from-pink-400 via-rose-400 to-pink-500 text-white border border-pink-300/30 shadow-lg shadow-pink-400/50 hover:shadow-pink-400/60'
+                  : 'bg-[#C4A0A5] text-white border border-[#C4A0A5]/30 shadow-lg shadow-[#C4A0A5]/30 hover:bg-[#d4b0b5]'
                 }
               `}
             >
@@ -294,7 +294,7 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
                   text-sm transition-colors
                   ${selectedDeck === 'witch'
                     ? 'text-white/60 hover:text-white'
-                    : 'text-pink-200/60 hover:text-pink-100'
+                    : 'text-white/60 hover:text-white'
                   }
                 `}
               >

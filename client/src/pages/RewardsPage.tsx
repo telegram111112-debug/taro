@@ -24,14 +24,14 @@ export function RewardsPage() {
 
   // Theme colors matching HomePage
   const themeColors = {
-    // Witch: slate/gray tones, Fairy: #FC89AC pink
-    primary: isFairyTheme ? 'from-[#FC89AC] to-[#E879F9]' : 'from-slate-500 to-slate-600',
-    secondary: isFairyTheme ? 'from-[#FC89AC]/20 to-[#E879F9]/20' : 'from-slate-500/20 to-slate-600/20',
-    accent: isFairyTheme ? 'text-[#FC89AC]' : 'text-slate-300',
-    accentBg: isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-500',
-    border: isFairyTheme ? 'border-[#FC89AC]/30' : 'border-slate-500/30',
-    glow: isFairyTheme ? 'rgba(252, 137, 172, 0.4)' : 'rgba(148, 163, 184, 0.4)',
-    progressBg: isFairyTheme ? 'from-[#FC89AC] to-pink-500' : 'from-slate-400 to-slate-500',
+    // Witch: slate/gray tones, Fairy: #C4A0A5 muted pink
+    primary: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-slate-500 to-slate-600',
+    secondary: isFairyTheme ? 'from-[#C4A0A5]/25 to-[#B090A0]/25' : 'from-slate-500/20 to-slate-600/20',
+    accent: isFairyTheme ? 'text-white' : 'text-slate-300',
+    accentBg: isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-slate-500',
+    border: isFairyTheme ? 'border-[#C4A0A5]/40' : 'border-slate-500/30',
+    glow: isFairyTheme ? 'rgba(196, 160, 165, 0.5)' : 'rgba(148, 163, 184, 0.4)',
+    progressBg: isFairyTheme ? 'from-[#C4A0A5] to-[#B090A0]' : 'from-slate-400 to-slate-500',
   }
 
   // Theme-specific emojis
@@ -197,7 +197,7 @@ export function RewardsPage() {
           <Button
             onClick={() => navigate('/referrals')}
             variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-            className={`w-full py-4 ${isFairyTheme ? 'bg-gradient-to-r from-[#FC89AC] to-pink-500' : 'bg-gradient-to-r from-slate-500 to-slate-600'}`}
+            className={`w-full py-4 ${isFairyTheme ? '!bg-[#C4A0A5] hover:!bg-[#d4b0b5] border-[#C4A0A5]/40' : 'bg-gradient-to-r from-slate-500 to-slate-600'}`}
           >
             Пригласить подругу
           </Button>

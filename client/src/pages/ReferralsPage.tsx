@@ -486,102 +486,212 @@ export function ReferralsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end justify-center"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={() => setShowShareSettings(false)}
           >
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+            {/* Floating particles animation */}
+            {isFairyTheme && (
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 rounded-full bg-white/30"
+                    style={{
+                      left: `${10 + (i * 7) % 80}%`,
+                      top: `${20 + (i * 11) % 60}%`,
+                    }}
+                    animate={{
+                      y: [-20, 20, -20],
+                      x: [-10, 10, -10],
+                      opacity: [0.2, 0.5, 0.2],
+                      scale: [0.8, 1.2, 0.8],
+                    }}
+                    transition={{
+                      duration: 3 + i * 0.3,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className={`relative w-full rounded-t-3xl overflow-hidden ${
-                isFairyTheme ? 'bg-gradient-to-b from-[#2a1018] to-[#1a0a10]' : 'bg-slate-900'
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              className={`relative w-full max-w-sm rounded-3xl overflow-hidden ${
+                isFairyTheme ? 'bg-[#C4A0A5]' : 'bg-slate-800'
               }`}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Handle */}
-              <div className="flex justify-center pt-3 pb-2">
-                <div className={`w-10 h-1 rounded-full ${isFairyTheme ? 'bg-[#FC89AC]/40' : 'bg-slate-600'}`} />
-              </div>
+              {/* Shimmer effect */}
+              {isFairyTheme && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+                />
+              )}
+
+              {/* Decorative corner sparkles */}
+              {isFairyTheme && (
+                <>
+                  <motion.span
+                    className="absolute top-4 right-4 text-white/40 text-lg"
+                    animate={{ rotate: [0, 180, 360], scale: [1, 1.2, 1] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  >
+                    ✦
+                  </motion.span>
+                  <motion.span
+                    className="absolute bottom-4 left-4 text-white/30 text-sm"
+                    animate={{ rotate: [360, 180, 0], scale: [1, 1.3, 1] }}
+                    transition={{ duration: 5, repeat: Infinity }}
+                  >
+                    ✧
+                  </motion.span>
+                </>
+              )}
 
               {/* Header */}
-              <div className="px-5 pb-4 flex items-center gap-4">
+              <div className="relative px-5 pt-5 pb-4 flex items-center gap-4">
                 <div className="flex-1">
-                  <h3 className="text-white font-bold text-lg">Делиться результатами</h3>
-                  <p className={`text-sm ${isFairyTheme ? 'text-[#FC89AC]/70' : 'text-slate-400'}`}>
+                  <motion.h3
+                    className="text-white font-bold text-lg"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    Делиться результатами
+                  </motion.h3>
+                  <motion.p
+                    className="text-sm text-white/70"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
                     Настрой видимость раскладов
-                  </p>
+                  </motion.p>
                 </div>
-                <button
+                <motion.button
                   onClick={() => setShowShareSettings(false)}
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    isFairyTheme ? 'bg-[#FC89AC]/20 text-[#FC89AC]' : 'bg-slate-700 text-slate-400'
+                    isFairyTheme ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-slate-700 text-slate-400'
                   }`}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 400 }}
                 >
                   ×
-                </button>
+                </motion.button>
               </div>
 
               {/* Content */}
-              <div className="px-5 pb-6">
+              <div className="relative px-5 pb-6">
                 {/* Toggle */}
-                <div className={`p-4 rounded-xl mb-4 ${
-                  isFairyTheme ? 'bg-[#FC89AC]/10 border border-[#FC89AC]/20' : 'bg-slate-800/50 border border-slate-700'
-                }`}>
+                <motion.div
+                  className={`p-4 rounded-2xl mb-4 ${
+                    isFairyTheme ? 'bg-white/15 border border-white/20' : 'bg-slate-700/50 border border-slate-600'
+                  }`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <p className="text-white font-medium">Расклады видны подругам</p>
-                      <p className={`text-xs ${isFairyTheme ? 'text-[#FC89AC]/60' : 'text-slate-500'}`}>
+                      <p className="text-xs text-white/60">
                         Подруги могут видеть твои расклады
                       </p>
                     </div>
-                    <button
+                    <motion.button
                       onClick={() => {
                         hapticFeedback('impact', 'light')
                         setShareEnabled(!shareEnabled)
                       }}
                       className={`w-14 h-8 rounded-full transition-all relative ${
                         shareEnabled
-                          ? isFairyTheme ? 'bg-[#FC89AC]' : 'bg-slate-500'
-                          : isFairyTheme ? 'bg-[#FC89AC]/30' : 'bg-slate-700'
+                          ? isFairyTheme ? 'bg-white/40' : 'bg-slate-500'
+                          : isFairyTheme ? 'bg-white/20' : 'bg-slate-700'
                       }`}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <motion.div
-                        className="w-6 h-6 bg-white rounded-full absolute top-1"
-                        animate={{ left: shareEnabled ? '1.75rem' : '0.25rem' }}
+                        className={`w-6 h-6 rounded-full absolute top-1 shadow-lg ${
+                          isFairyTheme ? 'bg-white' : 'bg-white'
+                        }`}
+                        animate={{
+                          left: shareEnabled ? '1.75rem' : '0.25rem',
+                          scale: shareEnabled ? [1, 1.1, 1] : 1
+                        }}
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                       />
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Info */}
-                <p className={`text-xs text-center mb-4 ${isFairyTheme ? 'text-[#FC89AC]/50' : 'text-slate-500'}`}>
+                <motion.p
+                  className="text-xs text-center mb-4 text-white/50"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
                   Когда функция включена, подруги смогут видеть твои расклады на вкладке "Подруги"
-                </p>
+                </motion.p>
 
                 {/* Share Now Button */}
-                <Button
-                  onClick={() => {
-                    handleShare()
-                    setShowShareSettings(false)
-                  }}
-                  variant={isFairyTheme ? 'primary-fairy' : 'primary'}
-                  className="w-full mb-3"
-                  size="lg"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
                 >
-                  Поделиться сейчас
-                </Button>
+                  <motion.button
+                    onClick={() => {
+                      handleShare()
+                      setShowShareSettings(false)
+                    }}
+                    className={`w-full py-4 rounded-2xl font-semibold text-lg mb-3 relative overflow-hidden ${
+                      isFairyTheme
+                        ? 'bg-white/25 text-white border border-white/30 hover:bg-white/35'
+                        : 'bg-slate-600 text-white'
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {/* Button shimmer */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full"
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                    />
+                    <span className="relative">Поделиться сейчас</span>
+                  </motion.button>
+                </motion.div>
 
                 {/* Done Button */}
-                <Button
-                  onClick={() => setShowShareSettings(false)}
-                  variant="secondary"
-                  className="w-full"
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  Готово
-                </Button>
+                  <motion.button
+                    onClick={() => setShowShareSettings(false)}
+                    className={`w-full py-4 rounded-2xl font-medium ${
+                      isFairyTheme
+                        ? 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
+                        : 'bg-slate-700 text-white'
+                    }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Готово
+                  </motion.button>
+                </motion.div>
               </div>
             </motion.div>
           </motion.div>

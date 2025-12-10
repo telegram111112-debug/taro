@@ -548,7 +548,7 @@ export function SpreadPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-6"
             >
-              <Card variant="mystic" className="border-gold-500/30">
+              <Card variant={isWitchTheme ? 'mystic-witch' : 'mystic-fairy'} className={isWitchTheme ? 'border-white/20' : 'border-[#FC89AC]/30'}>
                 <p className="text-white/90 leading-relaxed text-center italic">
                   {interpretation.greeting}
                 </p>
@@ -701,8 +701,8 @@ export function SpreadPage() {
               >
                 <div className={`relative overflow-hidden rounded-2xl ${
                   isWitchTheme
-                    ? 'bg-gradient-to-br from-[#2a2a2a] via-[#3a3a3a] to-[#2a2a2a] border border-white/20'
-                    : 'bg-gradient-to-br from-[#FC89AC] via-[#E879A0] to-[#D46A90] border border-[#FC89AC]/60'
+                    ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
+                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
                 }`}>
                   {/* Анимированный фон с частицами */}
                   <div className="absolute inset-0 overflow-hidden">
@@ -764,15 +764,15 @@ export function SpreadPage() {
                         animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
                         transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
                       />
-                      <div className={`w-full h-full rounded-full flex items-center justify-center ${
+                      <div className={`w-full h-full rounded-full flex items-center justify-center overflow-hidden ${
                         isWitchTheme
                           ? 'bg-gradient-to-br from-white/20 to-white/5 border border-white/30'
                           : 'bg-gradient-to-br from-white/30 to-white/10 border border-white/40'
                       }`}>
                         <img
-                          src="/icons/crystal-ball.png"
+                          src={isWitchTheme ? '/icons/clarifying-witch.png' : '/icons/clarifying-fairy.png'}
                           alt="Пояснительная карта"
-                          className="w-12 h-12 object-contain"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                     </motion.div>
@@ -828,8 +828,8 @@ export function SpreadPage() {
               >
                 <div className={`relative overflow-hidden rounded-2xl py-16 ${
                   isWitchTheme
-                    ? 'bg-gradient-to-br from-[#2a2a2a] via-[#3a3a3a] to-[#2a2a2a] border border-white/20'
-                    : 'bg-gradient-to-br from-[#FC89AC] via-[#E879A0] to-[#D46A90] border border-[#FC89AC]/60'
+                    ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
+                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
                 }`}>
                   {/* Магические руны/символы по углам */}
                   {['✧', '⋆', '✦', '★'].map((symbol, i) => (
@@ -1059,8 +1059,8 @@ export function SpreadPage() {
               >
                 <div className={`relative overflow-hidden rounded-2xl ${
                   isWitchTheme
-                    ? 'bg-gradient-to-br from-[#2a2a2a] via-[#3a3a3a] to-[#2a2a2a] border border-white/20'
-                    : 'bg-gradient-to-br from-[#FC89AC] via-[#E879A0] to-[#D46A90] border border-[#FC89AC]/60'
+                    ? 'bg-[#2a2a2a]/15 border border-white/20 backdrop-blur-sm'
+                    : 'bg-[#FC89AC]/15 border border-[#FC89AC]/40 backdrop-blur-sm'
                 }`}>
                   {/* Декоративные элементы на фоне */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
