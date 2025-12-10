@@ -157,9 +157,10 @@ export function DailyCardPage() {
         {step === 'ritual' && (
           <motion.div
             key="ritual"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className="min-h-screen flex flex-col items-center justify-center p-6 text-center relative overflow-hidden"
           >
             {/* Фон с крыльями */}
@@ -186,9 +187,9 @@ export function DailyCardPage() {
 
             {/* Main preparation text */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
               className="mb-8 max-w-sm relative z-10"
             >
               {/* Backdrop panel for readability - розовый оттенок для фей */}
@@ -221,7 +222,7 @@ export function DailyCardPage() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
               className="mb-8 w-full max-w-sm relative z-10"
             >
               <div className={`rounded-xl p-4 backdrop-blur-md border ${
@@ -260,7 +261,7 @@ export function DailyCardPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.3 }}
               className="mb-6 relative z-10"
             >
               <div className={`backdrop-blur-md rounded-full px-4 py-2 ${
@@ -276,9 +277,9 @@ export function DailyCardPage() {
 
             {/* Action button - розовая кнопка для фей */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.4 }}
               className="relative z-10 flex justify-center w-full"
             >
               <Button
@@ -300,6 +301,7 @@ export function DailyCardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
           >
             {/* Фон - меняется по дням недели из witchBackgrounds/fairyBackgrounds */}
@@ -335,9 +337,9 @@ export function DailyCardPage() {
 
             {/* Описание дня - с фоновой подложкой для читаемости */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.3 }}
               className="absolute bottom-8 left-0 right-0 text-center px-6 z-10"
             >
               <div className="inline-block bg-black/40 backdrop-blur-sm rounded-xl px-4 py-2">
@@ -356,6 +358,7 @@ export function DailyCardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
             className="min-h-screen flex flex-col items-center justify-center p-6 relative"
             style={{
               backgroundImage: selectedDeck === 'fairy'

@@ -132,8 +132,9 @@ export function ReferralsPage() {
       <div className="px-4 pb-24 pt-4">
         {/* Hero Section */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           className="text-center mb-4"
         >
           <motion.div
@@ -150,9 +151,9 @@ export function ReferralsPage() {
 
         {/* Banner Image - феи и ведьмы */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut', delay: 0.05 }}
           className="mb-4 rounded-2xl overflow-hidden border border-white/10"
         >
           <img
@@ -166,7 +167,7 @@ export function ReferralsPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
           className="flex gap-2 mb-4"
         >
           <button
@@ -210,9 +211,10 @@ export function ReferralsPage() {
           {activeTab === 'friends' && (
             <motion.div
               key="friends"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
             >
               {referralInfo?.recentReferrals && referralInfo.recentReferrals.length > 0 ? (
                 <div className="space-y-3">
@@ -360,9 +362,10 @@ export function ReferralsPage() {
           {activeTab === 'invite' && (
             <motion.div
               key="invite"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
               className="space-y-4"
             >
               {/* Reward Info */}

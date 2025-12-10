@@ -23,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             'focus:outline-none focus:ring-2 transition-all duration-200',
             error
               ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/20'
-              : 'border-white/20 focus:border-mystic-400 focus:ring-mystic-400/20',
+              : 'border-[#C4A0A5]/40 focus:border-[#C4A0A5] focus:ring-[#C4A0A5]/20',
             className
           )}
           {...props}

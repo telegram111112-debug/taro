@@ -152,8 +152,9 @@ export function HistoryPage() {
 
       {/* Hero Section */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
         className="text-center px-4 pb-4"
       >
         <motion.img
@@ -177,8 +178,9 @@ export function HistoryPage() {
       <div className="px-4">
         {mockHistory.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="text-center py-16"
           >
             <motion.div
@@ -198,9 +200,9 @@ export function HistoryPage() {
               return (
                 <motion.div
                   key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.08 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: i * 0.05 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedReading(item)}
                   className="cursor-pointer"
@@ -357,9 +359,9 @@ export function HistoryPage() {
 
                 {/* Card name */}
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
                   className="text-center mb-4"
                 >
                   <h2 className="text-xl font-display font-bold text-white">
@@ -392,9 +394,9 @@ export function HistoryPage() {
                 {/* Question if exists */}
                 {selectedReading.question && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
                     className={`
                       p-3 rounded-xl mb-4 text-center
                       ${isFairyTheme ? 'bg-[#C4A0A5]/10 border border-[#C4A0A5]/20' : 'bg-black/40 border border-white/20'}
@@ -410,9 +412,9 @@ export function HistoryPage() {
               <div className="px-4 pb-6 max-h-[40vh] overflow-y-auto">
                 {/* Interpretation */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, ease: 'easeOut', delay: 0.35 }}
                 >
                   <Card variant={isFairyTheme ? 'mystic-fairy' : 'mystic-witch'} className="mb-4">
                     <div className="space-y-4">
@@ -464,9 +466,9 @@ export function HistoryPage() {
                 {/* Feedback indicator */}
                 {selectedReading.feedback && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                     className="text-center mb-4"
                   >
                     <span className={`

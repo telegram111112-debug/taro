@@ -229,10 +229,10 @@ export function SpreadPage() {
         {step === 'intro' && (
           <motion.div
             key="intro"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="min-h-screen flex flex-col items-center justify-center p-6 pb-20"
           >
             <div className="text-center mb-10">
@@ -279,9 +279,9 @@ export function SpreadPage() {
                 {spreadConfig.positions.map((pos, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.08, ease: 'easeOut' }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: i * 0.06, ease: 'easeOut' }}
                     className="flex items-center gap-4"
                   >
                     {/* Number */}
@@ -416,7 +416,7 @@ export function SpreadPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             <DeckSelector onSelect={handleDeckSelect} />
           </motion.div>
@@ -429,7 +429,7 @@ export function SpreadPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="min-h-screen flex flex-col items-center justify-center p-6"
           >
             {/* Показываем уже выбранные карты сверху с эпичными эффектами */}
@@ -565,7 +565,7 @@ export function SpreadPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="p-4 pb-24 min-h-screen flex flex-col"
           >
             <p className="text-center text-white/60 text-sm mb-4">
@@ -580,9 +580,9 @@ export function SpreadPage() {
                 return (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, ease: 'easeOut', delay: i * 0.08 }}
                     className="flex flex-col items-center"
                   >
                     {/* Название позиции с подложкой для читаемости */}
@@ -661,13 +661,14 @@ export function SpreadPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="p-4 pb-24"
           >
             {/* Приветствие */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
               className="mb-6"
             >
               <Card variant={isWitchTheme ? 'mystic-witch' : 'mystic-fairy'} className={isWitchTheme ? 'border-white/20' : 'border-[#C4A0A5]/30'}>
@@ -682,9 +683,9 @@ export function SpreadPage() {
               {cards.map((c, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: i * 0.05 }}
                   onClick={() => setSelectedPosition(i)}
                   className={`flex-shrink-0 cursor-pointer transition-transform ${
                     selectedPosition === i
@@ -707,8 +708,9 @@ export function SpreadPage() {
             {selectedPosition !== null && (
               <motion.div
                 key={selectedPosition}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
               >
                 <Card variant="mystic" className="mb-4">
                   {/* Заголовок позиции */}
@@ -816,9 +818,9 @@ export function SpreadPage() {
             {/* Clarification card section - новый дизайн под тему */}
             {!clarifyingCard && !isDrawingClarifyingCard && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, type: 'spring', damping: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
                 className="mb-4"
               >
                 <div className={`relative overflow-hidden rounded-2xl ${
@@ -938,8 +940,8 @@ export function SpreadPage() {
             {/* Drawing animation - эпичная анимация вытягивания 2.3 сек */}
             {isDrawingClarifyingCard && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="mb-4"
               >
@@ -1290,9 +1292,9 @@ export function SpreadPage() {
             {/* Clarifying card result - тематический дизайн */}
             {showClarifyingCard && clarifyingCard && clarifyingInterpretation && (
               <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', damping: 20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
                 className="mb-4"
               >
                 <div className={`relative overflow-hidden rounded-2xl ${
@@ -1386,9 +1388,9 @@ export function SpreadPage() {
 
                     {/* Card name */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
                       className="text-center mb-4"
                     >
                       <h4 className={`font-display font-bold text-xl mb-1 ${
@@ -1417,9 +1419,9 @@ export function SpreadPage() {
                       {clarifyingInterpretation.keywords.map((keyword, ki) => (
                         <motion.span
                           key={ki}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.4 + ki * 0.05 }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.3, ease: 'easeOut', delay: 0.25 + ki * 0.04 }}
                           className={`text-xs px-3 py-1.5 rounded-full ${
                             isWitchTheme
                               ? 'bg-white/10 text-white/80 border border-white/20'
@@ -1433,9 +1435,9 @@ export function SpreadPage() {
 
                     {/* Intro */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.3 }}
                       className={`rounded-xl p-4 mb-4 ${
                         isWitchTheme
                           ? 'bg-white/5 border border-white/10'
@@ -1451,9 +1453,9 @@ export function SpreadPage() {
 
                     {/* Main message */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.35 }}
                       className="mb-4"
                     >
                       <div className="flex items-center gap-2 mb-2">
@@ -1475,9 +1477,9 @@ export function SpreadPage() {
 
                     {/* Deep analysis */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.4 }}
                       className="mb-4"
                     >
                       <div className="flex items-center gap-2 mb-2">
@@ -1499,9 +1501,9 @@ export function SpreadPage() {
 
                     {/* Connection to spread */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.45 }}
                       className={`rounded-xl p-4 mb-4 border-l-4 ${
                         isWitchTheme
                           ? 'bg-white/5 border-l-white/40'
@@ -1524,9 +1526,9 @@ export function SpreadPage() {
 
                     {/* Additional advice */}
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut', delay: 0.5 }}
                       className={`rounded-xl p-4 border-l-4 ${
                         isWitchTheme
                           ? 'bg-gradient-to-r from-white/10 to-white/5 border-l-white/60'

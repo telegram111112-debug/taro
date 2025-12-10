@@ -117,9 +117,9 @@ export function CollectionPage() {
           {mockCollection.map((card, i) => (
             <motion.div
               key={card.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, ease: 'easeOut', delay: i * 0.05 }}
               onClick={() => setSelectedCard(card)}
               className="cursor-pointer"
             >

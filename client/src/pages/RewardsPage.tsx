@@ -62,8 +62,9 @@ export function RewardsPage() {
       <div className="p-4 pb-24">
         {/* Stats Circle */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           className="flex justify-center mb-6"
         >
           <div className="relative">
@@ -88,9 +89,9 @@ export function RewardsPage() {
 
         {/* Progress bar - Epic animated version */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.05 }}
           className="mb-6 relative"
         >
           {/* Milestone markers with animations */}
@@ -299,7 +300,7 @@ export function RewardsPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
           className="grid grid-cols-4 gap-2 mb-6"
         >
           {milestones.map((count, i) => {
@@ -307,9 +308,9 @@ export function RewardsPage() {
             return (
               <motion.div
                 key={count}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, ease: 'easeOut', delay: i * 0.05 }}
                 className={`
                   relative p-3 rounded-2xl text-center
                   ${achieved
@@ -346,9 +347,9 @@ export function RewardsPage() {
 
         {/* Info card */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
           className={`rounded-2xl p-4 bg-gradient-to-br ${themeColors.secondary} ${themeColors.border} border mb-4`}
         >
           <div className="flex items-center gap-4">
@@ -379,9 +380,9 @@ export function RewardsPage() {
 
         {/* CTA Button */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.15 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
         >
           <Button
             onClick={() => navigate('/referrals')}

@@ -35,9 +35,9 @@ export function HomePage() {
 
       {/* Header with greeting */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
         className="mb-6 text-center"
       >
         <p className="text-white/60 text-sm text-center">
@@ -50,9 +50,9 @@ export function HomePage() {
 
       {/* Ask Tarot Card - Вопрос картам */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.05 }}
       >
         <Card
           variant="glass"
@@ -113,9 +113,9 @@ export function HomePage() {
 
       {/* Daily Card CTA */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
@@ -214,9 +214,9 @@ export function HomePage() {
 
       {/* Moon Phase */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
       >
         <Card
           variant="glass"
@@ -250,9 +250,9 @@ export function HomePage() {
 
       {/* Quick Actions - Spreads */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.2 }}
         className="mb-4"
       >
         <h2 className="text-white/80 font-medium mb-3 text-center">Расклады</h2>
@@ -288,9 +288,9 @@ export function HomePage() {
 
       {/* Invite friends */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.15 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeOut', delay: 0.25 }}
         className="mt-4"
       >
         <Link to="/referrals">
@@ -322,10 +322,10 @@ export function HomePage() {
 
             {/* Modal */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 50 }}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 50 }}
-              transition={{ duration: 0.3, type: 'spring', damping: 20, stiffness: 300 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               className="fixed inset-x-3 top-[5%] bottom-[5%] z-50 flex flex-col"
             >
               <Card
@@ -469,9 +469,10 @@ export function HomePage() {
                     {activeTab === 'general' ? (
                       <motion.div
                         key="general"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="space-y-2"
                       >
                         {getAllMoonPhases().map((phase, index) => {
@@ -607,9 +608,10 @@ export function HomePage() {
                     ) : (
                       <motion.div
                         key="beauty"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="space-y-3"
                       >
                         {getAllMoonPhases().map((phase, index) => {

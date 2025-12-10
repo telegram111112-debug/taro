@@ -68,9 +68,9 @@ export function GiftsPage() {
               {availableGifts.map((gift, i) => (
                 <motion.div
                   key={gift.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.15, delay: i * 0.03 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: i * 0.05 }}
                 >
                   <Card variant="mystic" className="border-white/10">
                     <div className="flex items-start gap-4">

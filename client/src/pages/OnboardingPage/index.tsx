@@ -40,6 +40,41 @@ export function OnboardingPage() {
     setErrors((prev) => ({ ...prev, [field]: '' }))
   }
 
+  // Автоформатирование времени с двоеточием
+  const handleBirthTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+
+    // Удаляем всё кроме цифр
+    const digits = value.replace(/\D/g, '')
+
+    // Форматируем с двоеточием (HH:MM)
+    let formatted = ''
+    if (digits.length > 0) {
+      // Ограничиваем первую цифру часов (0-2)
+      const firstDigit = parseInt(digits[0])
+      formatted = digits.slice(0, Math.min(2, digits.length))
+
+      // Проверяем валидность часов (00-23)
+      if (digits.length >= 2) {
+        const hours = parseInt(digits.slice(0, 2))
+        if (hours > 23) {
+          formatted = '23'
+        }
+      }
+    }
+    if (digits.length > 2) {
+      // Проверяем валидность минут (00-59)
+      let minutes = digits.slice(2, 4)
+      if (parseInt(minutes) > 59) {
+        minutes = '59'
+      }
+      formatted += ':' + minutes
+    }
+
+    setFormData((prev) => ({ ...prev, birthTime: formatted }))
+    setErrors((prev) => ({ ...prev, birthTime: '' }))
+  }
+
   // Автоформатирование даты с точками
   const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
@@ -129,12 +164,16 @@ export function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Background */}
+      {/* Background - разный фон для welcome и остальных шагов */}
       <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
-        style={{ backgroundImage: isFairyTheme ? 'url(/backgrounds/background-fairy.jpg)' : 'url(/backgrounds/background-witch.jpg)' }}
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 transition-all duration-500"
+        style={{
+          backgroundImage: step === 'welcome'
+            ? 'url(/backgrounds/onboarding-welcome.jpg)'
+            : 'url(/backgrounds/onboarding.jpg)'
+        }}
       />
-      <div className={`fixed inset-0 -z-10 ${isFairyTheme ? 'bg-black/40' : 'bg-black/60'}`} />
+      <div className="fixed inset-0 -z-10 bg-black/30" />
 
       <AnimatePresence mode="wait">
         {/* Welcome */}
@@ -142,22 +181,63 @@ export function OnboardingPage() {
           <OnboardingScreen key="welcome">
             <div className="text-center">
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', delay: 0.2 }}
-                className="text-6xl mb-6"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', delay: 0.2, damping: 12 }}
+                className="mb-6 relative"
               >
-                🔮
+                {/* Мягкое свечение под иконкой */}
+                <motion.div
+                  className="absolute inset-0 mx-auto w-16 h-16 rounded-full bg-[#C4A0A5]/30 blur-xl"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+                <motion.img
+                  src="/icons/onboarding-luna.png"
+                  alt="Луна"
+                  className="w-20 h-20 mx-auto object-contain relative z-10"
+                  style={{
+                    filter: 'drop-shadow(0 0 20px rgba(196,160,165,0.4)) drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                  }}
+                  animate={{
+                    y: [0, -6, -3, -6, 0],
+                    rotate: [0, 1.5, -1.5, 1, 0],
+                    scale: [1, 1.02, 1.01, 1.02, 1],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: [0.45, 0, 0.55, 1],
+                    times: [0, 0.25, 0.5, 0.75, 1],
+                  }}
+                />
               </motion.div>
-              <h1 className="text-3xl font-display font-bold text-white mb-4">
+              <h1
+                className="text-3xl font-display font-bold text-white mb-4"
+                style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
+              >
                 Привет! Я Луна
               </h1>
-              <p className="text-white/70 mb-2">
+              <p
+                className="text-white mb-2"
+                style={{ textShadow: '0 2px 6px rgba(0,0,0,0.7)' }}
+              >
                 Твоя персональная подруга-таролог
               </p>
-              <p className="text-white/50 text-sm mb-8">
-                Карты Таро — это не просто гадание.
-                Это разговор с самой собой через древние символы.
+              <p
+                className="text-white/80 text-sm mb-8"
+                style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+              >
+                Карты Таро — это не просто гадание,
+                <br />
+                это искренний разговор с самой собой через древние символы.
               </p>
               <Button onClick={() => goToStep('name')} variant="primary-fairy" className="w-full">
                 Давай познакомимся! 💫
@@ -173,6 +253,7 @@ export function OnboardingPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="text-center"
               >
                 <h2 className="text-2xl font-display font-semibold text-white mb-2">
                   Как тебя зовут?
@@ -191,7 +272,7 @@ export function OnboardingPage() {
               />
 
               <div className="mt-8 flex gap-3">
-                <Button variant="ghost" onClick={() => goToStep('welcome')}>
+                <Button variant="ghost" onClick={() => goToStep('welcome')} className="!text-[#C4A0A5] hover:!text-[#d4b0b5]">
                   Назад
                 </Button>
                 <Button
@@ -246,7 +327,7 @@ export function OnboardingPage() {
               )}
 
               <div className="mt-8 flex gap-3">
-                <Button variant="ghost" onClick={() => goToStep('name')}>
+                <Button variant="ghost" onClick={() => goToStep('name')} className="!text-[#C4A0A5] hover:!text-[#d4b0b5]">
                   Назад
                 </Button>
                 <Button
@@ -280,12 +361,14 @@ export function OnboardingPage() {
 
               <Input
                 value={formData.birthTime}
-                onChange={(e) => handleInputChange('birthTime', e.target.value)}
-                placeholder="Например: 14:30 или не знаю"
+                onChange={handleBirthTimeChange}
+                placeholder="Например: 14:30"
+                inputMode="numeric"
+                maxLength={5}
               />
 
               <div className="mt-8 flex gap-3">
-                <Button variant="ghost" onClick={() => goToStep('birthdate')}>
+                <Button variant="ghost" onClick={() => goToStep('birthdate')} className="!text-[#C4A0A5] hover:!text-[#d4b0b5]">
                   Назад
                 </Button>
                 <Button
@@ -323,7 +406,7 @@ export function OnboardingPage() {
               />
 
               <div className="mt-8 flex gap-3">
-                <Button variant="ghost" onClick={() => goToStep('birthtime')}>
+                <Button variant="ghost" onClick={() => goToStep('birthtime')} className="!text-[#C4A0A5] hover:!text-[#d4b0b5]">
                   Назад
                 </Button>
                 <Button variant="primary-fairy" className="flex-1" onClick={() => goToStep('relationship')}>
@@ -372,7 +455,7 @@ export function OnboardingPage() {
               </div>
 
               <div className="mt-8 flex gap-3">
-                <Button variant="ghost" onClick={() => goToStep('city')}>
+                <Button variant="ghost" onClick={() => goToStep('city')} className="!text-[#C4A0A5] hover:!text-[#d4b0b5]">
                   Назад
                 </Button>
                 <Button
@@ -460,10 +543,10 @@ export function OnboardingPage() {
 function OnboardingScreen({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -50 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
       className="min-h-screen flex items-center justify-center p-6"
     >
       <div className="w-full max-w-sm">{children}</div>
