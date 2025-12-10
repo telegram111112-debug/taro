@@ -164,13 +164,15 @@ export function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Background - разный фон для welcome и остальных шагов */}
+      {/* Background - разный фон для разных шагов */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10 transition-all duration-500"
         style={{
           backgroundImage: step === 'welcome'
             ? 'url(/backgrounds/onboarding-welcome.jpg)'
-            : 'url(/backgrounds/onboarding.jpg)'
+            : step === 'relationship'
+              ? 'url(/backgrounds/onboarding-relationship.jpg)'
+              : 'url(/backgrounds/onboarding.jpg)'
         }}
       />
       <div className="fixed inset-0 -z-10 bg-black/30" />
@@ -420,37 +422,67 @@ export function OnboardingPage() {
         {/* Relationship Status */}
         {step === 'relationship' && (
           <OnboardingScreen key="relationship">
-            <div>
-              <h2 className="text-2xl font-display font-semibold text-white mb-2">
+            <div className="text-center">
+              <h2
+                className="text-2xl font-display font-semibold text-white mb-2"
+                style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
+              >
                 Какой у тебя статус отношений?
               </h2>
-              <p className="text-white/50 text-sm mb-6">
+              <p
+                className="text-white/70 text-sm mb-6"
+                style={{ textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}
+              >
                 Для персонализации раскладов на любовь
               </p>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {[
-                  { value: 'single', label: '💔 Свободна', emoji: '🦋' },
-                  { value: 'in_relationship', label: '💕 В отношениях', emoji: '💑' },
-                  { value: 'complicated', label: '🤷‍♀️ Всё сложно', emoji: '🌪️' },
-                  { value: 'married', label: '💍 Замужем', emoji: '👰' },
-                ].map(({ value, label }) => (
-                  <button
+                  { value: 'single', label: 'Свободна', emoji: '🦋' },
+                  { value: 'in_relationship', label: 'В отношениях', emoji: '💕' },
+                  { value: 'complicated', label: 'Всё сложно', emoji: '✨' },
+                  { value: 'married', label: 'Замужем', emoji: '💍' },
+                ].map(({ value, label, emoji }, index) => (
+                  <motion.button
                     key={value}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.08 }}
                     onClick={() => {
                       handleInputChange('relationshipStatus', value)
                       hapticFeedback('selection')
                     }}
                     className={`
-                      p-4 rounded-xl text-left transition-all
+                      relative py-3 px-4 rounded-xl text-center transition-all duration-300
+                      backdrop-blur-sm
                       ${formData.relationshipStatus === value
-                        ? 'bg-[#C4A0A5]/30 border-2 border-[#C4A0A5]'
-                        : 'bg-white/5 border-2 border-transparent hover:bg-white/10'
+                        ? 'bg-[#C4A0A5]/30 border border-[#C4A0A5]/60'
+                        : 'bg-[#C4A0A5]/10 border border-[#C4A0A5]/20 hover:bg-[#C4A0A5]/20'
                       }
                     `}
                   >
-                    <span className="text-white">{label}</span>
-                  </button>
+                    <div className="flex items-center justify-center gap-2">
+                      <motion.span
+                        className="text-base"
+                        animate={formData.relationshipStatus === value ? {
+                          scale: [1, 1.15, 1],
+                        } : {}}
+                        transition={{ duration: 0.4, ease: 'easeInOut' }}
+                      >
+                        {emoji}
+                      </motion.span>
+                      <span
+                        className={`text-sm font-medium ${
+                          formData.relationshipStatus === value
+                            ? 'text-white'
+                            : 'text-white/80'
+                        }`}
+                        style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                  </motion.button>
                 ))}
               </div>
 
