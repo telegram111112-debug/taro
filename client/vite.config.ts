@@ -23,5 +23,26 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    // Оптимизация для производительности
+    target: 'es2020',
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Отдельный чанк для framer-motion (большая библиотека)
+          'framer-motion': ['framer-motion'],
+          // Отдельный чанк для react/router
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Zustand и tanstack-query
+          'state': ['zustand', '@tanstack/react-query'],
+        },
+      },
+    },
+    // Сжатие
+    cssMinify: true,
+  },
+  // Оптимизация разработки
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'framer-motion', 'zustand'],
   },
 })

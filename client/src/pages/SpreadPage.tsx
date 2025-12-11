@@ -741,14 +741,14 @@ export function SpreadPage() {
                   </div>
 
                   {/* Ключевые слова */}
-                  <div className="flex flex-wrap gap-1 mb-4">
+                  <div className="flex flex-wrap gap-1.5 mb-4">
                     {interpretation.positions[selectedPosition].keywords.map((keyword, ki) => (
                       <span
                         key={ki}
-                        className={`text-xs px-2 py-1 rounded-full ${
+                        className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                           isWitchTheme
-                            ? 'bg-white/5 text-white/60'
-                            : 'bg-[#C4A0A5]/10 text-[#C4A0A5]/80'
+                            ? 'bg-white/10 text-white/80 border border-white/20'
+                            : 'bg-[#1a1a2e]/60 text-white/90 border border-[#C4A0A5]/40 backdrop-blur-sm'
                         }`}
                       >
                         {keyword}

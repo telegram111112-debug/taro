@@ -158,19 +158,35 @@ async function preloadImagesParallel(images: string[], priority: 'high' | 'low' 
   await Promise.all(images.map(src => preloadImage(src, priority)))
 }
 
-// Основная функция предзагрузки - улучшенная версия
+// Основная функция предзагрузки - ленивая версия
+// НЕ блокирует старт приложения
 export async function preloadAllImages(): Promise<void> {
-  // Критичные фоны - высокий приоритет, параллельно
-  await preloadImagesParallel(CRITICAL_BACKGROUNDS, 'high')
+  // Загружаем только самые критичные фоны (основной фон и превью карт)
+  // Остальное загружается лениво по мере необходимости
+  const essentialImages = [
+    '/backgrounds/background-witch.jpg',
+    '/backgrounds/background-fairy.jpg',
+  ]
 
-  // Иконки - высокий приоритет
-  await preloadImagesParallel(ICONS, 'high')
+  // Не ждём завершения - загружаем в фоне
+  preloadImagesParallel(essentialImages, 'high')
 
-  // AskTarot фоны - высокий приоритет
-  await preloadImagesParallel(ASK_TAROT_BACKGROUNDS, 'high')
+  // Остальные изображения загружаются по необходимости с небольшой задержкой
+  setTimeout(() => {
+    preloadImagesWithConcurrency([
+      ...CRITICAL_BACKGROUNDS.filter(bg => !essentialImages.includes(bg)),
+      ...ICONS,
+    ], 2, 'low')
+  }, 1000)
 
-  // Второстепенные - низкий приоритет, с ограничением concurrency для плавности
-  preloadImagesWithConcurrency(SECONDARY_BACKGROUNDS, 2, 'low')
+  // AskTarot и второстепенные - ещё позже
+  setTimeout(() => {
+    preloadImagesWithConcurrency(ASK_TAROT_BACKGROUNDS, 2, 'low')
+  }, 3000)
+
+  setTimeout(() => {
+    preloadImagesWithConcurrency(SECONDARY_BACKGROUNDS, 1, 'low')
+  }, 5000)
 }
 
 // Предзагрузка только для конкретной темы - оптимизированная версия
