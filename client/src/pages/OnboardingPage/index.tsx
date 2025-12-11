@@ -7,6 +7,70 @@ import { Button, Input } from '../../components/ui'
 import { getNameMeaning } from '../../lib/namesMeanings'
 import type { DeckTheme, RelationshipStatus } from '../../types'
 
+// Уникальные фразы для каждого знака зодиака
+const zodiacPhrases: Record<string, { emoji: string; message: string; tarotConnection: string }> = {
+  'Овен': {
+    emoji: '♈',
+    message: 'Огненная энергия Овна делает тебя прирождённым лидером',
+    tarotConnection: 'Карты усилят твою интуицию и помогут направить страсть в нужное русло'
+  },
+  'Телец': {
+    emoji: '♉',
+    message: 'Земная мудрость Тельца дарит тебе терпение и чувственность',
+    tarotConnection: 'Таро раскроет секреты изобилия и поможет укрепить твои ценности'
+  },
+  'Близнецы': {
+    emoji: '♊',
+    message: 'Воздушная лёгкость Близнецов наделяет тебя даром общения',
+    tarotConnection: 'Карты помогут найти ответы среди множества твоих идей'
+  },
+  'Рак': {
+    emoji: '♋',
+    message: 'Водная глубина Рака делает тебя невероятно интуитивной',
+    tarotConnection: 'Таро станет мостом к твоим самым сокровенным чувствам'
+  },
+  'Лев': {
+    emoji: '♌',
+    message: 'Солнечное сияние Льва озаряет всё вокруг тебя',
+    tarotConnection: 'Карты усилят твой природный магнетизм и творческую силу'
+  },
+  'Дева': {
+    emoji: '♍',
+    message: 'Земная проницательность Девы дарит тебе дар видеть детали',
+    tarotConnection: 'Таро поможет найти гармонию между анализом и интуицией'
+  },
+  'Весы': {
+    emoji: '♎',
+    message: 'Воздушная гармония Весов наполняет тебя чувством красоты',
+    tarotConnection: 'Карты помогут найти баланс в отношениях и решениях'
+  },
+  'Скорпион': {
+    emoji: '♏',
+    message: 'Водная глубина Скорпиона делает тебя мастером трансформаций',
+    tarotConnection: 'Таро раскроет тайны и поможет в твоём духовном перерождении'
+  },
+  'Стрелец': {
+    emoji: '♐',
+    message: 'Огненный оптимизм Стрельца ведёт тебя к новым горизонтам',
+    tarotConnection: 'Карты станут твоим компасом в поиске истины и приключений'
+  },
+  'Козерог': {
+    emoji: '♑',
+    message: 'Земная сила Козерога даёт тебе несгибаемую волю',
+    tarotConnection: 'Таро поддержит тебя на пути к вершинам и мудрым решениям'
+  },
+  'Водолей': {
+    emoji: '♒',
+    message: 'Воздушная уникальность Водолея делает тебя провидцем',
+    tarotConnection: 'Карты откроют нестандартные решения и новые возможности'
+  },
+  'Рыбы': {
+    emoji: '♓',
+    message: 'Водная мистика Рыб дарит тебе связь с тонкими мирами',
+    tarotConnection: 'Таро усилит твой природный дар предвидения и интуиции'
+  },
+}
+
 type OnboardingStep =
   | 'welcome'
   | 'name'
@@ -397,11 +461,25 @@ export function OnboardingPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="mt-4 p-3 rounded-xl bg-[#C4A0A5]/20 border border-[#C4A0A5]/30 backdrop-blur-sm"
+                  className="mt-4 p-4 rounded-xl bg-[#C4A0A5]/20 border border-[#C4A0A5]/30 backdrop-blur-sm"
                 >
-                  <p className="text-white text-sm" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
-                    ✨ {getZodiacSign(formData.birthDate)}! Отличный знак для работы с картами
-                  </p>
+                  {(() => {
+                    const sign = getZodiacSign(formData.birthDate)
+                    const phrase = zodiacPhrases[sign]
+                    return (
+                      <div className="text-left space-y-2">
+                        <p className="text-white font-semibold text-base" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
+                          {phrase?.emoji} {sign}
+                        </p>
+                        <p className="text-white/90 text-sm" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>
+                          {phrase?.message}
+                        </p>
+                        <p className="text-[#d4b8bc] text-xs italic">
+                          ✨ {phrase?.tarotConnection}
+                        </p>
+                      </div>
+                    )
+                  })()}
                 </motion.div>
               )}
 
@@ -869,9 +947,9 @@ export function OnboardingPage() {
         )}
       </AnimatePresence>
 
-      {/* Progress dots */}
-      {step !== 'welcome' && step !== 'complete' && (
-        <div className="fixed bottom-8 left-0 right-0 flex justify-center gap-2">
+      {/* Progress dots - не показываем на gifts чтобы не наслаивались на кнопку */}
+      {step !== 'welcome' && step !== 'complete' && step !== 'gifts' && (
+        <div className="fixed bottom-6 left-0 right-0 flex justify-center gap-2 z-10">
           {['name', 'birthdate', 'birthtime', 'city', 'relationship', 'gifts'].map((s) => (
             <div
               key={s}

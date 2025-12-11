@@ -45,6 +45,22 @@ const ICONS = [
   '/icons/crystal-ball.png',
 ]
 
+// Иконки онбординга
+const ONBOARDING_IMAGES = [
+  '/backgrounds/onboarding-welcome.jpg',
+  '/backgrounds/onboarding.jpg',
+  '/backgrounds/onboarding-relationship.jpg',
+  '/backgrounds/onboarding-birthtime.jpg',
+  '/icons/onboarding-luna.png',
+  '/icons/onboarding/fairy.png',
+  '/icons/onboarding/butterfly-left.png',
+  '/icons/onboarding/butterfly-right.png',
+  '/icons/onboarding/daily-card.png',
+  '/icons/onboarding/question.png',
+  '/icons/onboarding/spreads.png',
+  '/icons/onboarding/streak.png',
+]
+
 // Кэш загруженных изображений
 const loadedImages = new Set<string>()
 const loadingImages = new Map<string, Promise<void>>()
@@ -166,6 +182,7 @@ export async function preloadAllImages(): Promise<void> {
     preloadImagesParallel(ASK_TAROT_BACKGROUNDS, 'high'),
     preloadImagesParallel(SECONDARY_BACKGROUNDS, 'high'),
     preloadImagesParallel(ICONS, 'high'),
+    preloadImagesParallel(ONBOARDING_IMAGES, 'high'),
   ])
 }
 
