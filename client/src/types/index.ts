@@ -16,6 +16,18 @@ export interface User {
   deckTheme: DeckTheme
   deckPermanent?: boolean
   createdAt: string
+  // Еженедельные расклады
+  weeklyLoveSpreads: number
+  weeklyMoneySpreads: number
+  weeklyFutureSpreads: number
+  weeklyLastRefill?: string
+  // Ежедневный вопрос картам
+  lastQuestionDate?: string
+  questionsUsedToday: number // Сколько вопросов использовано сегодня
+  // Ежедневная карта дня
+  lastDailyCardDate?: string
+  // Подруги (массив telegramId)
+  friends: number[]
 }
 
 export type RelationshipStatus = 'single' | 'in_relationship' | 'complicated' | 'married'
@@ -154,4 +166,14 @@ export interface TelegramUser {
   language_code?: string
   is_premium?: boolean
   photo_url?: string
+}
+
+// Friend types
+export interface Friend {
+  telegramId: number
+  name: string
+  avatar?: string
+  zodiacSign?: string
+  addedAt: string
+  isActive: boolean // Есть ли подруга в приложении
 }

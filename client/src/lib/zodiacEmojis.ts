@@ -125,6 +125,74 @@ function seededRandom(seed: number): number {
   return x - Math.floor(x)
 }
 
+// Уникальные тексты для каждого знака зодиака
+const zodiacUniqueMessages: Record<string, {
+  connectionIntro: string
+  cardInfluence: string
+  dailyAdvice: string
+}> = {
+  'Овен': {
+    connectionIntro: 'Огонь твоей души откликается на эту карту с особой силой',
+    cardInfluence: 'Твоя врождённая смелость и решительность помогают тебе понять глубинный смысл этого послания',
+    dailyAdvice: 'Действуй сегодня с той же отвагой, с которой ты всегда встречаешь вызовы судьбы'
+  },
+  'Телец': {
+    connectionIntro: 'Земная мудрость твоего знака раскрывает истинное значение этой карты',
+    cardInfluence: 'Твоя способность ценить красоту и гармонию позволяет увидеть в ней то, что скрыто от других',
+    dailyAdvice: 'Доверься своему природному чутью — оно не подведёт тебя сегодня'
+  },
+  'Близнецы': {
+    connectionIntro: 'Твой живой ум мгновенно улавливает послание этой карты',
+    cardInfluence: 'Дар общения и многогранность твоей натуры помогают видеть все оттенки её значения',
+    dailyAdvice: 'Сегодня твоя любознательность откроет новые горизонты понимания'
+  },
+  'Рак': {
+    connectionIntro: 'Твоя глубокая интуиция создаёт особую связь с этой картой',
+    cardInfluence: 'Эмоциональная мудрость твоего знака позволяет почувствовать её истинное послание сердцем',
+    dailyAdvice: 'Прислушайся к внутреннему голосу — он знает ответы на твои вопросы'
+  },
+  'Лев': {
+    connectionIntro: 'Царственная энергия твоего знака резонирует с силой этой карты',
+    cardInfluence: 'Твоё великодушие и творческий дух позволяют воспринять её послание во всём величии',
+    dailyAdvice: 'Сияй сегодня особенно ярко — Вселенная поддерживает твой внутренний свет'
+  },
+  'Дева': {
+    connectionIntro: 'Твоя проницательность раскрывает скрытые грани этой карты',
+    cardInfluence: 'Внимание к деталям и стремление к совершенству помогают понять каждый символ',
+    dailyAdvice: 'Применяй свой дар анализа, но не забывай доверять и интуиции'
+  },
+  'Весы': {
+    connectionIntro: 'Твоё чувство гармонии создаёт идеальный баланс с энергией этой карты',
+    cardInfluence: 'Дипломатичность и стремление к красоте позволяют увидеть её эстетику и глубину',
+    dailyAdvice: 'Ищи равновесие во всём — сегодня оно принесёт тебе особую мудрость'
+  },
+  'Скорпион': {
+    connectionIntro: 'Магнетическая сила твоего знака притягивает глубинные смыслы этой карты',
+    cardInfluence: 'Твоя способность к трансформации помогает понять её тайные послания',
+    dailyAdvice: 'Не бойся заглянуть в глубину — там ждут ответы, которые ты ищешь'
+  },
+  'Стрелец': {
+    connectionIntro: 'Твой вечный поиск истины находит отклик в послании этой карты',
+    cardInfluence: 'Философский склад ума и оптимизм помогают увидеть в ней путь к мудрости',
+    dailyAdvice: 'Следуй за своей стрелой — она указывает верное направление'
+  },
+  'Козерог': {
+    connectionIntro: 'Твоя внутренняя сила и упорство открывают истинное значение этой карты',
+    cardInfluence: 'Практичность и амбициозность помогают применить её уроки в реальной жизни',
+    dailyAdvice: 'Строй свой путь шаг за шагом — каждый твой шаг имеет значение'
+  },
+  'Водолей': {
+    connectionIntro: 'Твоя уникальность позволяет увидеть эту карту в совершенно новом свете',
+    cardInfluence: 'Революционный дух и независимость мышления раскрывают её нестандартные смыслы',
+    dailyAdvice: 'Доверься своему видению будущего — оно яснее, чем кажется'
+  },
+  'Рыбы': {
+    connectionIntro: 'Твоя духовная глубина создаёт мистическую связь с этой картой',
+    cardInfluence: 'Интуиция и творческое воображение позволяют воспринять её на уровне души',
+    dailyAdvice: 'Плыви по течению своей интуиции — она приведёт тебя к верным берегам'
+  }
+}
+
 // Генерация объяснения связи карты со знаком зодиака
 export function getZodiacCardExplanation(
   zodiacSign: string,
@@ -133,8 +201,9 @@ export function getZodiacCardExplanation(
 ): { title: string; explanation: string; dailyMessage: string } {
   const info = zodiacInfo[zodiacSign]
   const archetype = zodiacArchetypes[zodiacSign]
+  const uniqueMsg = zodiacUniqueMessages[zodiacSign]
 
-  if (!info || !archetype) {
+  if (!info || !archetype || !uniqueMsg) {
     return {
       title: `${zodiacSign} и ${cardName}`,
       explanation: 'Эта карта несёт особое послание для твоего знака.',
@@ -142,38 +211,20 @@ export function getZodiacCardExplanation(
     }
   }
 
-  const seed = getTodaySeed()
-  const signIndex = Object.keys(zodiacInfo).indexOf(zodiacSign)
-
   // Проверяем совпадение элементов
   const elementsMatch = cardElement && info.element === cardElement
 
-  // Шаблоны объяснений
-  const explanationTemplates = [
-    `Карта ${cardName} резонирует с твоей ${archetype.energy}. Как ${archetype.archetype}, ты особенно чувствуешь её влияние через ${archetype.traits[0]} и ${archetype.traits[1]}.`,
-    `${zodiacSign} ${info.emoji} обладает уникальной связью с этой картой. Твои качества — ${archetype.traits.slice(0, 2).join(' и ')} — помогают глубже понять её послание.`,
-    `Архетип ${archetype.archetype} в тебе откликается на энергию карты ${cardName}. Сегодня особенно важны твои ${archetype.traits[2]} и ${archetype.traits[3]}.`,
-  ]
-
-  const dailyTemplates = [
-    `Сегодня ${archetype.energy} усиливает влияние этой карты на твою жизнь. Используй свою ${archetype.traits[Math.floor(seededRandom(seed + signIndex) * archetype.traits.length)]}, чтобы воспринять её мудрость.`,
-    `Вселенная посылает тебе эту карту именно сейчас, когда твоя ${archetype.traits[0]} на пике. Прислушайся к её совету.`,
-    `Как ${archetype.archetype}, сегодня ты особенно восприимчива к энергии ${cardName}. Доверься своей интуиции.`,
-  ]
-
-  const explIndex = Math.floor(seededRandom(seed + signIndex * 7) * explanationTemplates.length)
-  const dailyIndex = Math.floor(seededRandom(seed + signIndex * 13) * dailyTemplates.length)
-
-  let explanation = explanationTemplates[explIndex]
+  // Формируем уникальное объяснение
+  let explanation = `${uniqueMsg.connectionIntro}. ${uniqueMsg.cardInfluence}.`
 
   // Добавляем информацию о совпадении элементов
   if (elementsMatch) {
-    explanation += ` ${info.elementEmoji} Ваши стихии совпадают — это усиливает связь!`
+    explanation += ` ${info.elementEmoji} Ваши стихии совпадают — связь особенно сильна!`
   }
 
   return {
     title: `${info.emoji} ${zodiacSign} и ${cardName}`,
     explanation,
-    dailyMessage: dailyTemplates[dailyIndex]
+    dailyMessage: uniqueMsg.dailyAdvice
   }
 }

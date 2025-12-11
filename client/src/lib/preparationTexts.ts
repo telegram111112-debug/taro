@@ -252,7 +252,7 @@ export const preparationTexts: PreparationText[] = [
     affirmation: "Я восстаю из любых трудностей"
   },
 
-  // Лунные и мистические
+  // Мистические (без привязки ко времени)
   {
     title: "Под светом луны",
     subtitle: "Лунная энергия наполняет этот момент... Карта впитала её силу...",
@@ -274,7 +274,7 @@ export const preparationTexts: PreparationText[] = [
     affirmation: "Я — часть великого космоса"
   },
   {
-    title: "Ночные откровения",
+    title: "Глубинные откровения",
     subtitle: "Самые важные истины приходят в тишине... Прислушайся...",
     affirmation: "Тишина открывает мне истину"
   },
@@ -356,17 +356,33 @@ export function getPreparationTextByTime(): PreparationText {
   return preparationTexts[adjustedIndex]
 }
 
+// Тексты по времени суток
+const morningTexts: number[] = [5, 6, 7, 8, 9, 20, 21, 22, 23, 24, 35, 36, 37, 40, 41, 42] // позитивные, энергичные
+const afternoonTexts: number[] = [0, 1, 2, 3, 4, 15, 16, 17, 18, 19, 30, 31, 32, 33, 34] // мудрые, философские
+const eveningTexts: number[] = [10, 11, 12, 13, 14, 25, 26, 27, 28, 29, 43, 44, 45, 46, 47] // романтические, мистические
+const nightTexts: number[] = [0, 1, 2, 3, 4, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49] // нежные, спокойные
+
 // Основная функция - комбинирует разные подходы для максимальной уникальности
 export function getUniquePreparationText(): PreparationText {
   const today = new Date()
+  const hour = today.getHours()
   const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate()
 
-  // Используем seed для псевдо-случайного, но воспроизводимого выбора в течение дня
-  const baseIndex = seed % preparationTexts.length
+  // Выбираем пул текстов в зависимости от времени суток
+  let textPool: number[]
+  if (hour >= 6 && hour < 12) {
+    textPool = morningTexts // Утро (6:00 - 11:59)
+  } else if (hour >= 12 && hour < 18) {
+    textPool = afternoonTexts // День (12:00 - 17:59)
+  } else if (hour >= 18 && hour < 23) {
+    textPool = eveningTexts // Вечер (18:00 - 22:59)
+  } else {
+    textPool = nightTexts // Ночь (23:00 - 5:59)
+  }
 
-  // Добавляем вариацию на основе часа
-  const hourVariation = today.getHours() % 5
-  const finalIndex = (baseIndex + hourVariation) % preparationTexts.length
+  // Используем seed для псевдо-случайного, но стабильного выбора в течение дня
+  const poolIndex = seed % textPool.length
+  const textIndex = textPool[poolIndex]
 
-  return preparationTexts[finalIndex]
+  return preparationTexts[textIndex]
 }

@@ -13,31 +13,50 @@ import { getThemeConfig } from '../../lib/deckThemes'
 import { getMoonPhase, getMoonName, getMoonMessage, getMoonEmoji } from '../../lib/moonPhase'
 import { getUniquePreparationText } from '../../lib/preparationTexts'
 import { createShareMessage, shareToTelegram } from '../../lib/sharing'
-import { getCurrentFairyBackground, getFairyBackgroundStyle } from '../../lib/fairyBackgrounds'
-import { getCurrentWitchBackground, getWitchBackgroundStyle } from '../../lib/witchBackgrounds'
-import { getCurrentDayTheme, getDayGradient } from '../../lib/dayThemes'
+import { getCurrentFairyBackground } from '../../lib/fairyBackgrounds'
+import { getCurrentWitchBackground } from '../../lib/witchBackgrounds'
+import { getCurrentDayTheme } from '../../lib/dayThemes'
 import { allTarotCards } from '../../data/tarotCards'
-import { getZodiacEmoji, getZodiacCardExplanation } from '../../lib/zodiacEmojis'
-import type { DeckTheme, Card as TarotCardType } from '../../types'
+import { getZodiacCardExplanation, getZodiacEmoji } from '../../lib/zodiacEmojis'
+import type { DeckTheme, Card as TarotCardType, Reading } from '../../types'
 
 type DailyCardStep = 'deck_select' | 'ritual' | 'shuffle' | 'reveal' | 'interpretation'
 
+// Helper to check if date is today
+function isSameDay(dateString: string): boolean {
+  const readingDate = new Date(dateString)
+  const today = new Date()
+  return (
+    readingDate.getDate() === today.getDate() &&
+    readingDate.getMonth() === today.getMonth() &&
+    readingDate.getFullYear() === today.getFullYear()
+  )
+}
+
 export function DailyCardPage() {
   const navigate = useNavigate()
-  const { user, updateUser } = useUserStore()
-  const { todayReading, setTodayReading } = useCardsStore()
+  const { user, canGetDailyCard, useDailyCard, canAskQuestion } = useUserStore()
+  const { todayReading, todayReadingDate, setTodayReading, addToCollection } = useCardsStore()
   const { hapticFeedback, showBackButton, hideBackButton } = useTelegram()
+  const [showLimitModal, setShowLimitModal] = useState(false)
+
+  // Check if today's reading is valid (from today)
+  const validTodayReading = todayReading && todayReadingDate && isSameDay(todayReadingDate) ? todayReading : null
 
   // Check if user has permanent deck choice
   const hasPermanentDeck = user?.deckPermanent === true
 
+  // Initialize drawnCard from validTodayReading if available
+  const initialCard = validTodayReading?.cards?.[0]?.card || null
+  const initialReversed = validTodayReading?.cards?.[0]?.isReversed || false
+
   const [step, setStep] = useState<DailyCardStep>(
-    todayReading ? 'interpretation' : (hasPermanentDeck ? 'ritual' : 'deck_select')
+    validTodayReading && initialCard ? 'interpretation' : (hasPermanentDeck ? 'ritual' : 'deck_select')
   )
   const [selectedDeck, setSelectedDeck] = useState<DeckTheme>(user?.deckTheme || 'witch')
   const [isShuffling, setIsShuffling] = useState(false)
-  const [drawnCard, setDrawnCard] = useState<TarotCardType | null>(null)
-  const [isReversed, setIsReversed] = useState(false)
+  const [drawnCard, setDrawnCard] = useState<TarotCardType | null>(initialCard)
+  const [isReversed, setIsReversed] = useState(initialReversed)
   const [showFullInterpretation, setShowFullInterpretation] = useState(false)
   const [feedbackGiven, setFeedbackGiven] = useState(false)
   const [selectedZodiac, setSelectedZodiac] = useState<string | null>(null)
@@ -71,13 +90,6 @@ export function DailyCardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // If already has today's reading, show it
-  useEffect(() => {
-    if (todayReading) {
-      setStep('interpretation')
-    }
-  }, [todayReading])
-
   const handleDeckSelect = (theme: DeckTheme) => {
     setSelectedDeck(theme)
     setStep('ritual')
@@ -94,6 +106,20 @@ export function DailyCardPage() {
   }
 
   const handleCardSelect = () => {
+    // Проверяем лимит карты дня
+    if (!canGetDailyCard()) {
+      hapticFeedback('notification', 'error')
+      setShowLimitModal(true)
+      return
+    }
+
+    // Списываем карту дня
+    const success = useDailyCard()
+    if (!success) {
+      setShowLimitModal(true)
+      return
+    }
+
     hapticFeedback('notification', 'success')
     // Select random card from our expanded deck
     const randomCard = allTarotCards[Math.floor(Math.random() * allTarotCards.length)]
@@ -101,12 +127,46 @@ export function DailyCardPage() {
     setDrawnCard(randomCard)
     setIsReversed(reversed)
     setStep('reveal')
+
+    // Save reading to store for persistence
+    const reading: Reading = {
+      id: `daily-${Date.now()}`,
+      userId: user?.id || 'anonymous',
+      type: 'daily',
+      cards: [{
+        id: `card-${Date.now()}`,
+        cardId: randomCard.id,
+        card: randomCard,
+        position: 0,
+        isReversed: reversed,
+      }],
+      interpretation: {
+        greeting: '',
+        cardName: randomCard.nameRu,
+        isReversed: reversed,
+        mainMeaning: reversed ? randomCard.meaningReversed.general : randomCard.meaningUpright.general,
+        loveMeaning: reversed ? randomCard.meaningReversed.love : randomCard.meaningUpright.love,
+        careerMeaning: reversed ? randomCard.meaningReversed.career : randomCard.meaningUpright.career,
+        advice: reversed ? randomCard.meaningReversed.advice : randomCard.meaningUpright.advice,
+      },
+      moonPhase: getMoonPhase(new Date()),
+      createdAt: new Date().toISOString(),
+    }
+    setTodayReading(reading)
+
+    // Add to collection
+    addToCollection({
+      cardId: randomCard.id,
+      unlockedAt: new Date().toISOString(),
+      timesReceived: 1,
+    })
   }
 
   const handleCardRevealed = () => {
+    // Задержка 1с чтобы карта осталась на экране
     setTimeout(() => {
       setStep('interpretation')
-    }, 500)
+    }, 1000)
   }
 
   const handleFeedback = (feedback: 'positive' | 'negative') => {
@@ -218,45 +278,6 @@ export function DailyCardPage() {
               </div>
             </motion.div>
 
-            {/* Moon info - розовая карточка для фей */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
-              className="mb-8 w-full max-w-sm relative z-10"
-            >
-              <div className={`rounded-xl p-4 backdrop-blur-md border ${
-                selectedDeck === 'fairy'
-                  ? 'bg-[#C4A0A5]/30 border-[#C4A0A5]/50'
-                  : 'bg-white/5 border-white/10'
-              }`}>
-                <div className="flex items-center justify-center gap-4">
-                  <motion.span
-                    className="text-3xl"
-                    style={{
-                      filter: selectedDeck === 'witch'
-                        ? 'grayscale(100%) brightness(2)'
-                        : 'sepia(100%) hue-rotate(290deg) saturate(3) brightness(1.1)'
-                    }}
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  >
-                    {getMoonEmoji(moonPhase)}
-                  </motion.span>
-                  <div className="text-left">
-                    <span className={`font-semibold block text-base ${
-                      selectedDeck === 'fairy' ? 'text-white drop-shadow-lg' : 'text-white'
-                    }`}>{getMoonName(moonPhase)}</span>
-                    <p className={`text-sm ${
-                      selectedDeck === 'fairy' ? 'text-white/90' : 'text-white/50'
-                    }`}>
-                      {getMoonMessage(moonPhase)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
             {/* День и настроение */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -351,32 +372,31 @@ export function DailyCardPage() {
           </motion.div>
         )}
 
-        {/* Reveal Card */}
+        {/* Reveal Card - пользователь нажимает чтобы открыть */}
         {step === 'reveal' && drawnCard && (
           <motion.div
             key="reveal"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative"
-            style={{
-              backgroundImage: selectedDeck === 'fairy'
-                ? 'url(/backgrounds/result-fairy.jpg)'
-                : 'url(/backgrounds/result-witch.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
+            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
           >
-            {/* Оверлей - усиленный для фокуса на карте */}
-            <div className={`absolute inset-0 ${
+            {/* Background */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10"
+              style={{
+                backgroundImage: selectedDeck === 'fairy'
+                  ? 'url(/backgrounds/result-fairy.jpg)'
+                  : 'url(/backgrounds/result-witch.jpg)',
+              }}
+            />
+            {/* Overlay */}
+            <div className={`absolute inset-0 -z-10 ${
               selectedDeck === 'fairy'
-                ? 'bg-gradient-to-b from-black/40 via-black/30 to-black/50'
-                : 'bg-gradient-to-b from-black/60 via-black/50 to-black/70'
+                ? 'bg-gradient-to-b from-black/30 via-black/40 to-black/60'
+                : 'bg-gradient-to-b from-black/40 via-black/50 to-black/70'
             }`} />
 
-            {/* Падающие тематические элементы */}
             <FallingElements theme={selectedDeck} intensity="medium" />
 
             <div className="relative z-10">
@@ -817,6 +837,175 @@ export function DailyCardPage() {
                   </span>
                 </motion.button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Модальное окно лимита карты дня */}
+      <AnimatePresence>
+        {showLimitModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6"
+            onClick={() => setShowLimitModal(false)}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={`absolute inset-0 ${selectedDeck === 'fairy' ? 'bg-[#C4A0A5]/20' : 'bg-[#2a2a2a]/40'} backdrop-blur-md`}
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative max-w-sm w-full rounded-3xl p-6 text-center overflow-hidden border-2 ${
+                selectedDeck === 'fairy'
+                  ? 'border-[#C4A0A5]/40 bg-gradient-to-b from-[#2a1f2d] via-[#1f1a22] to-[#1a1518]'
+                  : 'border-[#4a4a4a]/50 bg-gradient-to-b from-[#2a2a2a] via-[#1f1f1f] to-[#1a1a1a]'
+              }`}
+              style={{
+                backgroundImage: selectedDeck === 'fairy'
+                  ? 'url(/backgrounds/modal-daily-limit-fairy.jpg)'
+                  : 'url(/backgrounds/modal-daily-limit-witch.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {/* Decorative glow */}
+              <motion.div
+                className={`absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full blur-3xl ${
+                  selectedDeck === 'fairy' ? 'bg-[#C4A0A5]/20' : 'bg-[#5a5a5a]/20'
+                }`}
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+
+              {/* Text content with dark overlay for readability */}
+              <div className={`relative z-10 rounded-2xl p-4 mb-4 ${
+                selectedDeck === 'fairy'
+                  ? 'bg-black/50 backdrop-blur-sm'
+                  : 'bg-black/60 backdrop-blur-sm'
+              }`}>
+                {/* Icon */}
+                <motion.div
+                  className="mb-3"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', delay: 0.2 }}
+                >
+                  <motion.div
+                    className="text-5xl"
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    {selectedDeck === 'fairy' ? '🎴' : '🃏'}
+                  </motion.div>
+                </motion.div>
+
+                {/* Title */}
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-xl font-display font-bold mb-3 text-white"
+                >
+                  Карта дня уже открыта
+                </motion.h3>
+
+                {/* Message */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-white text-sm leading-relaxed"
+                >
+                  {selectedDeck === 'fairy'
+                    ? 'Сегодняшнее послание уже получено. Новая карта будет ждать тебя завтра ✨'
+                    : 'Послание дня уже раскрыто. Завтра карты расскажут новое 🌙'}
+                </motion.p>
+              </div>
+
+              {/* Sparkles for fairy theme */}
+              {selectedDeck === 'fairy' && (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-[#C4A0A5] rounded-full"
+                      style={{
+                        left: `${20 + i * 12}%`,
+                        top: `${30 + (i % 3) * 20}%`,
+                      }}
+                      animate={{
+                        opacity: [0.2, 0.8, 0.2],
+                        scale: [1, 1.5, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Button with animation */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="relative z-10"
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      setShowLimitModal(false)
+                      navigate('/')
+                    }}
+                    variant={selectedDeck === 'fairy' ? 'primary-fairy' : 'primary'}
+                    className={`w-full ${
+                      selectedDeck === 'fairy'
+                        ? 'bg-[#C4A0A5] hover:bg-[#d4b0b5]'
+                        : 'bg-[#4a4a4a] hover:bg-[#5a5a5a]'
+                    }`}
+                  >
+                    {selectedDeck === 'fairy' ? 'На главную ✨' : 'На главную 🌙'}
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Hint - only show if question is still available */}
+              {canAskQuestion() && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-white/60 text-xs mt-4 relative z-10"
+                >
+                  {selectedDeck === 'fairy'
+                    ? 'Попробуй задать вопрос картам 💫'
+                    : 'Вопрос картам ещё доступен'}
+                </motion.p>
+              )}
             </motion.div>
           </motion.div>
         )}

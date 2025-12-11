@@ -712,11 +712,11 @@ export function SpreadPage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <Card variant="mystic" className="mb-4">
+                <Card variant={isWitchTheme ? 'mystic-witch' : 'mystic-fairy'} className="mb-4">
                   {/* Заголовок позиции */}
-                  <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
-                    <div className="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center">
-                      <span className="text-gold-400 font-bold text-sm">{selectedPosition + 1}</span>
+                  <div className={`flex items-center gap-3 mb-4 pb-3 border-b ${isWitchTheme ? 'border-white/10' : 'border-[#C4A0A5]/20'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isWitchTheme ? 'bg-gold-500/20' : 'bg-[#C4A0A5]/20'}`}>
+                      <span className={`font-bold text-sm ${isWitchTheme ? 'text-gold-400' : 'text-[#C4A0A5]'}`}>{selectedPosition + 1}</span>
                     </div>
                     <div className="flex-1">
                       <p className="text-white font-medium">
@@ -745,7 +745,11 @@ export function SpreadPage() {
                     {interpretation.positions[selectedPosition].keywords.map((keyword, ki) => (
                       <span
                         key={ki}
-                        className="text-xs px-2 py-1 rounded-full bg-white/5 text-white/60"
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          isWitchTheme
+                            ? 'bg-white/5 text-white/60'
+                            : 'bg-[#C4A0A5]/10 text-[#C4A0A5]/80'
+                        }`}
                       >
                         {keyword}
                       </span>
@@ -758,8 +762,8 @@ export function SpreadPage() {
                   </p>
 
                   {/* Совет карты */}
-                  <div className="bg-white/5 rounded-xl p-3">
-                    <p className="text-white/60 text-xs mb-1">Совет карты:</p>
+                  <div className={`rounded-xl p-3 ${isWitchTheme ? 'bg-white/5' : 'bg-[#C4A0A5]/10'}`}>
+                    <p className={`text-xs mb-1 ${isWitchTheme ? 'text-white/60' : 'text-[#C4A0A5]/70'}`}>Совет карты:</p>
                     <p className="text-white/90 text-sm italic">
                       "{interpretation.positions[selectedPosition].advice}"
                     </p>
@@ -769,8 +773,8 @@ export function SpreadPage() {
             )}
 
             {selectedPosition === null && (
-              <Card variant="glass" className="mb-4">
-                <p className="text-center text-white/60">
+              <Card variant={isWitchTheme ? 'glass-witch' : 'glass-fairy'} className="mb-4">
+                <p className={`text-center ${isWitchTheme ? 'text-white/60' : 'text-[#C4A0A5]/80'}`}>
                   Нажми на карту выше, чтобы увидеть подробное толкование {getThemeEmoji(selectedDeck, 'main')}
                 </p>
               </Card>
@@ -782,7 +786,7 @@ export function SpreadPage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Card variant="glass" className="mb-4">
+              <Card variant={isWitchTheme ? 'glass-witch' : 'glass-fairy'} className="mb-4">
                 <h3 className="font-display font-semibold text-white mb-3 flex items-center gap-2">
                   <span className="text-xl">{getThemeEmoji(selectedDeck, 'future')}</span>
                   Общий итог расклада
@@ -792,22 +796,26 @@ export function SpreadPage() {
                 </p>
 
                 {/* Совет */}
-                <div className="bg-gradient-to-r from-gold-500/10 to-transparent rounded-xl p-4 mb-4 border-l-2 border-gold-500/50">
-                  <p className="text-white/60 text-xs mb-1 uppercase tracking-wide">Главный совет</p>
+                <div className={`bg-gradient-to-r rounded-xl p-4 mb-4 border-l-2 ${
+                  isWitchTheme
+                    ? 'from-gold-500/10 to-transparent border-gold-500/50'
+                    : 'from-[#C4A0A5]/15 to-transparent border-[#C4A0A5]/50'
+                }`}>
+                  <p className={`text-xs mb-1 uppercase tracking-wide ${isWitchTheme ? 'text-white/60' : 'text-[#C4A0A5]/70'}`}>Главный совет</p>
                   <p className="text-white/90 leading-relaxed">
                     {interpretation.advice}
                   </p>
                 </div>
 
                 {/* Позитивное послание */}
-                <p className="text-white/70 text-sm text-center italic">
+                <p className={`text-sm text-center italic ${isWitchTheme ? 'text-white/70' : 'text-[#C4A0A5]/80'}`}>
                   {interpretation.positive}
                 </p>
 
                 {/* Таймлайн */}
                 {interpretation.timing && (
-                  <div className="mt-4 pt-3 border-t border-white/10">
-                    <p className="text-white/50 text-xs text-center">
+                  <div className={`mt-4 pt-3 border-t ${isWitchTheme ? 'border-white/10' : 'border-[#C4A0A5]/20'}`}>
+                    <p className={`text-xs text-center ${isWitchTheme ? 'text-white/50' : 'text-[#C4A0A5]/60'}`}>
                       ⏱ {interpretation.timing}
                     </p>
                   </div>

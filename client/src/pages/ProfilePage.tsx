@@ -83,11 +83,7 @@ export function ProfilePage() {
               letterSpacing: '0.15em'
             }}
             >
-              {new Date(user.birthDate).toLocaleDateString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-              }).replace(/\./g, ' / ')}
+              {user.birthDate.replace(/\./g, ' / ')}
             </p>
           )}
         </div>

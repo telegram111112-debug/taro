@@ -4,12 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../../store/useUserStore'
 import { useTelegram } from '../../providers/TelegramProvider'
 import { Header } from '../../components/layout'
-import { Button, Card } from '../../components/ui'
+import { Button, Card, Modal } from '../../components/ui'
 import { CardDeck, CardFlip, TarotCard } from '../../components/tarot'
 import { MagicParticles, FallingElements } from '../../components/effects'
 import { allTarotCards } from '../../data/tarotCards'
-import { getCurrentFairyBackground, getFairyBackgroundStyle } from '../../lib/fairyBackgrounds'
-import { getCurrentWitchBackground, getWitchBackgroundStyle } from '../../lib/witchBackgrounds'
 import { tarotApi } from '../../lib/api'
 import type { Card as TarotCardType } from '../../types'
 
@@ -24,7 +22,14 @@ interface TarotAnswer {
 
 export function AskTarotPage() {
   const navigate = useNavigate()
-  const { user } = useUserStore()
+  const {
+    user,
+    canAskQuestion,
+    useQuestion,
+    getRemainingQuestions,
+    getMaxQuestionsPerDay,
+    getActiveFriendsCount,
+  } = useUserStore()
   const { hapticFeedback, showBackButton, hideBackButton } = useTelegram()
 
   const [step, setStep] = useState<AskTarotStep>('input')
@@ -34,14 +39,16 @@ export function AskTarotPage() {
   const [isReversed, setIsReversed] = useState(false)
   const [tarotAnswer, setTarotAnswer] = useState<TarotAnswer | null>(null)
   const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false)
+  const [showLimitModal, setShowLimitModal] = useState(false)
 
   const selectedDeck = user?.deckTheme || 'fairy'
-  const isWitchTheme = selectedDeck === 'witch'
   const isFairyTheme = selectedDeck === 'fairy'
 
-  // Фоны для колод
-  const fairyBackground = useMemo(() => getCurrentFairyBackground(), [])
-  const witchBackground = useMemo(() => getCurrentWitchBackground(), [])
+  // Проверяем, можно ли задавать вопрос
+  const canAsk = canAskQuestion()
+  const remainingQuestions = getRemainingQuestions()
+  const maxQuestions = getMaxQuestionsPerDay()
+  const activeFriends = getActiveFriendsCount()
 
   useEffect(() => {
     showBackButton(() => navigate(-1))
@@ -50,6 +57,21 @@ export function AskTarotPage() {
 
   const handleSubmitQuestion = () => {
     if (!question.trim()) return
+
+    // Проверяем лимит вопросов
+    if (!canAsk) {
+      hapticFeedback('notification', 'error')
+      setShowLimitModal(true)
+      return
+    }
+
+    // Используем вопрос (списываем из лимита)
+    const success = useQuestion()
+    if (!success) {
+      setShowLimitModal(true)
+      return
+    }
+
     hapticFeedback('impact', 'medium')
     setStep('shuffle')
     setIsShuffling(true)
@@ -213,7 +235,16 @@ export function AskTarotPage() {
                   maxLength={200}
                 />
                 <div className="flex justify-between items-center mt-2 text-white/50 text-xs">
-                  <span>1 вопрос в день</span>
+                  <div className="flex items-center gap-1">
+                    <span className={remainingQuestions > 0 ? 'text-white/70' : 'text-red-400'}>
+                      {remainingQuestions}/{maxQuestions} вопросов
+                    </span>
+                    {activeFriends > 0 && (
+                      <span className={`${isFairyTheme ? 'text-[#C4A0A5]' : 'text-purple-400'}`}>
+                        (+{activeFriends} 👭)
+                      </span>
+                    )}
+                  </div>
                   <span>{question.length}/200</span>
                 </div>
               </Card>
@@ -523,6 +554,164 @@ export function AskTarotPage() {
               </motion.div>
               <p className="text-white/80">Карты формируют ответ...</p>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Модальное окно лимита вопросов */}
+      <AnimatePresence>
+        {showLimitModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6"
+            onClick={() => setShowLimitModal(false)}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className={`absolute inset-0 ${isFairyTheme ? 'bg-[#C4A0A5]/20' : 'bg-[#2a2a2a]/40'} backdrop-blur-md`}
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative max-w-sm w-full rounded-3xl p-6 pt-12 text-center overflow-hidden border-2 ${
+                isFairyTheme
+                  ? 'border-[#C4A0A5]/40 bg-gradient-to-b from-[#2a1f2d] via-[#1f1a22] to-[#1a1518]'
+                  : 'border-[#4a4a4a]/50 bg-gradient-to-b from-[#2a2a2a] via-[#1f1f1f] to-[#1a1a1a]'
+              }`}
+              style={{
+                backgroundImage: isFairyTheme
+                  ? 'url(/backgrounds/modal-limit-fairy.jpg)'
+                  : 'url(/backgrounds/modal-limit-witch.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {/* Decorative glow */}
+              <motion.div
+                className={`absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full blur-3xl ${
+                  isFairyTheme ? 'bg-[#C4A0A5]/20' : 'bg-[#5a5a5a]/20'
+                }`}
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+
+              {/* Text content with dark overlay for readability */}
+              <div className={`relative z-10 rounded-2xl p-4 mb-4 ${
+                isFairyTheme
+                  ? 'bg-black/50 backdrop-blur-sm'
+                  : 'bg-black/60 backdrop-blur-sm'
+              }`}>
+                {/* Title */}
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-xl font-display font-bold mb-3 text-white"
+                >
+                  Карты отдыхают
+                </motion.h3>
+
+                {/* Message */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-white text-sm mb-3 leading-relaxed"
+                >
+                  Сегодня ты уже задала {maxQuestions} {maxQuestions === 1 ? 'вопрос' : maxQuestions < 5 ? 'вопроса' : 'вопросов'}.
+                  <br />
+                  Завтра карты снова откроют тебе тайны {isFairyTheme ? '✨' : '🌙'}
+                </motion.p>
+
+                {/* Friends bonus hint */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.45 }}
+                  className="text-white/80 text-xs"
+                >
+                  💫 Пригласи подругу — получи +1 вопрос в день
+                </motion.p>
+              </div>
+
+              {/* Sparkles for fairy theme */}
+              {isFairyTheme && (
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-[#C4A0A5] rounded-full"
+                      style={{
+                        left: `${20 + i * 12}%`,
+                        top: `${30 + (i % 3) * 20}%`,
+                      }}
+                      animate={{
+                        opacity: [0.2, 0.8, 0.2],
+                        scale: [1, 1.5, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.3,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Button with stronger animation */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="relative z-10"
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  <Button
+                    onClick={() => setShowLimitModal(false)}
+                    variant={isFairyTheme ? 'primary-fairy' : 'primary'}
+                    className={`w-full ${
+                      isFairyTheme
+                        ? 'bg-[#C4A0A5] hover:bg-[#d4b0b5]'
+                        : 'bg-[#4a4a4a] hover:bg-[#5a5a5a]'
+                    }`}
+                  >
+                    До завтра {isFairyTheme ? '💫' : '🌙'}
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Hint */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-white/60 text-xs mt-4 relative z-10"
+              >
+                {isFairyTheme
+                  ? 'А пока загляни в Карту дня ✨'
+                  : 'Карта дня всегда доступна'}
+              </motion.p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useUserStore } from './store/useUserStore'
+import { useCardsStore } from './store/useCardsStore'
 import { Layout } from './components/layout/Layout'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { HomePage } from './pages/HomePage'
@@ -26,14 +27,64 @@ function DemoOnboarding() {
   return <OnboardingPage />
 }
 
+// Компонент для dev-режима - пропускает онбоардинг с тестовым пользователем
+function DevSkipOnboarding() {
+  const { setUser, setOnboarded } = useUserStore()
+
+  useEffect(() => {
+    // Всегда пересоздаём тестового пользователя с актуальными полями
+    setUser({
+      id: 'dev-user-123',
+      telegramId: 123456789,
+      name: 'Тестовая',
+      birthDate: '15.03.1995',
+      birthTime: '14:30',
+      birthCity: 'Москва',
+      zodiacSign: 'Рыбы',
+      relationshipStatus: 'single',
+      streakCount: 3,
+      streakLastDate: new Date().toISOString(),
+      timezone: 'Europe/Moscow',
+      deckTheme: 'fairy',
+      createdAt: new Date().toISOString(),
+      weeklyLoveSpreads: 1,
+      weeklyMoneySpreads: 1,
+      weeklyFutureSpreads: 1,
+      weeklyLastRefill: new Date().toISOString(),
+      questionsUsedToday: 0,
+      friends: [],
+    })
+    setOnboarded(true)
+  }, [setUser, setOnboarded])
+
+  return <Navigate to="/" replace />
+}
+
+// Компонент для сброса карты дня (для тестирования)
+function ResetDailyCard() {
+  const { updateUser } = useUserStore()
+  const { setTodayReading } = useCardsStore()
+
+  useEffect(() => {
+    // Сбрасываем карту дня в обоих сторах
+    updateUser({ lastDailyCardDate: undefined })
+    setTodayReading(null)
+    console.log('✅ Карта дня сброшена!')
+  }, [updateUser, setTodayReading])
+
+  return <Navigate to="/daily" replace />
+}
+
 export function AppRoutes() {
   const { isOnboarded } = useUserStore()
 
   return (
     <Routes>
-      {/* Demo routes - доступны всегда */}
+      {/* Dev routes - доступны всегда */}
       <Route path="/surprise-demo" element={<SurpriseDemo />} />
       <Route path="/demo" element={<DemoOnboarding />} />
+      <Route path="/dev" element={<DevSkipOnboarding />} />
+      <Route path="/reset-daily" element={<ResetDailyCard />} />
 
       {/* Main app routes */}
       {!isOnboarded ? (
