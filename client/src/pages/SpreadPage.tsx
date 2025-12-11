@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../store/useUserStore'
+import { useCardsStore } from '../store/useCardsStore'
 import { useTelegram } from '../providers/TelegramProvider'
 import { Header } from '../components/layout'
 import { Button, Card, MysticLoader } from '../components/ui'
@@ -62,6 +63,7 @@ export function SpreadPage() {
   const { type } = useParams<{ type: string }>()
   const navigate = useNavigate()
   const { user } = useUserStore()
+  const { addFeedback } = useCardsStore()
   const { hapticFeedback, showBackButton, hideBackButton } = useTelegram()
 
   const spreadConfig = spreadConfigs[type as keyof typeof spreadConfigs]
@@ -77,6 +79,7 @@ export function SpreadPage() {
   const [clarifyingInterpretation, setClarifyingInterpretation] = useState<ClarifyingCardInterpretation | null>(null)
   const [showClarifyingCard, setShowClarifyingCard] = useState(false)
   const [isDrawingClarifyingCard, setIsDrawingClarifyingCard] = useState(false)
+  const [feedbackGiven, setFeedbackGiven] = useState(false)
 
   const themeConfig = getThemeConfig(selectedDeck)
 
@@ -102,6 +105,20 @@ export function SpreadPage() {
     } else {
       setStep('deck_select')
     }
+  }
+
+  // Обработчик отзыва о раскладе
+  const handleFeedback = (feedback: 'positive' | 'negative') => {
+    hapticFeedback('notification', feedback === 'positive' ? 'success' : 'warning')
+    setFeedbackGiven(true)
+
+    // Сохраняем отзыв
+    const readingType = type as 'love' | 'money' | 'future'
+    addFeedback({
+      readingType,
+      feedback,
+      cards: cards.map(c => c.card.id),
+    })
   }
 
   const handleDeckSelect = (theme: DeckTheme) => {
@@ -430,7 +447,8 @@ export function SpreadPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="min-h-screen flex flex-col items-center justify-center p-6"
+            className="h-screen flex flex-col items-center justify-center p-6 overflow-hidden"
+            style={{ touchAction: 'none' }}
           >
             {/* Показываем уже выбранные карты сверху с эпичными эффектами */}
             {cards.length > 0 && (
@@ -787,11 +805,11 @@ export function SpreadPage() {
               transition={{ delay: 0.3 }}
             >
               <Card variant={isWitchTheme ? 'glass-witch' : 'glass-fairy'} className="mb-4">
-                <h3 className="font-display font-semibold text-white mb-3 flex items-center gap-2">
+                <h3 className={`font-display font-semibold mb-3 flex items-center gap-2 ${isWitchTheme ? 'text-white' : 'text-[#4A2A2A]'}`}>
                   <span className="text-xl">{getThemeEmoji(selectedDeck, 'future')}</span>
                   Общий итог расклада
                 </h3>
-                <p className="text-white/85 leading-relaxed mb-4">
+                <p className={`leading-relaxed mb-4 ${isWitchTheme ? 'text-white/85' : 'text-[#4A2A2A]/90'}`}>
                   {interpretation.generalSummary}
                 </p>
 
@@ -799,23 +817,23 @@ export function SpreadPage() {
                 <div className={`bg-gradient-to-r rounded-xl p-4 mb-4 border-l-2 ${
                   isWitchTheme
                     ? 'from-gold-500/10 to-transparent border-gold-500/50'
-                    : 'from-[#C4A0A5]/15 to-transparent border-[#C4A0A5]/50'
+                    : 'from-[#8B5A5A]/20 to-transparent border-[#8B5A5A]/60'
                 }`}>
-                  <p className={`text-xs mb-1 uppercase tracking-wide ${isWitchTheme ? 'text-white/60' : 'text-[#C4A0A5]/70'}`}>Главный совет</p>
-                  <p className="text-white/90 leading-relaxed">
+                  <p className={`text-xs mb-1 uppercase tracking-wide ${isWitchTheme ? 'text-white/60' : 'text-[#6B3A3A]'}`}>Главный совет</p>
+                  <p className={`leading-relaxed ${isWitchTheme ? 'text-white/90' : 'text-[#4A2A2A]'}`}>
                     {interpretation.advice}
                   </p>
                 </div>
 
                 {/* Позитивное послание */}
-                <p className={`text-sm text-center italic ${isWitchTheme ? 'text-white/70' : 'text-[#C4A0A5]/80'}`}>
+                <p className={`text-sm text-center italic ${isWitchTheme ? 'text-white/70' : 'text-[#6B3A3A]/90'}`}>
                   {interpretation.positive}
                 </p>
 
                 {/* Таймлайн */}
                 {interpretation.timing && (
-                  <div className={`mt-4 pt-3 border-t ${isWitchTheme ? 'border-white/10' : 'border-[#C4A0A5]/20'}`}>
-                    <p className={`text-xs text-center ${isWitchTheme ? 'text-white/50' : 'text-[#C4A0A5]/60'}`}>
+                  <div className={`mt-4 pt-3 border-t ${isWitchTheme ? 'border-white/10' : 'border-[#8B5A5A]/30'}`}>
+                    <p className={`text-xs text-center ${isWitchTheme ? 'text-white/50' : 'text-[#6B3A3A]/80'}`}>
                       ⏱ {interpretation.timing}
                     </p>
                   </div>
@@ -1563,20 +1581,38 @@ export function SpreadPage() {
             )}
 
             {/* Feedback */}
-            <div className="flex gap-3 mb-4">
-              <Button variant="secondary" className="flex-1">
-                Не попало {isWitchTheme ? '🖤' : '💔'}
-              </Button>
-              <button
-                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
-                  isFairyTheme
-                    ? 'bg-[#C4A0A5] text-white'
-                    : 'bg-[#6a6a6a] text-white'
-                }`}
+            {!feedbackGiven ? (
+              <div className="flex gap-3 mb-4">
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => handleFeedback('negative')}
+                >
+                  Не попало {isWitchTheme ? '🖤' : '💔'}
+                </Button>
+                <button
+                  onClick={() => handleFeedback('positive')}
+                  className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all active:scale-95 ${
+                    isFairyTheme
+                      ? 'bg-[#C4A0A5] text-white hover:bg-[#b8949a]'
+                      : 'bg-[#6a6a6a] text-white hover:bg-[#7a7a7a]'
+                  }`}
+                >
+                  В точку! {getThemeEmoji(selectedDeck, 'love')}
+                </button>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-4 mb-4"
               >
-                В точку! {getThemeEmoji(selectedDeck, 'love')}
-              </button>
-            </div>
+                <span className="text-2xl">💫</span>
+                <p className={`mt-2 ${isWitchTheme ? 'text-white/70' : 'text-[#6B3A3A]/80'}`}>
+                  Спасибо за отзыв!
+                </p>
+              </motion.div>
+            )}
 
             {/* На главную */}
             <Button

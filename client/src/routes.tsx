@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useUserStore } from './store/useUserStore'
 import { useCardsStore } from './store/useCardsStore'
@@ -77,6 +77,30 @@ function ResetDailyCard() {
 
 export function AppRoutes() {
   const { isOnboarded } = useUserStore()
+  const [hasHydrated, setHasHydrated] = useState(false)
+
+  // Ждём загрузки данных из localStorage
+  useEffect(() => {
+    const unsubscribe = useUserStore.persist.onFinishHydration(() => {
+      setHasHydrated(true)
+    })
+
+    // Проверяем, если уже загружено
+    if (useUserStore.persist.hasHydrated()) {
+      setHasHydrated(true)
+    }
+
+    return unsubscribe
+  }, [])
+
+  // Показываем загрузку пока данные не загружены
+  if (!hasHydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#1a1a2e]">
+        <div className="text-white/60 text-lg">✨</div>
+      </div>
+    )
+  }
 
   return (
     <Routes>

@@ -48,11 +48,12 @@ export function DeckSelector({ onSelect, showPermanentOption = true, showBackBut
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-6 relative"
+      className="fixed inset-0 flex flex-col items-center justify-center p-6 overflow-hidden"
       style={{
         backgroundImage,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        touchAction: 'none',
       }}
     >
       {/* Затемнение для читаемости контента */}

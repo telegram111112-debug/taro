@@ -7,6 +7,7 @@ interface UserState {
   isOnboarded: boolean
   isLoading: boolean
   friends: Friend[] // Список подруг с деталями
+  pendingBonusSpread: boolean // Ожидает выбор бонусного расклада (при добавлении подруги)
 
   // Actions
   setUser: (user: User) => void
@@ -26,11 +27,14 @@ interface UserState {
   canGetDailyCard: () => boolean
   useDailyCard: () => boolean
   // Подруги
-  addFriend: (friend: Friend) => void
+  addFriend: (friend: Friend) => boolean // Возвращает true если подруга добавлена
   removeFriend: (telegramId: number) => void
   updateFriendStatus: (telegramId: number, isActive: boolean) => void
   syncFriends: (activeTelegramIds: number[]) => void
   getActiveFriendsCount: () => number
+  // Бонусный расклад
+  claimBonusSpread: (type: 'love' | 'money' | 'future') => boolean
+  clearPendingBonus: () => void
   logout: () => void
 }
 
@@ -65,6 +69,7 @@ export const useUserStore = create<UserState>()(
       isOnboarded: false,
       isLoading: false,
       friends: [],
+      pendingBonusSpread: false,
 
       setUser: (user) => set({ user }),
 
@@ -243,18 +248,20 @@ export const useUserStore = create<UserState>()(
         return true
       },
 
-      // Добавить подругу
+      // Добавить подругу (возвращает true если добавлена новая подруга)
       addFriend: (friend) => {
         const { friends, user } = get()
         // Проверяем, что подруги ещё нет в списке
-        if (friends.some((f) => f.telegramId === friend.telegramId)) return
+        if (friends.some((f) => f.telegramId === friend.telegramId)) return false
 
         set({
           friends: [...friends, friend],
+          pendingBonusSpread: true, // Даём бонусный расклад за подругу
           user: user
             ? { ...user, friends: [...user.friends, friend.telegramId] }
             : null,
         })
+        return true
       },
 
       // Удалить подругу
@@ -290,7 +297,30 @@ export const useUserStore = create<UserState>()(
         })
       },
 
-      logout: () => set({ user: null, isOnboarded: false, friends: [] }),
+      // Использовать бонусный расклад (при добавлении подруги)
+      claimBonusSpread: (type) => {
+        const { user, pendingBonusSpread } = get()
+        if (!user || !pendingBonusSpread) return false
+
+        const key = `weekly${type.charAt(0).toUpperCase() + type.slice(1)}Spreads` as
+          | 'weeklyLoveSpreads'
+          | 'weeklyMoneySpreads'
+          | 'weeklyFutureSpreads'
+
+        set({
+          pendingBonusSpread: false,
+          user: {
+            ...user,
+            [key]: user[key] + 1,
+          },
+        })
+        return true
+      },
+
+      // Очистить ожидающий бонус (если пользователь закрыл модалку)
+      clearPendingBonus: () => set({ pendingBonusSpread: false }),
+
+      logout: () => set({ user: null, isOnboarded: false, friends: [], pendingBonusSpread: false }),
     }),
     {
       name: 'taro-user-store',
@@ -298,6 +328,7 @@ export const useUserStore = create<UserState>()(
         user: state.user,
         isOnboarded: state.isOnboarded,
         friends: state.friends,
+        pendingBonusSpread: state.pendingBonusSpread,
       }),
     }
   )

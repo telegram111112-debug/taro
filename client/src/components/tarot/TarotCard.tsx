@@ -73,10 +73,11 @@ export function TarotCard({
           <div
             className={clsx(
               'absolute inset-0 backface-hidden rounded-xl overflow-hidden rotate-y-180',
-              'border-2 shadow-xl bg-white'
+              'border-2 shadow-xl'
             )}
             style={{
               borderColor: themeConfig.colors.cardBorder,
+              background: themeConfig.gradients.card,
             }}
           >
             {card && (

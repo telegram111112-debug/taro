@@ -32,6 +32,8 @@ const SECONDARY_BACKGROUNDS = [
   '/backgrounds/bathtub-witch.jpg',
   '/backgrounds/roses-witch.jpg',
   '/backgrounds/clouds-fairy.jpg',
+  '/backgrounds/moon-calendar-witch.jpg',
+  '/backgrounds/moon-calendar-fairy.jpg',
 ]
 
 // Иконки

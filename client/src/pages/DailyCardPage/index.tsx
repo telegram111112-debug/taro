@@ -36,7 +36,7 @@ function isSameDay(dateString: string): boolean {
 export function DailyCardPage() {
   const navigate = useNavigate()
   const { user, canGetDailyCard, useDailyCard, canAskQuestion } = useUserStore()
-  const { todayReading, todayReadingDate, setTodayReading, addToCollection } = useCardsStore()
+  const { todayReading, todayReadingDate, setTodayReading, addToCollection, addFeedback } = useCardsStore()
   const { hapticFeedback, showBackButton, hideBackButton } = useTelegram()
   const [showLimitModal, setShowLimitModal] = useState(false)
 
@@ -172,7 +172,13 @@ export function DailyCardPage() {
   const handleFeedback = (feedback: 'positive' | 'negative') => {
     hapticFeedback('notification', feedback === 'positive' ? 'success' : 'warning')
     setFeedbackGiven(true)
-    // TODO: Save feedback to API
+
+    // Сохраняем отзыв
+    addFeedback({
+      readingType: 'daily',
+      feedback,
+      cards: card ? [card.id] : [],
+    })
   }
 
   const handleShare = () => {

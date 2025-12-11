@@ -211,6 +211,7 @@ export function OnboardingPage() {
       id: 'temp-' + Date.now(),
       telegramId: tgUser?.id || 0,
       name: formData.name,
+      avatar: tgUser?.photo_url, // Сохраняем аватар из Telegram
       birthDate: formData.birthDate,
       birthTime: formData.birthTime || undefined,
       birthCity: formData.birthCity || undefined,
@@ -226,6 +227,9 @@ export function OnboardingPage() {
       weeklyMoneySpreads: 1,
       weeklyFutureSpreads: 1,
       weeklyLastRefill: new Date().toISOString(),
+      // Ежедневные лимиты
+      questionsUsedToday: 0,
+      friends: [],
     }
 
     setUser(newUser)

@@ -11,11 +11,25 @@ import { getRandomGreeting } from '../../lib/greetings'
 import { getThemeEmoji } from '../../lib/themeEmojis'
 import type { MoonPhase } from '../../types'
 
+// Helper to check if date is today
+function isSameDay(dateString: string): boolean {
+  const readingDate = new Date(dateString)
+  const today = new Date()
+  return (
+    readingDate.getDate() === today.getDate() &&
+    readingDate.getMonth() === today.getMonth() &&
+    readingDate.getFullYear() === today.getFullYear()
+  )
+}
+
 export function HomePage() {
   const navigate = useNavigate()
   const { user } = useUserStore()
-  const { todayReading } = useCardsStore()
+  const { todayReading, todayReadingDate } = useCardsStore()
   const { hapticFeedback } = useTelegram()
+
+  // Проверяем, что расклад действительно сегодняшний
+  const hasValidTodayReading = todayReading && todayReadingDate && isSameDay(todayReadingDate)
 
   const moonPhase = getMoonPhase(new Date())
 
@@ -139,21 +153,27 @@ export function HomePage() {
             />
 
             <div className="relative flex items-center gap-4">
-              <motion.div
-                className={`w-20 h-28 rounded-xl overflow-hidden flex items-center justify-center bg-cover bg-center border ${
-                  isFairyTheme ? 'border-[#C4A0A5]/20' : 'border-white/20'
-                }`}
-                style={{
-                  backgroundImage: isFairyTheme
-                    ? 'url(/backgrounds/card-preview-fairy.jpg)'
-                    : 'url(/backgrounds/card-preview-witch.jpg)',
-                }}
-                animate={{ rotate: todayReading ? 0 : [0, 2, -2, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              >
-                {todayReading && (
+              {/* Card preview wrapper with overlay */}
+              <div className="relative">
+                <motion.div
+                  className="w-20 h-28 rounded-xl overflow-hidden flex items-center justify-center bg-cover bg-center"
+                  style={{
+                    backgroundImage: isFairyTheme
+                      ? 'url(/backgrounds/card-preview-fairy.jpg)'
+                      : 'url(/backgrounds/card-preview-witch.jpg)',
+                  }}
+                  animate={{ rotate: hasValidTodayReading ? 0 : [0, 2, -2, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+                {/* Overlay */}
+                {hasValidTodayReading && (
                   <motion.div
-                    className="w-full h-full bg-black/50 flex items-center justify-center"
+                    className="absolute inset-0 rounded-xl flex items-center justify-center"
+                    style={{
+                      backgroundColor: isFairyTheme
+                        ? 'rgba(90, 60, 70, 0.38)'
+                        : 'rgba(30, 30, 30, 0.5)',
+                    }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
@@ -167,14 +187,14 @@ export function HomePage() {
                     </motion.span>
                   </motion.div>
                 )}
-              </motion.div>
+              </div>
 
               <div className="flex-1">
                 <h3 className="text-white font-display font-semibold text-lg mb-1">
-                  {todayReading ? 'Твоя карта дня' : 'Карта дня'}
+                  {hasValidTodayReading ? 'Твоя карта дня' : 'Карта дня'}
                 </h3>
                 <p className="text-white/60 text-sm mb-3">
-                  {todayReading
+                  {hasValidTodayReading
                     ? 'Посмотри свой расклад'
                     : 'Узнай, что приготовила вселенная'}
                 </p>
@@ -184,7 +204,7 @@ export function HomePage() {
                   className="relative"
                 >
                   {/* Glow effect for button */}
-                  {!todayReading && (
+                  {!hasValidTodayReading && (
                     <motion.div
                       className={`absolute inset-0 rounded-xl blur-md ${
                         isFairyTheme
@@ -203,7 +223,7 @@ export function HomePage() {
                     variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
                     className="w-full relative"
                   >
-                    {todayReading ? 'Посмотреть' : 'Вытянуть карту'} {getThemeEmoji(user?.deckTheme, 'button')}
+                    {hasValidTodayReading ? 'Посмотреть' : 'Вытянуть карту'} {getThemeEmoji(user?.deckTheme, 'button')}
                   </Button>
                 </motion.div>
               </div>
@@ -330,10 +350,19 @@ export function HomePage() {
             >
               <Card
                 variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}
-                className={`${isFairyTheme ? 'border-[#C4A0A5]/30' : 'border-white/20'} overflow-hidden flex flex-col h-full`}
+                className={`${isFairyTheme ? 'border-[#C4A0A5]/30' : 'border-white/20'} overflow-hidden flex flex-col h-full relative`}
               >
+                {/* Background image */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+                  style={{
+                    backgroundImage: isFairyTheme
+                      ? 'url(/backgrounds/moon-calendar-fairy.jpg)'
+                      : 'url(/backgrounds/moon-calendar-witch.jpg)',
+                  }}
+                />
                 {/* Header with animated moon cycle */}
-                <div className="text-center pb-3 border-b border-white/10 flex-shrink-0">
+                <div className="relative z-10 text-center pb-3 border-b border-white/10 flex-shrink-0">
                   {/* Animated orbiting moon cycle */}
                   <div className="relative h-16 mb-2">
                     <motion.div
@@ -414,7 +443,7 @@ export function HomePage() {
                 </div>
 
                 {/* Tab switcher */}
-                <div className="flex gap-2 p-2 bg-black/20 mx-2 mt-2 rounded-xl flex-shrink-0">
+                <div className="relative z-10 flex gap-2 p-2 bg-black/20 mx-2 mt-2 rounded-xl flex-shrink-0">
                   <motion.button
                     onClick={() => setActiveTab('general')}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
@@ -459,7 +488,7 @@ export function HomePage() {
 
                 {/* Content area with smooth scroll */}
                 <div
-                  className="flex-1 overflow-y-auto overscroll-contain py-3 px-1"
+                  className="relative z-10 flex-1 overflow-y-auto overscroll-contain py-3 px-1"
                   style={{
                     scrollbarWidth: 'thin',
                     scrollbarColor: isFairyTheme ? '#C4A0A540 transparent' : '#64748b40 transparent'
@@ -489,9 +518,9 @@ export function HomePage() {
                               className={`rounded-2xl transition-all duration-300 overflow-hidden ${
                                 isCurrentPhase
                                   ? isFairyTheme
-                                    ? 'bg-gradient-to-r from-[#C4A0A5]/25 to-pink-500/15 border border-[#C4A0A5]/40 shadow-lg shadow-[#C4A0A5]/10'
-                                    : 'bg-gradient-to-r from-black/25 to-black/15 border border-white/30 shadow-lg shadow-black/10'
-                                  : 'bg-white/5 hover:bg-white/8'
+                                    ? 'bg-gradient-to-r from-[#C4A0A5]/35 to-pink-500/25 border border-[#C4A0A5]/40 shadow-lg shadow-[#C4A0A5]/10'
+                                    : 'bg-gradient-to-r from-black/35 to-black/25 border border-white/30 shadow-lg shadow-black/10'
+                                  : 'bg-white/15 hover:bg-white/18'
                               }`}
                             >
                               {/* Collapsed header - always visible */}
@@ -628,9 +657,9 @@ export function HomePage() {
                               className={`rounded-2xl overflow-hidden ${
                                 isCurrentPhase
                                   ? isFairyTheme
-                                    ? 'bg-gradient-to-br from-[#C4A0A5]/30 via-pink-500/20 to-rose-500/15 border border-[#C4A0A5]/50 shadow-xl shadow-[#C4A0A5]/20'
-                                    : 'bg-gradient-to-br from-black/30 via-black/20 to-black/15 border border-white/30 shadow-xl shadow-black/20'
-                                  : 'bg-white/5 hover:bg-white/8'
+                                    ? 'bg-gradient-to-br from-[#C4A0A5]/40 via-pink-500/30 to-rose-500/25 border border-[#C4A0A5]/50 shadow-xl shadow-[#C4A0A5]/20'
+                                    : 'bg-gradient-to-br from-black/40 via-black/30 to-black/25 border border-white/30 shadow-xl shadow-black/20'
+                                  : 'bg-white/15 hover:bg-white/18'
                               }`}
                             >
                               {/* Header */}
@@ -766,7 +795,7 @@ export function HomePage() {
                 </div>
 
                 {/* Close button */}
-                <div className="pt-3 border-t border-white/10 flex-shrink-0">
+                <div className="relative z-10 pt-3 border-t border-white/10 flex-shrink-0">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

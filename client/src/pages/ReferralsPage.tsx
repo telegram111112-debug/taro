@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTelegram } from '../providers/TelegramProvider'
 import { useUserStore } from '../store/useUserStore'
@@ -47,12 +48,16 @@ const witchEmojis = ['🌙', '🔮', '✦', '☽', '⭐', '🌑']
 const fairyEmojis = ['🌸', '💕', '🦋', '✨', '💗', '🌷']
 
 export function ReferralsPage() {
+  const [searchParams] = useSearchParams()
   const { hapticFeedback } = useTelegram()
   const { user } = useUserStore()
   const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
-  const [activeTab, setActiveTab] = useState<'friends' | 'invite'>('friends')
+
+  // Определяем начальную вкладку из URL параметра
+  const initialTab = searchParams.get('tab') === 'invite' ? 'invite' : 'friends'
+  const [activeTab, setActiveTab] = useState<'friends' | 'invite'>(initialTab)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const [showShareSettings, setShowShareSettings] = useState(false)
   const [shareEnabled, setShareEnabled] = useState(true)
@@ -179,7 +184,7 @@ export function ReferralsPage() {
               activeTab === 'friends'
                 ? isFairyTheme
                   ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
-                  : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
+                  : 'bg-white/90 text-[#1a1a1a] shadow-lg shadow-white/20'
                 : isFairyTheme
                   ? 'bg-[#C4A0A5]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
@@ -196,7 +201,7 @@ export function ReferralsPage() {
               activeTab === 'invite'
                 ? isFairyTheme
                   ? 'bg-[#C4A0A5] text-white shadow-lg shadow-[#C4A0A5]/30'
-                  : 'bg-[#3a3a3a] text-white shadow-lg shadow-black/30'
+                  : 'bg-white/90 text-[#1a1a1a] shadow-lg shadow-white/20'
                 : isFairyTheme
                   ? 'bg-[#C4A0A5]/20 text-white/70'
                   : 'bg-[#2a2a2a]/80 text-gray-400'
@@ -369,20 +374,34 @@ export function ReferralsPage() {
               className="space-y-4"
             >
               {/* Reward Info */}
-              <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'}>
-                <div className="flex items-center gap-3">
-                  <motion.div
-                    className="text-4xl"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    {isFairyTheme ? '🎁' : '🌟'}
-                  </motion.div>
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold mb-1">За каждую подругу</h3>
-                    <p className={`text-sm ${isFairyTheme ? 'text-white/80' : 'text-gray-400'}`}>
-                      +1 расклад из 4-х карт обеим
-                    </p>
+              <Card variant={isFairyTheme ? 'glass-fairy' : 'glass-witch'} padding="sm">
+                <div className="flex items-start gap-3">
+                  <motion.img
+                    src={isFairyTheme ? '/icons/referral-gift-fairy.png' : '/icons/referral-gift-witch.png'}
+                    alt="gift"
+                    className="h-16 w-auto flex-shrink-0"
+                    animate={isFairyTheme
+                      ? { rotate: [0, 10, -10, 0] }
+                      : { scale: [1, 1.1, 1], opacity: [0.9, 1, 0.9] }
+                    }
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <div>
+                    <h3 className="text-white font-semibold text-sm mb-1.5">За каждую подругу</h3>
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-1">
+                        {!isFairyTheme && <span className="text-xs">✦</span>}
+                        <p className={`text-xs ${isFairyTheme ? 'text-white/90' : 'text-white/80'}`}>
+                          +1 расклад из 4-х карт обеим
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {!isFairyTheme && <span className="text-xs">☽</span>}
+                        <p className={`text-xs ${isFairyTheme ? 'text-white/90' : 'text-white/80'}`}>
+                          +1 вопрос картам каждый день
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -416,8 +435,12 @@ export function ReferralsPage() {
 
                 <Button
                   onClick={handleShare}
-                  variant={isFairyTheme ? 'primary-fairy' : 'primary'}
-                  className="w-full"
+                  variant="secondary"
+                  className={`w-full !border-0 ${
+                    isFairyTheme
+                      ? '!bg-[#C4A0A5] hover:!bg-[#d4b0b5] text-white'
+                      : '!bg-[#3a3a3a] hover:!bg-[#4a4a4a] text-white'
+                  }`}
                   size="lg"
                 >
                   <motion.span

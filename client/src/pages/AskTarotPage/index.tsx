@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUserStore } from '../../store/useUserStore'
+import { useCardsStore } from '../../store/useCardsStore'
 import { useTelegram } from '../../providers/TelegramProvider'
 import { Header } from '../../components/layout'
 import { Button, Card, Modal } from '../../components/ui'
@@ -30,7 +31,11 @@ export function AskTarotPage() {
     getMaxQuestionsPerDay,
     getActiveFriendsCount,
   } = useUserStore()
+  const { todayReading } = useCardsStore()
   const { hapticFeedback, showBackButton, hideBackButton } = useTelegram()
+
+  // Проверяем, можно ли ещё открыть карту дня (если todayReading уже есть - значит уже открыта)
+  const canShowDailyCardButton = !todayReading
 
   const [step, setStep] = useState<AskTarotStep>('input')
   const [question, setQuestion] = useState('')
@@ -54,6 +59,13 @@ export function AskTarotPage() {
     showBackButton(() => navigate(-1))
     return () => hideBackButton()
   }, [])
+
+  // Показываем модалку лимита сразу при заходе, если лимит исчерпан
+  useEffect(() => {
+    if (!canAsk) {
+      setShowLimitModal(true)
+    }
+  }, [canAsk])
 
   const handleSubmitQuestion = () => {
     if (!question.trim()) return
@@ -292,7 +304,8 @@ export function AskTarotPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
+            className="h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
+            style={{ touchAction: 'none' }}
           >
             {/* Unique background for shuffle screen */}
             <div
@@ -362,7 +375,8 @@ export function AskTarotPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
+            className="h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden"
+            style={{ touchAction: 'none' }}
           >
             {/* Unique background for reveal screen */}
             <div
@@ -605,18 +619,15 @@ export function AskTarotPage() {
                 transition={{ duration: 3, repeat: Infinity }}
               />
 
-              {/* Text content with dark overlay for readability */}
-              <div className={`relative z-10 rounded-2xl p-4 mb-4 ${
-                isFairyTheme
-                  ? 'bg-black/50 backdrop-blur-sm'
-                  : 'bg-black/60 backdrop-blur-sm'
-              }`}>
+              {/* Text content - без рамки, с усиленной тенью для читаемости */}
+              <div className="relative z-10 p-4 mb-4">
                 {/* Title */}
                 <motion.h3
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                   className="text-xl font-display font-bold mb-3 text-white"
+                  style={{ textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.8)' }}
                 >
                   Карты отдыхают
                 </motion.h3>
@@ -626,22 +637,85 @@ export function AskTarotPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
-                  className="text-white text-sm mb-3 leading-relaxed"
+                  className="text-white text-sm mb-3 leading-relaxed font-medium"
+                  style={{ textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.8)' }}
                 >
                   Сегодня ты уже задала {maxQuestions} {maxQuestions === 1 ? 'вопрос' : maxQuestions < 5 ? 'вопроса' : 'вопросов'}.
                   <br />
                   Завтра карты снова откроют тебе тайны {isFairyTheme ? '✨' : '🌙'}
                 </motion.p>
 
-                {/* Friends bonus hint */}
-                <motion.p
+                {/* Friends bonus hint - кликабельная кнопка с искрящимися эмодзи */}
+                <motion.button
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.45 }}
-                  className="text-white/80 text-xs"
+                  onClick={() => {
+                    setShowLimitModal(false)
+                    navigate('/referrals?tab=invite')
+                  }}
+                  className="relative text-white text-xs font-medium active:scale-95 transition-transform flex items-center gap-1"
+                  style={{ textShadow: '0 2px 10px rgba(0,0,0,0.9), 0 4px 20px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.8)' }}
                 >
-                  💫 Пригласи подругу — получи +1 вопрос в день
-                </motion.p>
+                  {/* Искорка слева */}
+                  <motion.span
+                    className="text-base"
+                    style={{
+                      filter: isFairyTheme ? 'drop-shadow(0 0 4px #ff9ec4) drop-shadow(0 0 8px #ff69b4)' : 'drop-shadow(0 0 3px #fff)',
+                    }}
+                    animate={{
+                      opacity: [0.7, 1, 0.7],
+                      filter: isFairyTheme
+                        ? [
+                            'drop-shadow(0 0 2px #ff9ec4)',
+                            'drop-shadow(0 0 6px #ff69b4) drop-shadow(0 0 10px #ff9ec4)',
+                            'drop-shadow(0 0 2px #ff9ec4)',
+                          ]
+                        : [
+                            'drop-shadow(0 0 2px #fff)',
+                            'drop-shadow(0 0 5px #fff)',
+                            'drop-shadow(0 0 2px #fff)',
+                          ],
+                    }}
+                    transition={{
+                      duration: 1.8,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  >
+                    ✨
+                  </motion.span>
+                  {/* Текст */}
+                  <span>Пригласи подругу — получи +1 вопрос каждый день</span>
+                  {/* Искорка справа */}
+                  <motion.span
+                    className="text-base"
+                    style={{
+                      filter: isFairyTheme ? 'drop-shadow(0 0 4px #ff9ec4) drop-shadow(0 0 8px #ff69b4)' : 'drop-shadow(0 0 3px #fff)',
+                    }}
+                    animate={{
+                      opacity: [1, 0.7, 1],
+                      filter: isFairyTheme
+                        ? [
+                            'drop-shadow(0 0 6px #ff69b4) drop-shadow(0 0 10px #ff9ec4)',
+                            'drop-shadow(0 0 2px #ff9ec4)',
+                            'drop-shadow(0 0 6px #ff69b4) drop-shadow(0 0 10px #ff9ec4)',
+                          ]
+                        : [
+                            'drop-shadow(0 0 5px #fff)',
+                            'drop-shadow(0 0 2px #fff)',
+                            'drop-shadow(0 0 5px #fff)',
+                          ],
+                    }}
+                    transition={{
+                      duration: 1.8,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  >
+                    ✨
+                  </motion.span>
+                </motion.button>
               </div>
 
               {/* Sparkles for fairy theme */}
@@ -687,30 +761,52 @@ export function AskTarotPage() {
                   }}
                 >
                   <Button
-                    onClick={() => setShowLimitModal(false)}
-                    variant={isFairyTheme ? 'primary-fairy' : 'primary'}
-                    className={`w-full ${
+                    onClick={() => {
+                      setShowLimitModal(false)
+                      navigate('/')
+                    }}
+                    variant="secondary"
+                    className={`w-full !border-0 ${
                       isFairyTheme
-                        ? 'bg-[#C4A0A5] hover:bg-[#d4b0b5]'
-                        : 'bg-[#4a4a4a] hover:bg-[#5a5a5a]'
+                        ? '!bg-[#C4A0A5] hover:!bg-[#d4b0b5] text-white'
+                        : '!bg-[#3a3a3a] hover:!bg-[#4a4a4a] text-white'
                     }`}
                   >
-                    До завтра {isFairyTheme ? '💫' : '🌙'}
+                    До завтра {isFairyTheme ? '💫' : '🔮'}
                   </Button>
                 </motion.div>
               </motion.div>
 
-              {/* Hint */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-white/60 text-xs mt-4 relative z-10"
-              >
-                {isFairyTheme
-                  ? 'А пока загляни в Карту дня ✨'
-                  : 'Карта дня всегда доступна'}
-              </motion.p>
+              {/* Кнопка Карта дня - показываем только если карта дня ещё не открыта сегодня */}
+              {canShowDailyCardButton && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="relative z-10 mt-3"
+                >
+                  <motion.button
+                    animate={{
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                    onClick={() => {
+                      setShowLimitModal(false)
+                      navigate('/daily')
+                    }}
+                    className="text-sm text-white/80 active:scale-95"
+                    style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}
+                  >
+                    {isFairyTheme
+                      ? 'Загляни в Карту дня ✨'
+                      : 'Загляни в Карту дня 🌙'}
+                  </motion.button>
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         )}
